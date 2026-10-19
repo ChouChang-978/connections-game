@@ -1,0 +1,41 @@
+@use "Item.scss" as item;
+
+.solved-group {
+  height: 70px;
+  grid-column-end: span 4;
+  width: 100%;
+  background-color: lightblue;
+  color: #1a1a1a;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  .title {
+    font-weight: bold;
+  }
+
+  &.easy {
+    background-color: #f9df6d;
+  }
+  &.medium {
+    background-color: #63f486;
+  }
+  &.hard {
+    background-color: #62e8ee;
+  }
+  &.tricky {
+    background-color: #c185f5;
+  }
+}
+
+$ic: item.$item-correction;
+$solved-full-padding: item.$outer-padding * 2;
+
+@media only screen and (max-width: 640px) {
+  .solved-group {
+    height: calc(25vw - $ic);
+    width: calc(100vw - $solved-full-padding);
+  }
+}

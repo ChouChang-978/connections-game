@@ -1,0 +1,270 @@
+#root {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.app-shell {
+  min-height: 100vh;
+  transform-origin: center center;
+  transition: transform 350ms ease;
+}
+
+.app-shell[data-rotation="90"],
+.app-shell[data-rotation="270"] {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  box-sizing: border-box;
+  width: 100vh;
+  height: 100vw;
+  padding: 2rem;
+  overflow: auto;
+}
+
+.app-shell[data-rotation="90"] {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.app-shell[data-rotation="180"] {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100vh;
+  padding: 2rem;
+  overflow: auto;
+  transform: rotate(180deg);
+}
+
+.app-shell[data-rotation="270"] {
+  transform: translate(-50%, -50%) rotate(270deg);
+}
+
+.face-me-pair {
+  position: fixed;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transform-origin: center center;
+}
+
+.face-me-pair button {
+  box-sizing: border-box;
+  min-height: 42px;
+  padding: 8px 10px;
+  white-space: nowrap;
+}
+
+.face-me-button {
+  width: 190px;
+}
+
+.submit-button {
+  width: 100px;
+}
+
+.submit-button:disabled {
+  color: #777;
+  cursor: not-allowed;
+}
+
+.face-me-top .face-me-button,
+.face-me-right .face-me-button,
+.face-me-left .face-me-button {
+  order: 2;
+}
+
+.face-me-top .submit-button,
+.face-me-right .submit-button,
+.face-me-left .submit-button {
+  order: 1;
+}
+
+.face-me-top {
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.face-me-right {
+  top: 50%;
+  left: calc(100% - 37px);
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.face-me-bottom {
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.face-me-top .button-label,
+.face-me-right .button-label,
+.face-me-left .button-label {
+  display: inline-block;
+  transform: rotate(180deg);
+}
+
+.face-me-left {
+  top: 50%;
+  left: 37px;
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+@media only screen and (max-width: 640px) {
+  #root {
+    padding: 8px;
+  }
+
+  .app-shell[data-rotation="90"],
+  .app-shell[data-rotation="180"],
+  .app-shell[data-rotation="270"] {
+    padding: 8px;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.foot-disclaimer {
+  color: #888;
+}
+
+.web-search {
+  display: flex;
+  gap: 8px;
+  width: min(100%, 600px);
+  margin: 0 auto 20px;
+}
+
+.web-search input {
+  box-sizing: border-box;
+  flex: 1;
+  min-width: 0;
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1px solid #999;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.web-search button {
+  min-height: 42px;
+  padding: 0 18px;
+}
+
+.dictionary-results {
+  box-sizing: border-box;
+  width: min(100%, 600px);
+  max-height: 40vh;
+  overflow-y: auto;
+  margin: 0 auto 20px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: rgba(128, 128, 128, 0.12);
+  text-align: left;
+}
+
+.dictionary-results-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dictionary-results-heading h2 {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: 1.2rem;
+}
+
+.dictionary-close {
+  min-width: 36px;
+  min-height: 36px;
+  font-size: 1.25rem;
+}
+
+.dictionary-entry h3 {
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+.dictionary-entry ol {
+  margin-top: 0.25rem;
+  padding-left: 1.5rem;
+}
+
+.dictionary-entry li {
+  margin: 0.5rem 0;
+}
+
+.dictionary-example {
+  margin: 0.25rem 0 0;
+  color: #666;
+  font-style: italic;
+}
+
+.dictionary-source {
+  margin-bottom: 0;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.game-instruction {
+  font-weight: 600;
+}
+
+.puzzle-counter {
+  padding: 0.5rem;
+  color: #777;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.game-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.game-controls button {
+  min-height: 42px;
+}
+
+.game-message {
+  min-height: 1.5em;
+  margin: 12px auto;
+  font-weight: 600;
+}
+
+.hint-message {
+  color: #7a5b12;
+}
+
+.answer-key {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: rgba(128, 128, 128, 0.12);
+  text-align: left;
+}
+
+.answer-key h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.answer-key p:last-child {
+  margin-bottom: 0;
+}
