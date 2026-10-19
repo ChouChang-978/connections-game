@@ -27,6 +27,30 @@ const getEnglishEntries = (data: unknown): DictionaryEntry[] => {
   return Array.isArray(entries) ? (entries as DictionaryEntry[]) : [];
 };
 
+const mergeWiktionaryEntries = (entryGroups: DictionaryEntry[][]): DictionaryEntry[] => {
+  const merged = new Map<string, DictionaryEntry>();
+  const seenDefinitions = new Map<string, Set<string>>();
+
+  for (const entry of entryGroups.flat()) {
+    const partOfSpeech = entry.partOfSpeech?.trim() ?? "";
+    const entryKey = partOfSpeech.toLocaleLowerCase();
+    if (!merged.has(entryKey)) {
+      merged.set(entryKey, { partOfSpeech, definitions: [] });
+      seenDefinitions.set(entryKey, new Set());
+    }
+    const target = merged.get(entryKey)!;
+    const seen = seenDefinitions.get(entryKey)!;
+    for (const definition of entry.definitions ?? []) {
+      if (!definition.definition) continue;
+      const definitionKey = stripMarkup(definition.definition).toLocaleLowerCase().replace(/\s+/g, " ");
+      if (!definitionKey || seen.has(definitionKey)) continue;
+      seen.add(definitionKey);
+      target.definitions?.push(definition);
+    }
+  }
+
+  return Array.from(merged.values()).filter((entry) => entry.definitions?.length);
+};
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchedTerm, setSearchedTerm] = useState("");
@@ -52,20 +76,26 @@ function App() {
     setLookupStatus("loading");
 
     try {
-      const title = encodeURIComponent(query.replace(/\s+/g, "_"));
-      const response = await fetch(
-        `https://en.wiktionary.org/api/rest_v1/page/definition/${title}`,
-        { signal: controller.signal, headers: { Accept: "application/json" } },
+      const lowercaseQuery = query.toLocaleLowerCase();
+      const capitalizedQuery = lowercaseQuery.charAt(0).toLocaleUpperCase() + lowercaseQuery.slice(1);
+      const titles = Array.from(
+        new Set([lowercaseQuery, capitalizedQuery, query].map((term) =>
+          encodeURIComponent(term.replace(/\s+/g, "_")),
+        )),
       );
-
-      if (response.status === 404) {
-        setLookupStatus("not-found");
-        return;
-      }
-      if (!response.ok) throw new Error(`Dictionary request failed: ${response.status}`);
-
-      const data: unknown = await response.json();
-      const entries = getEnglishEntries(data).filter((entry) =>
+      const entryGroups = await Promise.all(
+        titles.map(async (title) => {
+          const response = await fetch(
+            `https://en.wiktionary.org/api/rest_v1/page/definition/${title}`,
+            { signal: controller.signal, headers: { Accept: "application/json" } },
+          );
+          if (response.status === 404) return [];
+          if (!response.ok) throw new Error(`Dictionary request failed: ${response.status}`);
+          const data: unknown = await response.json();
+          return getEnglishEntries(data);
+        }),
+      );
+      const entries = mergeWiktionaryEntries(entryGroups).filter((entry) =>
         entry.definitions?.some((definition) => definition.definition),
       );
       setDictionaryEntries(entries);
