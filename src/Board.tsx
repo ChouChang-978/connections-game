@@ -1,4 +1,3 @@
-/opt/homebrew/Library/Homebrew/cmd/shellenv.sh: line 27: /bin/ps: Operation not permitted
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import "./Board.scss";
