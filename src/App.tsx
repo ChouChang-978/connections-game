@@ -1,3 +1,4 @@
+/opt/homebrew/Library/Homebrew/cmd/shellenv.sh: line 27: /bin/ps: Operation not permitted
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import "./App.css";
 import Game from "./Game.tsx";
@@ -13,14 +14,36 @@ type DictionaryEntry = {
   definitions?: DictionaryDefinition[];
 };
 
+type DictionarySource = "merriam-webster" | "wiktionary";
+
 type LookupStatus = "idle" | "loading" | "success" | "not-found" | "error";
 
 const stripMarkup = (value: string) =>
   new DOMParser().parseFromString(value, "text/html").body.textContent?.trim() ?? "";
 
-const getEnglishEntries = (data: unknown): DictionaryEntry[] => {
-  if (Array.isArray(data)) return data as DictionaryEntry[];
-  if (!data || typeof data !== "object") return [];
+const getMerriamWebsterEntries = (data: unknown): DictionaryEntry[] => {
+  if (!Array.isArray(data)) return [];
+
+  return data.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const entry = item as Record<string, unknown>;
+    const definitions = Array.isArray(entry.shortdef)
+      ? entry.shortdef
+          .filter((definition): definition is string => typeof definition === "string")
+          .map((definition) => ({ definition }))
+      : [];
+
+    return definitions.length > 0
+      ? [{
+          partOfSpeech: typeof entry.fl === "string" ? entry.fl : undefined,
+          definitions,
+        }]
+      : [];
+  });
+};
+
+const getWiktionaryEntries = (data: unknown): DictionaryEntry[] => {
+  if (!data || typeof data !== "object" || Array.isArray(data)) return [];
 
   const response = data as Record<string, unknown>;
   const entries = response.en ?? response.English;
@@ -38,11 +61,14 @@ const mergeWiktionaryEntries = (entryGroups: DictionaryEntry[][]): DictionaryEnt
       merged.set(entryKey, { partOfSpeech, definitions: [] });
       seenDefinitions.set(entryKey, new Set());
     }
+
     const target = merged.get(entryKey)!;
     const seen = seenDefinitions.get(entryKey)!;
     for (const definition of entry.definitions ?? []) {
       if (!definition.definition) continue;
-      const definitionKey = stripMarkup(definition.definition).toLocaleLowerCase().replace(/\s+/g, " ");
+      const definitionKey = stripMarkup(definition.definition)
+        .toLocaleLowerCase()
+        .replace(/\s+/g, " ");
       if (!definitionKey || seen.has(definitionKey)) continue;
       seen.add(definitionKey);
       target.definitions?.push(definition);
@@ -51,10 +77,12 @@ const mergeWiktionaryEntries = (entryGroups: DictionaryEntry[][]): DictionaryEnt
 
   return Array.from(merged.values()).filter((entry) => entry.definitions?.length);
 };
+
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchedTerm, setSearchedTerm] = useState("");
   const [dictionaryEntries, setDictionaryEntries] = useState<DictionaryEntry[]>([]);
+  const [dictionarySource, setDictionarySource] = useState<DictionarySource>("merriam-webster");
   const [lookupStatus, setLookupStatus] = useState<LookupStatus>("idle");
   const activeLookup = useRef<AbortController | null>(null);
   const [rotation, setRotation] = useState(0);
@@ -76,26 +104,45 @@ function App() {
     setLookupStatus("loading");
 
     try {
-      const lowercaseQuery = query.toLocaleLowerCase();
-      const capitalizedQuery = lowercaseQuery.charAt(0).toLocaleUpperCase() + lowercaseQuery.slice(1);
-      const titles = Array.from(
-        new Set([lowercaseQuery, capitalizedQuery, query].map((term) =>
-          encodeURIComponent(term.replace(/\s+/g, "_")),
-        )),
+      const response = await fetch(
+        `/api/dictionary?word=${encodeURIComponent(query.toLowerCase())}`,
+        { signal: controller.signal, headers: { Accept: "application/json" } },
       );
-      const entryGroups = await Promise.all(
-        titles.map(async (title) => {
-          const response = await fetch(
-            `https://en.wiktionary.org/api/rest_v1/page/definition/${title}`,
-            { signal: controller.signal, headers: { Accept: "application/json" } },
-          );
-          if (response.status === 404) return [];
-          if (!response.ok) throw new Error(`Dictionary request failed: ${response.status}`);
-          const data: unknown = await response.json();
-          return getEnglishEntries(data);
-        }),
-      );
-      const entries = mergeWiktionaryEntries(entryGroups).filter((entry) =>
+
+      let data: unknown;
+      let entries: DictionaryEntry[];
+      if (response.status === 404) {
+        // GitHub Pages cannot run the proxy; look up both common and capitalized forms.
+        const lowercaseQuery = query.toLocaleLowerCase();
+        const capitalizedQuery = lowercaseQuery.charAt(0).toLocaleUpperCase() + lowercaseQuery.slice(1);
+        const titles = Array.from(
+          new Set(
+            [lowercaseQuery, capitalizedQuery, query].map((term) =>
+              encodeURIComponent(term.replace(/\s+/g, "_")),
+            ),
+          ),
+        );
+        const entryGroups = await Promise.all(
+          titles.map(async (title) => {
+            const fallback = await fetch(
+              `https://en.wiktionary.org/api/rest_v1/page/definition/${title}`,
+              { signal: controller.signal, headers: { Accept: "application/json" } },
+            );
+            if (fallback.status === 404) return [];
+            if (!fallback.ok) throw new Error(`Dictionary request failed: ${fallback.status}`);
+            return getWiktionaryEntries(await fallback.json());
+          }),
+        );
+        entries = mergeWiktionaryEntries(entryGroups);
+        setDictionarySource("wiktionary");
+      } else {
+        if (!response.ok) throw new Error(`Dictionary request failed: ${response.status}`);
+        data = await response.json();
+        entries = getMerriamWebsterEntries(data);
+        setDictionarySource("merriam-webster");
+      }
+
+      entries = entries.filter((entry) =>
         entry.definitions?.some((definition) => definition.definition),
       );
       setDictionaryEntries(entries);
@@ -115,7 +162,7 @@ function App() {
         <form className="web-search" role="search" onSubmit={handleSearch}>
           <input
             type="search"
-            aria-label="Look up an English word in Wiktionary"
+            aria-label="Look up an English word in Merriam-Webster's Collegiate Dictionary"
             placeholder="Look up an English word..."
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
@@ -142,7 +189,7 @@ function App() {
               <p>No English definition found for “{searchedTerm}”.</p>
             )}
             {lookupStatus === "error" && (
-              <p>Could not reach Wiktionary. Check your internet connection and try again.</p>
+              <p>Could not reach the dictionary. Check your internet connection and try again.</p>
             )}
             {lookupStatus === "success" && (
               <>
@@ -169,9 +216,28 @@ function App() {
                     </ol>
                   </div>
                 ))}
-                <p className="dictionary-source">
-                  Source: <a href={`https://en.wiktionary.org/wiki/${encodeURIComponent(searchedTerm.replace(/\s+/g, "_"))}`} target="_blank" rel="noreferrer">Wiktionary</a>
-                </p>
+                {dictionarySource === "merriam-webster" ? (
+                  <div className="dictionary-source merriam-webster-source">
+                    <a
+                      href={`https://www.merriam-webster.com/dictionary/${encodeURIComponent(searchedTerm)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="Merriam-Webster's Collegiate Dictionary"
+                    >
+                      <img
+                        src="https://dictionaryapi.com/images/info/branding-guidelines/MWLogo_LightBG_120x120_2x.png"
+                        alt="Merriam-Webster"
+                        width="50"
+                        height="50"
+                      />
+                    </a>
+                    <span>Source: Merriam-Webster&apos;s Collegiate<sup>®</sup> Dictionary</span>
+                  </div>
+                ) : (
+                  <p className="dictionary-source">
+                    Source: <a href={`https://en.wiktionary.org/wiki/${encodeURIComponent(searchedTerm.replace(/\s+/g, "_"))}`} target="_blank" rel="noreferrer">Wiktionary</a>
+                  </p>
+                )}
               </>
             )}
           </section>
@@ -181,6 +247,7 @@ function App() {
             gameDataSets={gameDataSets}
             submitRequest={submitRequest}
             onSubmitAvailabilityChange={setSubmitAvailable}
+            rotation={rotation}
           />
         </div>
         <br />

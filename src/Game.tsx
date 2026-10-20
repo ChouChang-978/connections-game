@@ -1,18 +1,23 @@
+/opt/homebrew/Library/Homebrew/cmd/shellenv.sh: line 27: /bin/ps: Operation not permitted
 import { useEffect, useRef, useState } from "react";
 import Board from "./Board.tsx";
 import shuffle from "lodash.shuffle";
 import type { GameData } from "./gameData.ts";
 
 const solvedGroupColorClasses = ["easy", "medium", "hard", "tricky"] as const;
+const WRONG_ANSWER_FLASH_MS = 850;
+const WRONG_ANSWER_RESET_DELAY_MS = 300;
 
 const Game = ({
   gameDataSets,
   submitRequest,
   onSubmitAvailabilityChange,
+  rotation,
 }: {
   gameDataSets: GameData[];
   submitRequest: number;
   onSubmitAvailabilityChange: (available: boolean) => void;
+  rotation: number;
 }) => {
   const [currentPuzzleIndex, setCurrentPuzzleIndex] = useState(0);
   const gameData = gameDataSets[currentPuzzleIndex];
@@ -21,11 +26,28 @@ const Game = ({
   );
   const [submitLocked, setSubmitLocked] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
+  const [incorrectSelection, setIncorrectSelection] = useState(false);
   const [solvedGroups, setSolvedGroups] = useState<string[]>([]);
   const [mistakesLeft, setMistakesLeft] = useState(4);
   const [hintMessage, setHintMessage] = useState("");
-  const [statusMessage, setStatusMessage] = useState("");
   const [showAnswers, setShowAnswers] = useState(false);
+  const incorrectAnimationTimer = useRef<number | null>(null);
+
+  useEffect(() => () => {
+    if (incorrectAnimationTimer.current !== null) {
+      window.clearTimeout(incorrectAnimationTimer.current);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hintMessage) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setHintMessage("");
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [hintMessage]);
 
   const solvedGroupData = solvedGroups.flatMap((description, index) => {
     const group = gameData.groups.find(
@@ -50,7 +72,7 @@ const Game = ({
   }, [canSubmit, onSubmitAvailabilityChange]);
 
   const toggleSelected = (value: string) => {
-    setStatusMessage("");
+    if (incorrectSelection || submitLocked) return;
     if (selected.includes(value)) {
       setSelected(selected.filter((word) => word !== value));
       setSubmitLocked(false);
@@ -74,13 +96,24 @@ const Game = ({
     if (!matchedGroup) {
       setSubmitLocked(true);
       setMistakesLeft((count) => Math.max(0, count - 1));
-      setStatusMessage("Those four words do not make a group. Try again.");
+      setIncorrectSelection(true);
+      if (incorrectAnimationTimer.current !== null) {
+        window.clearTimeout(incorrectAnimationTimer.current);
+      }
+      incorrectAnimationTimer.current = window.setTimeout(() => {
+        setIncorrectSelection(false);
+        incorrectAnimationTimer.current = window.setTimeout(() => {
+          setSelected([]);
+          setSubmitLocked(false);
+          incorrectAnimationTimer.current = null;
+        }, WRONG_ANSWER_RESET_DELAY_MS);
+      }, WRONG_ANSWER_FLASH_MS);
       return;
     }
 
+    setIncorrectSelection(false);
     setSelected([]);
     setSolvedGroups([...solvedGroups, matchedGroup.description]);
-    setStatusMessage(`Correct: ${matchedGroup.description}`);
 
     // Move the remaining top-row words into the spaces made by the solved group.
     const topRowWords = remainingWords
@@ -110,19 +143,23 @@ const Game = ({
       ({ description }) => !solvedGroups.includes(description),
     );
     if (nextGroup) {
-      setHintMessage(`Hint: one group is “${nextGroup.description}”.`);
+      setHintMessage(`One group is “${nextGroup.description}”.`);
     }
   };
 
   const resetPuzzle = (puzzleIndex: number) => {
+    if (incorrectAnimationTimer.current !== null) {
+      window.clearTimeout(incorrectAnimationTimer.current);
+      incorrectAnimationTimer.current = null;
+    }
     setCurrentPuzzleIndex(puzzleIndex);
     setRemainingWords(shuffle(gameDataSets[puzzleIndex].words));
     setSelected([]);
+    setIncorrectSelection(false);
     setSolvedGroups([]);
     setMistakesLeft(4);
     setSubmitLocked(false);
     setHintMessage("");
-    setStatusMessage("");
     setShowAnswers(false);
   };
 
@@ -135,56 +172,77 @@ const Game = ({
 
   return (
     <>
-      <div className="card puzzle-counter">
-        Puzzle {currentPuzzleIndex + 1} of {gameDataSets.length}
-      </div>
-      <div className="card game-instruction">
-        {hasWon
-          ? "Congratulations! You solved all four groups!"
-          : hasLost
-            ? "Game over. Start a new game to try again."
-            : "Create four groups of four"}
-      </div>
-      <div>
-        <Board
-          words={remainingWords}
-          selected={selected}
-          solvedGroupData={solvedGroupData}
-          toggleSelected={toggleSelected}
-        />
-
-        <div className="card">
-          mistakes remaining:{" "}
-          {Array(mistakesLeft)
-            .fill(null)
-            .map((_value, index) => (
-              <span key={`dot-${index}`}>&#9679; </span>
-            ))}
-        </div>
-
-        <div className="game-controls">
-          <button disabled={isGameOver} onClick={onHint}>
-            Hint
-          </button>
-          <button
-            aria-expanded={showAnswers}
-            onClick={() => setShowAnswers((visible) => !visible)}
+      <div className="game-layout">
+        <div className="game-top-controls">
+          <div
+            className="card mistakes-remaining"
+            role="group"
+            aria-label={`Mistakes remaining: ${mistakesLeft}`}
           >
-            {showAnswers ? "Hide Answers" : "Show Answers"}
-          </button>
-          <button onClick={onRestart}>Restart</button>
-          <button onClick={onNext}>Next</button>
+            MISTAKES REMAINING:{" "}
+            {Array(mistakesLeft)
+              .fill(null)
+              .map((_value, index) => (
+                <span className="mistake-dot" key={`dot-${index}`}>&#9679;</span>
+              ))}
+          </div>
+
+          <div className="game-controls">
+            <button className="game-control-button" disabled={isGameOver} onClick={onHint}>
+              Hint
+            </button>
+            <button
+              className="game-control-button"
+              aria-expanded={showAnswers}
+              onClick={() => setShowAnswers((visible) => !visible)}
+            >
+              {showAnswers ? "Hide Answers" : "Show Answers"}
+            </button>
+            <button className="game-control-button" onClick={onRestart}>Restart</button>
+            <button className="game-control-button" onClick={onNext}>Next</button>
+          </div>
         </div>
 
-        {statusMessage && (
-          <p className="game-message" role="status">
-            {statusMessage}
-          </p>
-        )}
+        <div className="board-stage">
+          <Board
+            words={remainingWords}
+            selected={selected}
+            incorrectSelection={incorrectSelection}
+            rotation={rotation}
+            solvedGroupData={solvedGroupData}
+            toggleSelected={toggleSelected}
+          />
+        </div>
+
         {hintMessage && (
-          <p className="game-message hint-message" role="status">
-            {hintMessage}
-          </p>
+          <div
+            className="hint-modal-backdrop"
+            role="presentation"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setHintMessage("");
+            }}
+          >
+            <section
+              className="hint-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="hint-modal-title"
+              aria-describedby="hint-modal-description"
+            >
+              <div className="hint-modal-heading">
+                <h2 id="hint-modal-title">Hint</h2>
+                <button
+                  className="hint-modal-close"
+                  type="button"
+                  aria-label="Close hint"
+                  onClick={() => setHintMessage("")}
+                >
+                  ×
+                </button>
+              </div>
+              <p id="hint-modal-description">{hintMessage}</p>
+            </section>
+          </div>
         )}
         {showAnswers && (
           <section className="answer-key" aria-label="Answer key">

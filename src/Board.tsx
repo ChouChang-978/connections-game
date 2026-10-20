@@ -1,3 +1,4 @@
+/opt/homebrew/Library/Homebrew/cmd/shellenv.sh: line 27: /bin/ps: Operation not permitted
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import "./Board.scss";
@@ -8,6 +9,8 @@ import type { WordGroup } from "./gameData.ts";
 type BoardProps = {
   words: string[];
   selected: string[];
+  incorrectSelection: boolean;
+  rotation: number;
   toggleSelected: (value: string) => void;
   solvedGroupData: WordGroup[];
 };
@@ -15,6 +18,8 @@ type BoardProps = {
 const Board = ({
   words,
   selected,
+  incorrectSelection,
+  rotation,
   solvedGroupData,
   toggleSelected,
 }: BoardProps) => {
@@ -32,6 +37,8 @@ const Board = ({
             toggleSelected(word);
           }}
           selected={selected.includes(word)}
+          incorrect={incorrectSelection && selected.includes(word)}
+          rotation={rotation}
         >
           {word}
         </Item>
