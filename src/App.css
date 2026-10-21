@@ -1,475 +1,33 @@
-#root {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.app-shell {
-  min-height: 100vh;
-  transform-origin: center center;
-  transition: transform 350ms ease;
-}
-
-.app-shell[data-rotation="90"],
-.app-shell[data-rotation="270"] {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  box-sizing: border-box;
-  width: 100vh;
-  height: 100vw;
-  padding: 2rem;
-  overflow: auto;
-}
-
-.app-shell[data-rotation="90"] {
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-
-.app-shell[data-rotation="180"] {
-  position: fixed;
-  inset: 0;
-  box-sizing: border-box;
-  width: 100vw;
-  height: 100vh;
-  padding: 2rem;
-  overflow: auto;
-  transform: rotate(180deg);
-}
-
-.app-shell[data-rotation="270"] {
-  transform: translate(-50%, -50%) rotate(270deg);
-}
-
-.face-me-pair {
-  position: fixed;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transform-origin: center center;
-}
-
-.face-me-pair button {
-  box-sizing: border-box;
-  min-height: 42px;
-  padding: 8px 10px;
-  white-space: nowrap;
-  border: 1px solid #a9cfe0;
-  background-color: #d8eff9;
-  color: #233d4b;
-  font-weight: 700;
-  box-shadow: 0 3px 7px rgba(25, 65, 85, 0.2);
-  transition: background-color 140ms ease, box-shadow 140ms ease, transform 100ms ease;
-}
-
-.face-me-pair button:hover:not(:disabled) {
-  background-color: #c2e8f7;
-  box-shadow: 0 4px 10px rgba(25, 65, 85, 0.26);
-}
-
-.face-me-pair button:active:not(:disabled) {
-  background-color: #e5e7eb;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.14);
-  transform: translateY(1px);
-}
-
-.face-me-button {
-  width: 190px;
-}
-
-.submit-button {
-  width: 100px;
-}
-
-.submit-button:disabled {
-  color: #777;
-  cursor: not-allowed;
-}
-
-.face-me-pair button:focus-visible,
-.game-control-button:focus-visible,
-.hint-modal-close:focus-visible {
-  outline: 3px solid #397fa0;
-  outline-offset: 2px;
-}
-
-.face-me-top .face-me-button,
-.face-me-right .face-me-button,
-.face-me-left .face-me-button {
-  order: 2;
-}
-
-.face-me-top .submit-button,
-.face-me-right .submit-button,
-.face-me-left .submit-button {
-  order: 1;
-}
-
-.face-me-top {
-  display: none;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.face-me-right {
-  top: 50%;
-  left: calc(100% - 56px);
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-
-.face-me-bottom {
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.face-me-top .button-label,
-.face-me-right .button-label,
-.face-me-left .button-label {
-  display: inline-block;
-  transform: rotate(180deg);
-}
-
-.face-me-left {
-  top: 50%;
-  left: 56px;
-  transform: translate(-50%, -50%) rotate(-90deg);
-}
-
-@media only screen and (max-width: 640px) {
-  #root {
-    padding: 8px;
-  }
-
-  .game-layout {
-    min-height: calc(100vh - 16px);
-  }
-
-  .app-shell[data-rotation="90"],
-  .app-shell[data-rotation="180"],
-  .app-shell[data-rotation="270"] {
-    padding: 8px;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.foot-disclaimer {
-  color: #888;
-}
-
-.web-search {
-  display: flex;
-  gap: 8px;
-  width: min(100%, 600px);
-  margin: 0 auto 20px;
-}
-
-.web-search input {
-  box-sizing: border-box;
-  flex: 1;
-  min-width: 0;
-  min-height: 42px;
-  padding: 8px 12px;
-  border: 1px solid #999;
-  border-radius: 8px;
-  font: inherit;
-}
-
-.web-search button {
-  min-height: 42px;
-  padding: 0 18px;
-}
-
-.dictionary-results {
-  box-sizing: border-box;
-  width: min(100%, 600px);
-  max-height: 40vh;
-  overflow-y: auto;
-  margin: 0 auto 20px;
-  padding: 16px 20px;
-  border-radius: 12px;
-  background: rgba(128, 128, 128, 0.12);
-  text-align: left;
-}
-
-.dictionary-results-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.dictionary-results-heading h2 {
-  margin: 0;
-  overflow-wrap: anywhere;
-  font-size: 1.2rem;
-}
-
-.dictionary-close {
-  min-width: 36px;
-  min-height: 36px;
-  font-size: 1.25rem;
-}
-
-.dictionary-entry h3 {
-  margin-bottom: 0.25rem;
-  font-size: 1rem;
-  text-transform: capitalize;
-}
-
-.dictionary-entry ol {
-  margin-top: 0.25rem;
-  padding-left: 1.5rem;
-}
-
-.dictionary-entry li {
-  margin: 0.5rem 0;
-}
-
-.dictionary-example {
-  margin: 0.25rem 0 0;
-  color: #666;
-  font-style: italic;
-}
-
-.dictionary-source {
-  margin-bottom: 0;
-  color: #666;
-  font-size: 0.85rem;
-}
-
-.merriam-webster-source {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.merriam-webster-source img {
-  display: block;
-  border-radius: 50%;
-}
-
-.game-instruction {
-  font-weight: 600;
-}
-
-.app-shell > h1,
-.app-shell > .web-search,
-.app-shell > .dictionary-results,
-.app-shell > .foot-disclaimer,
-.puzzle-counter,
-.game-instruction:not(.game-result) {
-  display: none;
-}
-
-.game-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - 4rem);
-}
-
-.game-top-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 12px 20px;
-  width: 100%;
-  box-sizing: border-box;
-  padding-top: 64px;
-}
-
-.mistakes-remaining {
-  margin: 0;
-  padding: 8px 12px;
-  font-size: 1.15rem;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.board-stage {
-  display: grid;
-  flex: 1 0 auto;
-  place-items: center;
-  width: 100%;
-  padding: 16px 0;
-}
-
-.puzzle-counter {
-  padding: 0.5rem;
-  color: #777;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.game-controls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px;
-  row-gap: 14px;
-  max-width: 760px;
-  margin: 0 auto;
-}
-
-.game-controls button {
-  min-height: 42px;
-}
-
-.game-controls .game-control-button {
-  min-width: 104px;
-  padding: 9px 16px;
-  border: 1px solid #e6d58d;
-  background-color: #fff1b8;
-  color: #51451f;
-  font-weight: 700;
-  box-shadow: 0 3px 7px rgba(105, 86, 25, 0.2);
-  transition: background-color 140ms ease, box-shadow 140ms ease, transform 100ms ease;
-}
-
-.game-controls .game-control-button:hover:not(:disabled) {
-  background-color: #fff8d6;
-  box-shadow: 0 4px 10px rgba(105, 86, 25, 0.25);
-}
-
-.game-controls .game-control-button:active:not(:disabled) {
-  background-color: #e5e7eb;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.14);
-  transform: translateY(1px);
-}
-
-.game-controls .game-control-button:disabled {
-  color: #8b846b;
-  cursor: not-allowed;
-}
-
-.mistake-dot {
-  display: inline-block;
-  margin-left: 4px;
-  color: #27a844;
-  font-size: 1.35em;
-  line-height: 1;
-}
-
-.hint-modal-backdrop {
-  position: fixed;
-  z-index: 2000;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  box-sizing: border-box;
-  padding: 20px;
-  background: rgba(18, 27, 34, 0.48);
-  animation: hint-backdrop-appear 150ms ease-out;
-}
-
-.hint-modal {
-  box-sizing: border-box;
-  width: min(420px, 100%);
-  padding: 20px 22px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 16px;
-  background: #fffdf5;
-  color: #29333a;
-  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.24);
-  text-align: left;
-  animation: hint-modal-appear 180ms ease-out;
-}
-
-.hint-modal-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.hint-modal-heading h2 {
-  margin: 0;
-  font-size: 1.25rem;
-}
-
-.hint-modal-close {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  min-width: 38px;
-  height: 38px;
-  padding: 0;
-  border: 1px solid #e6d58d;
-  border-radius: 50%;
-  background: #fff1b8;
-  color: #51451f;
-  font-size: 1.5rem;
-  line-height: 1;
-  box-shadow: 0 2px 5px rgba(105, 86, 25, 0.16);
-  cursor: pointer;
-}
-
-.hint-modal-close:hover {
-  background: #fff8d6;
-}
-
-.hint-modal-close:active {
-  background: #e5e7eb;
-}
-
-.hint-modal p {
-  margin: 14px 0 2px;
-  font-size: 1.05rem;
-}
-
-@keyframes hint-backdrop-appear {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes hint-modal-appear {
-  from { opacity: 0; transform: translateY(8px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.answer-key {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 16px 20px;
-  border-radius: 12px;
-  background: rgba(128, 128, 128, 0.12);
-  text-align: left;
-}
-
-.answer-key h2 {
-  margin-top: 0;
-  font-size: 1.2rem;
-}
-
-.answer-key p:last-child {
-  margin-bottom: 0;
-}
-
-.app-shell[data-rotation="90"] .game-layout,
-.app-shell[data-rotation="270"] .game-layout {
-  min-height: calc(100vw - 4rem);
-}
-
-@media only screen and (max-width: 640px) {
-  .game-layout {
-    min-height: calc(100vh - 16px);
-  }
-
-  .game-top-controls {
-    padding-top: 80px;
-  }
-
-  .app-shell[data-rotation="90"] .game-layout,
-  .app-shell[data-rotation="270"] .game-layout {
-    min-height: calc(100vw - 16px);
-  }
-}
+şŠmş&yºŞÃòân¶«Ëñè™æë{Ü™ßì…éez{ì†X§{nÿn)ÿ¦Ã©z¶­Š‰ç¢Ú^®h­µçHÜ›ÛİÂˆ›Ş\Ú^š[™Îˆ›Ü™\‹X›ŞÂˆÚYˆL	NÂˆX^]ÚYˆLÂˆX\™Ú[ˆ]]ÎÂˆY[™Îˆœ™[NÂˆ^X[YÛˆÙ[\ÂŸB‚‹˜\\Ú[ÂˆZ[‹ZZYÚˆLšÂˆ˜[œÙ›Ü›K[ÜšYÚ[ˆÙ[\ˆÙ[\ÂŸB‚‹˜\\Ú[Ù]K\›İ][Û‹]˜[œÚ][ÛH™˜YK[İ]—HÂˆ[š[X][Ûˆ›İ][Û‹Y˜YK[İ]N\ÈX\ÙKZ[ˆ›ÜØ\™ÎÂŸB‚‹˜\\Ú[Ù]K\›İ][Û‹]˜[œÚ][ÛH™˜YKZ[ˆ—HÂˆ[š[X][Ûˆ›İ][Û‹Y˜YKZ[ˆN\ÈX\ÙK[İ]›İÂŸB‚Ù^Yœ˜[Y\È›İ][Û‹Y˜YK[İ]Âˆœ›ÛHÈÜXÚ]NˆNÈBˆÈÈÜXÚ]NˆÈBŸB‚Ù^Yœ˜[Y\È›İ][Û‹Y˜YKZ[ˆÂˆœ›ÛHÈÜXÚ]NˆÈBˆÈÈÜXÚ]NˆNÈBŸB‚YYXH
+™Y™\œË\™YXÙY[[İ[Ûˆ™YXÙJHÂˆ˜\\Ú[Ù]K\›İ][Û‹]˜[œÚ][ÛH™˜YK[İ]—Kˆ˜\\Ú[Ù]K\›İ][Û‹]˜[œÚ][ÛH™˜YKZ[ˆ—HÂˆ[š[X][Û‹Y\˜][Ûˆ[\ÎÂˆBŸB‚‹˜\\Ú[Ù]K\›İ][ÛHL—K‹˜\\Ú[Ù]K\›İ][ÛHŒÌ—HÂˆÜÚ][Ûˆš^YÂˆÜˆL	NÂˆYˆL	NÂˆ›Ş\Ú^š[™Îˆ›Ü™\‹X›ŞÂˆÚYˆLšÂˆZYÚˆLÎÂˆY[™Îˆœ™[NÂˆİ™\™›İÎˆ]]ÎÂŸB‚‹˜\\Ú[Ù]K\›İ][ÛHL—HÂˆ˜[œÙ›Ü›Nˆ˜[œÛ]JML	KML	JH›İ]JLYÊNÂŸB‚‹˜\\Ú[Ù]K\›İ][ÛHŒN—HÂˆÜÚ][Ûˆš^YÂˆ[œÙ]ˆÂˆ›Ş\Ú^š[™Îˆ›Ü™\‹X›ŞÂˆÚYˆLÎÂˆZYÚˆLšÂˆY[™Îˆœ™[NÂˆİ™\™›İÎˆ]]ÎÂˆ˜[œÙ›Ü›Nˆ›İ]JNYÊNÂŸB‚‹˜\\Ú[Ù]K\›İ][ÛHŒÌ—HÂˆ˜[œÙ›Ü›Nˆ˜[œÛ]JML	KML	JH›İ]JÌYÊNÂŸB‚‹™˜XÙK[YK\Z\ˆÂˆÜÚ][Ûˆš^YÂˆ‹Z[™^ˆLÂˆ\Ü^Nˆ›^Âˆ[YÛ‹Z][\ÎˆÙ[\ÂˆØ\ˆÂˆ˜[œÙ›Ü›K[ÜšYÚ[ˆÙ[\ˆÙ[\ÂŸB‚‹™˜XÙK[YK\Z\ˆ]ÛˆÂˆ›Ş\Ú^š[™Îˆ›Ü™\‹X›ŞÂˆZ[‹ZZYÚˆœÂˆY[™ÎˆLÂˆÚ]K\ÜXÙNˆ›İÜ˜\Âˆ›Ü™\ˆ\ÛÛYØNXÙ™LÂˆ˜XÚÙÜ›İ[™XÛÛÜˆÙY™NÂˆÛÛÜˆÌŒÌÙÂˆ›Û]ÙZYÚˆÌÂˆ›Ş\ÚYİÎˆÜÜ™Ø˜JKKKŒŠNÂˆ˜[œÚ][Ûˆ˜XÚÙÜ›İ[™XÛÛÜˆM\ÈX\ÙK›Ş\ÚYİÈM\ÈX\ÙK˜[œÙ›Ü›HL\ÈX\ÙNÂŸB‚‹™˜XÙK[YK\Z\ˆ]Ûšİ™\››İ
+™\ØX›Y
+HÂˆ˜XÚÙÜ›İ[™XÛÛÜˆØÌ™NÎÂˆ›Ş\ÚYİÎˆL™Ø˜JKKKŒŠNÂŸB‚‹™˜XÙK[YK\Z\ˆ]Û˜Xİ]™N››İ
+™\ØX›Y
+HÂˆ˜XÚÙÜ›İ[™XÛÛÜˆÙMYMÙXÂˆ›Ş\ÚYİÎˆ[œÙ]œ™Ø˜JŒM
+NÂˆ˜[œÙ›Ü›Nˆ˜[œÛ]VJ\
+NÂŸB‚‹™˜XÙK[YKX]ÛˆÂˆÚYˆNLÂŸB‚‹œİX›Z]X]ÛˆÂˆÚYˆLÂŸB‚‹œİX›Z]X]Û™\ØX›YÂˆÛÛÜˆÍÍÍÎÂˆİ\œÛÜˆ›İX[İÙYÂŸB‚‹™˜XÙK[YK\Z\ˆ]Û™›Øİ\Ë]š\ÚX›K‹™Ø[YKXÛÛ›ÛX]Û™›Øİ\Ë]š\ÚX›K‹š[[[Ù[XÛÜÙN™›Øİ\Ë]š\ÚX›HÂˆİ][™NˆÜÛÛYÌÎMÙ˜LÂˆİ][™K[Ù™œÙ]ˆœÂŸB‚‹™˜XÙK[YK]Ü™˜XÙK[YKX]Û‹‹™˜XÙK[YK\šYÚ™˜XÙK[YKX]Û‹‹™˜XÙK[YK[Y™˜XÙK[YKX]ÛˆÂˆÜ™\ˆÂŸB‚‹™˜XÙK[YK]ÜœİX›Z]X]Û‹‹™˜XÙK[YK\šYÚœİX›Z]X]Û‹‹™˜XÙK[YK[YœİX›Z]X]ÛˆÂˆÜ™\ˆNÂŸB‚‹™˜XÙK[YK]ÜÂˆ\Ü^Nˆ›Û™NÂˆÜˆÌÂˆYˆL	NÂˆ˜[œÙ›Ü›Nˆ˜[œÛ]V
+ML	JNÂŸB‚‹™˜XÙK[YK\šYÚÂˆÜˆL	NÂˆYˆØ[ÊL	HHMœ
+NÂˆ˜[œÙ›Ü›Nˆ˜[œÛ]JML	KML	JH›İ]JLYÊNÂŸB‚‹™˜XÙK[YKX›İÛHÂˆ›İÛNˆÌÂˆYˆL	NÂˆ˜[œÙ›Ü›Nˆ˜[œÛ]V
+ML	JNÂŸB‚‹™˜XÙK[YK]Ü˜]Û‹[X™[‹™˜XÙK[YK\šYÚ˜]Û‹[X™[‹™˜XÙK[YK[Y˜]Û‹[X™[Âˆ\Ü^Nˆ[›[™KX›ØÚÎÂˆ˜[œÙ›Ü›Nˆ›İ]JNYÊNÂŸB‚‹™˜XÙK[YK[YÂˆÜˆL	NÂˆYˆMœÂˆ˜[œÙ›Ü›Nˆ˜[œÛ]JML	KML	JH›İ]JNLYÊNÂŸB‚YYXHÛ›HØÜ™Y[ˆ[™
+X^]ÚYˆ
+HÂˆÜ›ÛİÂˆY[™ÎˆÂˆB‚ˆ™Ø[YK[^[İ]ÂˆZ[‹ZZYÚˆØ[ÊLšHMœ
+NÂˆB‚ˆ˜\\Ú[Ù]K\›İ][ÛHL—Kˆ˜\\Ú[Ù]K\›İ][ÛHŒN—Kˆ˜\\Ú[Ù]K\›İ][ÛHŒÌ—HÂˆY[™ÎˆÂˆBŸB‚‹˜Ø\™ÂˆY[™Îˆ™[NÂŸB‚‹™›ÛİY\ØÛZ[Y\ˆÂˆÛÛÜˆÎÂŸB‚‹ÙX‹\ÙX\˜ÚÂˆ\Ü^Nˆ›^ÂˆØ\ˆÂˆÚYˆZ[ŠL	KŒ
+NÂˆX\™Ú[ˆ]]ÈŒÂŸB‚‹ÙX‹\ÙX\˜Ú[œ]Âˆ›Ş\Ú^š[™Îˆ›Ü™\‹X›ŞÂˆ›^ˆNÂˆZ[‹]ÚYˆÂˆZ[‹ZZYÚˆœÂˆY[™ÎˆLœÂˆ›Ü™\ˆ\ÛÛYÎNNNÂˆ›Ü™\‹\˜Y]\ÎˆÂˆ›Ûˆ[š\š]ÂŸB‚‹ÙX‹\ÙX\˜Ú]ÛˆÂˆZ[‹ZZYÚˆœÂˆY[™ÎˆNÂŸB‚‹™Xİ[Û˜\K\™\İ[ÈÂˆ›Ş\Ú^š[™Îˆ›Ü™\‹X›ŞÂˆÚYˆZ[ŠL	KŒ
+NÂˆX^ZZYÚˆšÂˆİ™\™›İË^Nˆ]]ÎÂˆX\™Ú[ˆ]]ÈŒÂˆY[™ÎˆMœŒÂˆ›Ü™\‹\˜Y]\ÎˆLœÂˆ˜XÚÙÜ›İ[™ˆ™Ø˜JLLLŒLŠNÂˆ^X[YÛˆYÂŸB‚‹™Xİ[Û˜\K\™\İ[ËZXY[™ÈÂˆ\Ü^Nˆ›^Âˆ[YÛ‹Z][\ÎˆÙ[\Âˆ\İYKXÛÛ[ˆÜXÙKX™]ÙY[ÂˆØ\ˆLœÂŸB‚‹™Xİ[Û˜\K\™\İ[ËZXY[™ÈˆÂˆX\™Ú[ˆÂˆİ™\™›İË]Ü˜\ˆ[]Ú\™NÂˆ›Û\Ú^™NˆKŒœ™[NÂŸB‚‹™Xİ[Û˜\KXÛÜÙHÂˆZ[‹]ÚYˆÍœÂˆZ[‹ZZYÚˆÍœÂˆ›Û\Ú^™NˆKŒ\™[NÂŸB‚‹™Xİ[Û˜\KY[HÈÂˆX\™Ú[‹X›İÛNˆŒ\™[NÂˆ›Û\Ú^™Nˆ\™[NÂˆ^]˜[œÙ›Ü›NˆØ\][^™NÂŸB‚‹™Xİ[Û˜\KY[HÛÂˆX\™Ú[‹]ÜˆŒ\™[NÂˆY[™Ë[YˆK\™[NÂŸB‚‹™Xİ[Û˜\KY[HHÂˆX\™Ú[ˆ\™[HÂŸB‚‹™Xİ[Û˜\KY^[\HÂˆX\™Ú[ˆŒ\™[HÂˆÛÛÜˆÍÂˆ›Û\İ[Nˆ][XÎÂŸB‚‹™Xİ[Û˜\K\Ûİ\˜ÙHÂˆX\™Ú[‹X›İÛNˆÂˆÛÛÜˆÍÂˆ›Û\Ú^™Nˆ\™[NÂŸB‚‹›Y\œšX[K]ÙXœİ\‹\Ûİ\˜ÙHÂˆ\Ü^Nˆ›^Âˆ[YÛ‹Z][\ÎˆÙ[\ÂˆØ\ˆLÂŸB‚‹›Y\œšX[K]ÙXœİ\‹\Ûİ\˜ÙH[YÈÂˆ\Ü^Nˆ›ØÚÎÂˆ›Ü™\‹\˜Y]\ÎˆL	NÂŸB‚‹™Ø[YKZ[œİXİ[ÛˆÂˆ›Û]ÙZYÚˆŒÂŸB‚‹˜\\Ú[ˆK‹˜\\Ú[ˆÙX‹\ÙX\˜Ú‹˜\\Ú[ˆ™Xİ[Û˜\K\™\İ[Ë‹˜\\Ú[ˆ™›ÛİY\ØÛZ[Y\‹‹œ^›KXÛİ[\‹‹™Ø[YKZ[œİXİ[Û››İ
+™Ø[YK\™\İ[
+HÂˆ\Ü^Nˆ›Û™NÂŸB‚‹™Ø[YK[^[İ]Âˆ\Ü^Nˆ›^Âˆ›^Y\™Xİ[ÛˆÛÛ[[ÂˆZ[‹ZZYÚˆØ[ÊLšH™[JNÂŸB‚‹™Ø[YK]ÜXÛÛ›ÛÈÂˆ\Ü^Nˆ›^Âˆ›^]Ü˜\ˆÜ˜\Âˆ[YÛ‹Z][\ÎˆÙ[\Âˆ\İYKXÛÛ[ˆÙ[\ÂˆØ\ˆLœŒÂˆÚYˆL	NÂˆ›Ş\Ú^š[™Îˆ›Ü™\‹X›ŞÂˆY[™Ë]ÜˆÂŸB‚‹›Z\İZÙ\Ë\™[XZ[š[™ÈÂˆX\™Ú[ˆÂˆY[™ÎˆLœÂˆ›Û\Ú^™NˆKŒM\™[NÂˆ›Û]ÙZYÚˆÌÂˆÚ]K\ÜXÙNˆ›İÜ˜\ÂŸB‚‹˜›Ø\™\İYÙHÂˆ\Ü^NˆÜšYÂˆ›^ˆH]]ÎÂˆXÙKZ][\ÎˆÙ[\ÂˆÚYˆL	NÂˆY[™ÎˆMœÂŸB‚‹œ^›KXÛİ[\ˆÂˆY[™Îˆ\™[NÂˆÛÛÜˆÍÍÍÎÂˆ›Û\Ú^™Nˆ\™[NÂˆ›Û]ÙZYÚˆŒÂŸB‚‹™Ø[YKXÛÛ›ÛÈÂˆ\Ü^Nˆ›^Âˆ›^]Ü˜\ˆÜ˜\Âˆ\İYKXÛÛ[ˆÙ[\ÂˆØ\ˆMœÂˆ›İËYØ\ˆMÂˆX^]ÚYˆÍŒÂˆX\™Ú[ˆ]]ÎÂŸB‚‹™Ø[YKXÛÛ›ÛÈ]ÛˆÂˆZ[‹ZZYÚˆœÂŸB‚‹™Ø[YKXÛÛ›ÛÈ™Ø[YKXÛÛ›ÛX]ÛˆÂˆZ[‹]ÚYˆLÂˆY[™Îˆ\MœÂˆ›Ü™\ˆ\ÛÛYÙM™NÂˆ˜XÚÙÜ›İ[™XÛÛÜˆÙ™™ŒXÂˆÛÛÜˆÍLMLYÂˆ›Û]ÙZYÚˆÌÂˆ›Ş\ÚYİÎˆÜÜ™Ø˜JLK‹KŒŠNÂˆ˜[œÚ][Ûˆ˜XÚÙÜ›İ[™XÛÛÜˆM\ÈX\ÙK›Ş\ÚYİÈM\ÈX\ÙK˜[œÙ›Ü›HL\ÈX\ÙNÂŸB‚‹™Ø[YKXÛÛ›ÛÈ™Ø[YKXÛÛ›ÛX]Ûšİ™\››İ
+™\ØX›Y
+HÂˆ˜XÚÙÜ›İ[™XÛÛÜˆÙ™™Âˆ›Ş\ÚYİÎˆL™Ø˜JLK‹KŒJNÂŸB‚‹™Ø[YKXÛÛ›ÛÈ™Ø[YKXÛÛ›ÛX]Û˜Xİ]™N››İ
+™\ØX›Y
+HÂˆ˜XÚÙÜ›İ[™XÛÛÜˆÙMYMÙXÂˆ›Ş\ÚYİÎˆ[œÙ]œ™Ø˜JŒM
+NÂˆ˜[œÙ›Ü›Nˆ˜[œÛ]VJ\
+NÂŸB‚‹™Ø[YKXÛÛ›ÛÈ™Ø[YKXÛÛ›ÛX]Û™\ØX›YÂˆÛÛÜˆÎ˜Âˆİ\œÛÜˆ›İX[İÙYÂŸB‚‹›Z\İZÙKYİÂˆ\Ü^Nˆ[›[™KX›ØÚÎÂˆX\™Ú[‹[YˆÂˆÛÛÜˆÌØNÂˆ›Û\Ú^™NˆKŒÍY[NÂˆ[™KZZYÚˆNÂŸB‚‹š[[[Ù[X˜XÚÙ›ÜÂˆÜÚ][Ûˆš^YÂˆ‹Z[™^ˆŒÂˆ[œÙ]ˆÂˆ\Ü^NˆÜšYÂˆXÙKZ][\ÎˆÙ[\Âˆ›Ş\Ú^š[™Îˆ›Ü™\‹X›ŞÂˆY[™ÎˆŒÂˆ˜XÚÙÜ›İ[™ˆ™Ø˜JNËÍ
+NÂˆ[š[X][Ûˆ[X˜XÚÙ›ÜX\X\ˆML\ÈX\ÙK[İ]ÂŸB‚‹š[[[Ù[Âˆ›Ş\Ú^š[™Îˆ›Ü™\‹X›ŞÂˆÚYˆZ[ŠŒL	JNÂˆY[™ÎˆŒŒœÂˆ›Ü™\ˆ\ÛÛY™Ø˜JŒLŠNÂˆ›Ü™\‹\˜Y]\ÎˆMœÂˆ˜XÚÙÜ›İ[™ˆÙ™™™NÂˆÛÛÜˆÌLÌÌØNÂˆ›Ş\ÚYİÎˆMœ™Ø˜JŒ
+NÂˆ^X[YÛˆYÂˆ[š[X][Ûˆ[[[Ù[X\X\ˆN\ÈX\ÙK[İ]ÂŸB‚‹š[[[Ù[ZXY[™ÈÂˆ\Ü^Nˆ›^Âˆ[YÛ‹Z][\ÎˆÙ[\Âˆ\İYKXÛÛ[ˆÜXÙKX™]ÙY[ÂˆØ\ˆMœÂŸB‚‹š[[[Ù[ZXY[™ÈˆÂˆX\™Ú[ˆÂˆ›Û\Ú^™NˆKŒ\™[NÂŸB‚‹š[[[Ù[XÛÜÙHÂˆ\Ü^NˆÜšYÂˆXÙKZ][\ÎˆÙ[\ÂˆÚYˆÎÂˆZ[‹]ÚYˆÎÂˆZYÚˆÎÂˆY[™ÎˆÂˆ›Ü™\ˆ\ÛÛYÙM™NÂˆ›Ü™\‹\˜Y]\ÎˆL	NÂˆ˜XÚÙÜ›İ[™ˆÙ™™ŒXÂˆÛÛÜˆÍLMLYÂˆ›Û\Ú^™NˆK\™[NÂˆ[™KZZYÚˆNÂˆ›Ş\ÚYİÎˆœ\™Ø˜JLK‹KŒMŠNÂˆİ\œÛÜˆÚ[\ÂŸB‚‹š[[[Ù[XÛÜÙNšİ™\ˆÂˆ˜XÚÙÜ›İ[™ˆÙ™™ÂŸB‚‹š[[[Ù[XÛÜÙN˜Xİ]™HÂˆ˜XÚÙÜ›İ[™ˆÙMYMÙXÂŸB‚‹š[[[Ù[ÂˆX\™Ú[ˆMœÂˆ›Û\Ú^™NˆKŒ\™[NÂŸB‚Ù^Yœ˜[Y\È[X˜XÚÙ›ÜX\X\ˆÂˆœ›ÛHÈÜXÚ]NˆÈBˆÈÈÜXÚ]NˆNÈBŸB‚Ù^Yœ˜[Y\È[[[Ù[X\X\ˆÂˆœ›ÛHÈÜXÚ]NˆÈ˜[œÙ›Ü›Nˆ˜[œÛ]VJ
+HØØ[JN
+NÈBˆÈÈÜXÚ]NˆNÈ˜[œÙ›Ü›Nˆ˜[œÛ]VJ
+HØØ[JJNÈBŸB‚‹˜[œİÙ\‹ZÙ^HÂˆX^]ÚYˆŒÂˆX\™Ú[ˆŒ]]ÎÂˆY[™ÎˆMœŒÂˆ›Ü™\‹\˜Y]\ÎˆLœÂˆ˜XÚÙÜ›İ[™ˆ™Ø˜JLLLŒLŠNÂˆ^X[YÛˆYÂŸB‚‹˜[œİÙ\‹ZÙ^HˆÂˆX\™Ú[‹]ÜˆÂˆ›Û\Ú^™NˆKŒœ™[NÂŸB‚‹˜[œİÙ\‹ZÙ^H›\İXÚ[ÂˆX\™Ú[‹X›İÛNˆÂŸB‚‹˜\\Ú[Ù]K\›İ][ÛHL—H™Ø[YK[^[İ]‹˜\\Ú[Ù]K\›İ][ÛHŒÌ—H™Ø[YK[^[İ]ÂˆZ[‹ZZYÚˆØ[ÊLÈH™[JNÂŸB‚YYXHÛ›HØÜ™Y[ˆ[™
+X^]ÚYˆ
+HÂˆ™Ø[YK[^[İ]ÂˆZ[‹ZZYÚˆØ[ÊLšHMœ
+NÂˆB‚ˆ™Ø[YK]ÜXÛÛ›ÛÈÂˆY[™Ë]ÜˆÂˆB‚ˆ˜\\Ú[Ù]K\›İ][ÛHL—H™Ø[YK[^[İ]ˆ˜\\Ú[Ù]K\›İ][ÛHŒÌ—H™Ø[YK[^[İ]ÂˆZ[‹ZZYÚˆØ[ÊLÈHMœ
+NÂˆBŸB

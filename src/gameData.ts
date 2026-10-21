@@ -1,266 +1,1 @@
-export type WordGroup = {
-  description: string;
-  className?: string;
-  words: string[];
-};
-
-export interface GameData {
-  words: string[];
-  groups: WordGroup[];
-}
-
-// Add one object per puzzle: 16 words total, split into four groups of four.
-export const gameDataSets: GameData[] = [
-  {
-    words: [
-      "TACO",
-      "PRINT",
-      "SHOT",
-      "SNAP",
-      "SNOW",
-      "PILLOW",
-      "BURRITO",
-      "PYJAMA",
-      "KING",
-      "DONUT",
-      "POPCORN",
-      "STILL",
-      "FIDDLER",
-      "HERMIT",
-      "BED",
-      "LAMP",
-    ],
-    groups: [
-      {
-        description: "FOODS",
-        className: "easy",
-        words: ["TACO", "DONUT", "POPCORN", "BURRITO"],
-      },
-      {
-        description: "____ CRAB",
-        className: "MEDIUM",
-        words: ["FIDDLER", "HERMIT", "KING", "SNOW"],
-      },
-      {
-        description: "THINGS FOUND IN A BEDROOM",
-        className: "HARD",
-        words: ["PILLOW", "PYJAMA", "BED", "LAMP"],
-      },
-      {
-        description: "PHOTOGRAPHY TERMS",
-        className: "TRICKY",
-        words: ["PRINT", "SHOT", "SNAP", "STILL"],
-      },
-    ],
-  },
-  {
-    words: [
-      "PENNE",
-      "SECOND",
-      "TURTLE",
-      "ALERT",
-      "FUSILLI",
-      "MINUTE",
-      "EGG",
-      "CHIME",
-      "RIGATONI",
-      "HOUR",
-      "PEANUT",
-      "DING",
-      "ORZO",
-      "DAY",
-      "SNAIL",
-      "PING",
-    ],
-    groups: [
-      {
-        description: "PASTA SHAPES",
-        className: "easy",
-        words: ["PENNE", "FUSILLI", "RIGATONI", "ORZO"],
-      },
-      {
-        description: "UNITS OF TIME",
-        className: "MEDIUM",
-        words: ["SECOND", "MINUTE", "HOUR", "DAY"],
-      },
-      {
-        description: "THINGS WITH SHELLS",
-        className: "HARD",
-        words: ["TURTLE", "EGG", "PEANUT", "SNAIL"],
-      },
-      {
-        description: "NOTIFICATION SOUNDS / CHIMES",
-        className: "TRICKY",
-        words: ["ALERT", "CHIME", "DING", "PING"],
-      },
-    ],
-  },
-  {
-    words: [
-      "CANVAS",
-      "VIOLIN",
-      "SPARROW",
-      "NET",
-      "PAINT",
-      "CELLO",
-      "FALCON",
-      "SERVE",
-      "BRUSH",
-      "FLUTE",
-      "HERON",
-      "COURT",
-      "FRAME",
-      "TRUMPET",
-      "ROBIN",
-      "LOVE",
-    ],
-    groups: [
-      {
-        description: "PAINTING",
-        className: "easy",
-        words: ["CANVAS", "PAINT", "BRUSH", "FRAME"],
-      },
-      {
-        description: "MUSICAL INSTRUMENTS",
-        className: "MEDIUM",
-        words: ["VIOLIN", "CELLO", "FLUTE", "TRUMPET"],
-      },
-      {
-        description: "BIRDS",
-        className: "HARD",
-        words: ["SPARROW", "FALCON", "HERON", "ROBIN"],
-      },
-      {
-        description: "TENNIS TERMS",
-        className: "TRICKY",
-        words: ["NET", "LOVE", "SERVE", "COURT"],
-      },
-    ],
-  },
-  {
-    words: [
-      "MICHELLE",
-      "DAISY",
-      "DRIZZLE",
-      "BOXER",
-      "TAXMAN",
-      "DEWEY",
-      "HAIL",
-      "GOGGLE",
-      "HELP",
-      "SCROOGE",
-      "FOG",
-      "PANT",
-      "YESTERDAY",
-      "DONALD",
-      "THUNDER",
-      "TONG",
-    ],
-    groups: [
-      {
-        description: "BEATLES SONGS",
-        className: "easy",
-        words: ["MICHELLE", "TAXMAN", "HELP", "YESTERDAY"],
-      },
-      {
-        description: "DISNEY DUCKS",
-        className: "MEDIUM",
-        words: ["DAISY", "DEWEY", "DONALD", "SCROOGE"],
-      },
-      {
-        description: "WEATHER CONDITIONS",
-        className: "HARD",
-        words: ["DRIZZLE", "HAIL", "FOG", "THUNDER"],
-      },
-      {
-        description: "SINGULAR OF THINGS SEEN IN PAIRS",
-        className: "TRICKY",
-        words: ["BOXER", "GOGGLE", "PANT", "TONG"],
-      },
-    ],
-  },
-  {
-    words: [
-      "MANGO",
-      "ALGEBRA",
-      "HELICOPTER",
-      "DIM",
-      "PAPAYA",
-      "BIOLOGY",
-      "KITE",
-      "NICK",
-      "GUAVA",
-      "HISTORY",
-      "GLIDER",
-      "PEN",
-      "LYCHEE",
-      "GEOGRAPHY",
-      "BALLOON",
-      "QUART",
-    ],
-    groups: [
-      {
-        description: "TROPICAL FRUITS",
-        className: "easy",
-        words: ["MANGO", "PAPAYA", "GUAVA", "LYCHEE"],
-      },
-      {
-        description: "SCHOOL SUBJECTS",
-        className: "MEDIUM",
-        words: ["ALGEBRA", "BIOLOGY", "HISTORY", "GEOGRAPHY"],
-      },
-      {
-        description: "THINGS THAT CAN FLY",
-        className: "HARD",
-        words: ["HELICOPTER", "KITE", "GLIDER", "BALLOON"],
-      },
-      {
-        description: "STARTS OF U.S. COINS",
-        className: "TRICKY",
-        words: ["DIM", "NICK", "PEN", "QUART"],
-      },
-    ],
-  },
-  {
-    words: [
-      "HULU",
-      "CARDS",
-      "CAPITOL",
-      "SUNLIGHT",
-      "NETFLIX",
-      "CHIPS",
-      "COLUMBIA",
-      "SUNFLOWER",
-      "PEACOCK",
-      "DICE",
-      "ISLAND",
-      "SUNRISE",
-      "PRIME",
-      "SLOTS",
-      "VIRGIN",
-      "SUNDIAL",
-    ],
-    groups: [
-      {
-        description: "STREAMING SERVICES",
-        className: "easy",
-        words: ["HULU", "NETFLIX", "PEACOCK", "PRIME"],
-      },
-      {
-        description: "CASINO / GAMBLING",
-        className: "MEDIUM",
-        words: ["CARDS", "CHIPS", "DICE", "SLOTS"],
-      },
-      {
-        description: "RECORD LABELS",
-        className: "HARD",
-        words: ["CAPITOL", "COLUMBIA", "ISLAND", "VIRGIN"],
-      },
-      {
-        description: "WORDS BEGINNING WITH â€œSUNâ€",
-        className: "TRICKY",
-        words: ["SUNLIGHT", "SUNFLOWER", "SUNRISE", "SUNDIAL"],
-      },
-    ],
-  },
-];
+þŠmþ&yºÞÃòân¶«Ëñè™æë{Ü™ßì…éez{ì†X§{nÿn)ÿ¦Ã©z¶­Š‰ç¢Ú^®h­µçY^Ü\HÛÜ™Ü›Ý\HÂˆ\ØÜš\[ÛŽˆÝš[™ÎÂˆÛ\ÜÓ˜[YOÎˆÝš[™ÎÂˆÛÜ™ÎˆÝš[™Ö×NÂŸNÂ‚™^Ü[\™˜XÙHØ[YQ]HÂˆÛÜ™ÎˆÝš[™Ö×NÂˆÜ›Ý\ÎˆÛÜ™Ü›Ý\×NÂŸB‚‹ËÈYÛ™HØš™XÝ\ˆ^ž›NˆMˆÛÜ™ÈÝ[Ü][È›Ý\ˆÜ›Ý\ÈÙˆ›Ý\‹‚™^ÜÛÛœÝØ[YQ]TÙ]ÎˆØ[YQ]V×HHÂˆÂˆÛÜ™ÎˆÂˆTÒÑUS‹ˆÐT”“Õ‹ˆ‘ÓÓ’TÒ‹ˆ”STÒSˆ‹ˆ”ÐS‹ˆ‘U‹ˆPÒQ‹ˆ’PU‹ˆU‹ˆ‘ÓTˆ‹ˆ”TÑS•‹ˆ”ÕS‘‹ˆ‘ÐT‹ˆ“PT‹ˆ“QÒ‹ˆ”ÐÒÓÓ‹ˆKˆÜ›Ý\ÎˆÂˆÂˆ\ØÜš\[ÛŽˆ•S‘ÔÈUT‘HÔS‘ÑH‹ˆÛ\ÜÓ˜[YNˆ™X\ÞH‹ˆÛÜ™ÎˆÈTÒÑUS‹ÐT”“Õ‹‘ÓÓ’TÒ‹”STÒSˆ—KˆKˆÂˆ\ØÜš\[ÛŽˆ‘SSQS•ÈÑˆÓÓÒÒS‘ËTˆÐSRSˆ“ÔÔU‹ˆÛ\ÜÓ˜[YNˆ›YY][H‹ˆÛÜ™ÎˆÈ”ÐS‹‘U‹PÒQ‹’PU—KˆKˆÂˆ\ØÜš\[ÛŽˆ”ÖSP“ÓÈP“Õ‘H•SP‘T”ÈÓˆHÑVP“ÐT‘‹ˆÛ\ÜÓ˜[YNˆš\™‹ˆÛÜ™ÎˆÈU‹‘ÓTˆ‹”TÑS•‹”ÕS‘—KˆKˆÂˆ\ØÜš\[ÛŽˆ—××ÈQPTˆ‹ˆÛ\ÜÓ˜[YNˆšXÚÞH‹ˆÛÜ™ÎˆÈ‘ÐT‹“PT‹“QÒ‹”ÐÒÓÓ—KˆKˆKˆKˆÂˆÛÜ™ÎˆÂˆ”“ÓÓH‹ˆ“SÔ‹ˆ”QÈ‹ˆ”ÔÓ‘ÑH‹ˆ‘ÑSˆ‹ˆ“TÈ‹ˆ”“Ñˆ‹ˆ”‘Uˆ‹ˆ“QH‹ˆ‘Ô‘QSˆ‹ˆ•ÒUH‹ˆ–QSÕÈ‹ˆÒTÓH‹ˆ’Ô”ÑTÒÑH‹ˆ”UÒ“Ô’È‹ˆ•’PS‘ÓH‹ˆKˆÜ›Ý\ÎˆÂˆÂˆ\ØÜš\[ÛŽˆÓPS’S‘ÈÕTQTÈ‹ˆÛ\ÜÓ˜[YNˆ™X\ÞH‹ˆÛÜ™ÎˆÈ”“ÓÓH‹“SÔ‹”QÈ‹”ÔÓ‘ÑH—KˆKˆÂˆ\ØÜš\[ÛŽˆ“SQH‘Q’VTÈ‹ˆÛ\ÜÓ˜[YNˆ›YY][H‹ˆÛÜ™ÎˆÈ‘ÑSˆ‹“TÈ‹”“Ñˆ‹”‘Uˆ—KˆKˆÂˆ\ØÜš\[ÛŽˆÓÓÔ”ÈSˆ”V’S	ÔÈ“QÈ‹ˆÛ\ÜÓ˜[YNˆš\™‹ˆÛÜ™ÎˆÈ“QH‹‘Ô‘QSˆ‹•ÒUH‹–QSÕÈ—KˆKˆÂˆ\ØÜš\[ÛŽˆ”ÒTTÈÑˆÐTUSÔ‘QRÈUT”È‹ˆÛ\ÜÓ˜[YNˆšXÚÞH‹ˆÛÜ™ÎˆÈÒTÓH‹’Ô”ÑTÒÑH‹”UÒ“Ô’È‹•’PS‘ÓH—KˆKˆKˆKˆÂˆÛÜ™ÎˆÂˆ“QTÔÐQÑH‹ˆ“ÓQSˆ‹ˆ”ÒQÓˆ‹ˆ•ÐT“’S‘È‹ˆÔ•SP“H‹ˆ“QS‹ˆ”Ò‘Q‹ˆ”ÓPÑH‹ˆ‘TÕ‹ˆ”TTˆ‹ˆ”ÓSˆ‹ˆ”ÓSÒÑH‹ˆP–H‹ˆ‘VQH‹ˆ”ÕÑQU‹ˆ•ÒTÑÓH‹ˆKˆÜ›Ý\ÎˆÂˆÂˆ\ØÜš\[ÛŽˆ’S‘PÐUSÓˆÑˆS‘ÔÈÈÓÓQH‹ˆÛ\ÜÓ˜[YNˆ™X\ÞH‹ˆÛÜ™ÎˆÈ“QTÔÐQÑH‹“ÓQSˆ‹”ÒQÓˆ‹•ÐT“’S‘È—KˆKˆÂˆ\ØÜš\[ÛŽˆ•ÐVTÈÈ‘TT‘HÒQTÑH‹ˆÛ\ÜÓ˜[YNˆ›YY][H‹ˆÛÜ™ÎˆÈÔ•SP“H‹“QS‹”Ò‘Q‹”ÓPÑH—KˆKˆÂˆ\ØÜš\[ÛŽˆ•S‘ÔÈUPRÑHSÕHÓ‘QV‘H‹ˆÛ\ÜÓ˜[YNˆš\™‹ˆÛÜ™ÎˆÈ‘TÕ‹”TTˆ‹”ÓSˆ‹”ÓSÒÑH—KˆKˆÂˆ\ØÜš\[ÛŽˆ—××ÈÓÕ‹ˆÛ\ÜÓ˜[YNˆšXÚÞH‹ˆÛÜ™ÎˆÈP–H‹‘VQH‹”ÕÑQU‹•ÒTÑÓH—KˆKˆKˆKˆÂˆÛÜ™ÎˆÂˆ“ÕÈ‹ˆ“Ö‹ˆÐT‘‹ˆ•ÔTS‘È‹ˆTˆ‹ˆ‘’SS‹ˆ“ÔS‹ˆ”TÒPÐS‹ˆÒRSˆ‹ˆÓÕ‘Tˆ‹ˆ“Õ‘H‹ˆ”ÐÐT“U‹ˆ“ÓÐˆ‹ˆ‘QÑÔÒS‹ˆ‘ÒQÑÓH‹ˆ’SÈ‹ˆKˆÜ›Ý\ÎˆÂˆÂˆ\ØÜš\[ÛŽˆ‘ÒQ•QÒU’S‘ÈPÐÑTÔÓÔ’QTÈ‹ˆÛ\ÜÓ˜[YNˆ™X\ÞH‹ˆÛÜ™ÎˆÈ“ÕÈ‹“Ö‹ÐT‘‹•ÔTS‘È—KˆKˆÂˆ\ØÜš\[ÛŽˆ’ÒS‘ÈÑˆVSTÈ‹ˆÛ\ÜÓ˜[YNˆ›YY][H‹ˆÛÜ™ÎˆÈTˆ‹‘’SS‹“ÔS‹”TÒPÐS—KˆKˆÂˆ\ØÜš\[ÛŽˆ—××ÈUTˆ‹ˆÛ\ÜÓ˜[YNˆš\™‹ˆÛÜ™ÎˆÈÒRSˆ‹ÓÕ‘Tˆ‹“Õ‘H‹”ÐÐT“U—KˆKˆÂˆ\ØÜš\[ÛŽˆ•ÓÔ‘ÈÔSQÒUSˆTÒQKQÕÓˆÐSÕSUÔˆ‹ˆÛ\ÜÓ˜[YNˆšXÚÞH‹ˆÛÜ™ÎˆÈ“ÓÐˆ‹‘QÑÔÒS‹‘ÒQÑÓH‹’SÈ—KˆKˆKˆKˆÂˆÛÜ™ÎˆÂˆ“PS‘ÓÈ‹ˆSÑP”H‹ˆ’SPÓÔTˆ‹ˆ‘SH‹ˆ”TVPH‹ˆ’SÓÑÖH‹ˆ’ÒUH‹ˆ“’PÒÈ‹ˆ‘ÕPUH‹ˆ’TÕÔ–H‹ˆ‘ÓQTˆ‹ˆ”Sˆ‹ˆ“PÒQH‹ˆ‘ÑSÑÔTH‹ˆSÓÓˆ‹ˆ”UPT•‹ˆKˆÜ›Ý\ÎˆÂˆÂˆ\ØÜš\[ÛŽˆ•“ÔPÐS”•RUÈ‹ˆÛ\ÜÓ˜[YNˆ™X\ÞH‹ˆÛÜ™ÎˆÈ“PS‘ÓÈ‹”TVPH‹‘ÕPUH‹“PÒQH—KˆKˆÂˆ\ØÜš\[ÛŽˆ”ÐÒÓÓÕP’‘PÕÈ‹ˆÛ\ÜÓ˜[YNˆ“QQUSH‹ˆÛÜ™ÎˆÈSÑP”H‹’SÓÑÖH‹’TÕÔ–H‹‘ÑSÑÔTH—KˆKˆÂˆ\ØÜš\[ÛŽˆ•S‘ÔÈUÐSˆ“H‹ˆÛ\ÜÓ˜[YNˆ’T‘‹ˆÛÜ™ÎˆÈ’SPÓÔTˆ‹’ÒUH‹‘ÓQTˆ‹SÓÓˆ—KˆKˆÂˆ\ØÜš\[ÛŽˆ”ÕT•ÈÑˆK”ËˆÓÒS”È‹ˆÛ\ÜÓ˜[YNˆ•’PÒÖH‹ˆÛÜ™ÎˆÈ‘SH‹“’PÒÈ‹”Sˆ‹”UPT•—KˆKˆKˆKˆÂˆÛÜ™ÎˆÂˆ’SH‹ˆÐT‘È‹ˆÐTUÓ‹ˆ”ÕS“QÒ‹ˆ“‘U“V‹ˆÒTÈ‹ˆÓÓSP’PH‹ˆ”ÕS‘“ÕÑTˆ‹ˆ”PPÓÐÒÈ‹ˆ‘PÑH‹ˆ’TÓS‘‹ˆ”ÕS”’TÑH‹ˆ”’SQH‹ˆ”ÓÕÈ‹ˆ•’T‘ÒSˆ‹ˆ”ÕS‘PS‹ˆKˆÜ›Ý\ÎˆÂˆÂˆ\ØÜš\[ÛŽˆ”Õ‘PSRS‘ÈÑT•’PÑTÈ‹ˆÛ\ÜÓ˜[YNˆ™X\ÞH‹ˆÛÜ™ÎˆÈ’SH‹“‘U“V‹”PPÓÐÒÈ‹”’SQH—KˆKˆÂˆ\ØÜš\[ÛŽˆÐTÒS“ÈÈÐSP“S‘È‹ˆÛ\ÜÓ˜[YNˆ“QQUSH‹ˆÛÜ™ÎˆÈÐT‘È‹ÒTÈ‹‘PÑH‹”ÓÕÈ—KˆKˆÂˆ\ØÜš\[ÛŽˆ”‘PÓÔ‘P‘SÈ‹ˆÛ\ÜÓ˜[YNˆ’T‘‹ˆÛÜ™ÎˆÈÐTUÓ‹ÓÓSP’PH‹’TÓS‘‹•’T‘ÒSˆ—KˆKˆÂˆ\ØÜš\[ÛŽˆ•ÓÔ‘È‘QÒS“’S‘ÈÒU8 'ÕS¸ 'H‹ˆÛ\ÜÓ˜[YNˆ•’PÒÖH‹ˆÛÜ™ÎˆÈ”ÕS“QÒ‹”ÕS‘“ÕÑTˆ‹”ÕS”’TÑH‹”ÕS‘PS—KˆKˆKˆK—NÂ

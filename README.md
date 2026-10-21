@@ -1,11 +1,1 @@
-# Connections Game
-
-A personal Connections-style word game.
-
-## Run locally
-
-Double-click `Start Connections Game.command`.
-
-## Dictionary
-
-For local Merriam-Webster lookup, add `MW_COLLEGIATE_API_KEY` to `.env.local`. GitHub Pages uses Wiktionary.
+юЉmю&yєЮГтвn¶«Лси™жл{Ь™Ям…йez{м†X§{nяn)я¦Г©z¶­Љ‰зўЪ^®h­µзHИЫЫ›™XЭ[ЫњИШ[YB‚ђH\њЫЫ[ЫЫ›™XЭ[ЫњЛ\Э[HЫЬ™Ш[YK‚‚€ИИќ[€ШШ[B‚‘ЭX›KXЫXЪИЭ\ќЫЫ›™XЭ[ЫњИШ[YKЫЫ[X[™‚‚€ИИXЭ[Ы\ћB‚‘›Ь€ШШ[Y\њљX[KUЩXњЭ\€ЫЪЭ\YUЧРУУQТPUWРTWТСVXИ™[ќ‹›ШШ[€Ъ]X€YЩ\И\Щ\ИЪZЭ[Ы\ћK‚

@@ -77,6 +77,8 @@ const mergeWiktionaryEntries = (entryGroups: DictionaryEntry[][]): DictionaryEnt
   return Array.from(merged.values()).filter((entry) => entry.definitions?.length);
 };
 
+const ROTATION_FADE_DURATION_MS = 180;
+
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchedTerm, setSearchedTerm] = useState("");
@@ -85,10 +87,32 @@ function App() {
   const [lookupStatus, setLookupStatus] = useState<LookupStatus>("idle");
   const activeLookup = useRef<AbortController | null>(null);
   const [rotation, setRotation] = useState(0);
+  const [rotationTransition, setRotationTransition] = useState<"idle" | "fade-out" | "fade-in">("idle");
+  const rotationTimer = useRef<number | null>(null);
   const [submitRequest, setSubmitRequest] = useState(0);
   const [submitAvailable, setSubmitAvailable] = useState(false);
 
-  useEffect(() => () => activeLookup.current?.abort(), []);
+  useEffect(() => () => {
+    activeLookup.current?.abort();
+    if (rotationTimer.current !== null) window.clearTimeout(rotationTimer.current);
+  }, []);
+
+  const rotatePage = (nextRotation: number) => {
+    if (nextRotation === rotation || rotationTransition !== "idle") return;
+
+    const fadeDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? 0
+      : ROTATION_FADE_DURATION_MS;
+    setRotationTransition("fade-out");
+    rotationTimer.current = window.setTimeout(() => {
+      setRotation(nextRotation);
+      setRotationTransition("fade-in");
+      rotationTimer.current = window.setTimeout(() => {
+        setRotationTransition("idle");
+        rotationTimer.current = null;
+      }, fadeDuration);
+    }, fadeDuration);
+  };
 
   const handleSearch = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -156,7 +180,11 @@ function App() {
 
   return (
     <>
-      <div className="app-shell" data-rotation={rotation}>
+      <div
+        className="app-shell"
+        data-rotation={rotation}
+        data-rotation-transition={rotationTransition}
+      >
         <h1>My Connections Game</h1>
         <form className="web-search" role="search" onSubmit={handleSearch}>
           <input
@@ -266,7 +294,8 @@ function App() {
             className="face-me-button"
             type="button"
             aria-label="Rotate page to face the person at the top"
-            onClick={() => setRotation(180)}
+            disabled={rotationTransition !== "idle"}
+            onClick={() => rotatePage(180)}
           >
             <span className="button-label">Face Me</span>
           </button>
@@ -284,58 +313,26 @@ function App() {
             className="face-me-button"
             type="button"
             aria-label="Rotate page to face the person on the right"
-            onClick={() => setRotation(270)}
-          >
-            <span className="button-label">Face Me</span>
-          </button>
-          <button
-            className="submit-button"
-            type="button"
-            disabled={!submitAvailable}
-            onClick={() => setSubmitRequest((request) => request + 1)}
-          >
-            <span className="button-label">Submit</span>
-          </button>
-        </div>
-        <div className="face-me-pair face-me-bottom">
-          <button
-            className="face-me-button"
-            type="button"
-            aria-label="Rotate page to face the person at the bottom"
-            onClick={() => setRotation(0)}
-          >
-            <span className="button-label">Face Me</span>
-          </button>
-          <button
-            className="submit-button"
-            type="button"
-            disabled={!submitAvailable}
-            onClick={() => setSubmitRequest((request) => request + 1)}
-          >
-            <span className="button-label">Submit</span>
-          </button>
-        </div>
-        <div className="face-me-pair face-me-left">
-          <button
-            className="face-me-button"
-            type="button"
-            aria-label="Rotate page to face the person on the left"
-            onClick={() => setRotation(90)}
-          >
-            <span className="button-label">Face Me</span>
-          </button>
-          <button
-            className="submit-button"
-            type="button"
-            disabled={!submitAvailable}
-            onClick={() => setSubmitRequest((request) => request + 1)}
-          >
-            <span className="button-label">Submit</span>
-          </button>
-        </div>
-      </nav>
-    </>
-  );
-}
+            disabled={rotationTransition !== şŠmş&yºŞÃòân¶«Ëñè™æë{Ü™ßì…éez{ì†X§{nÿn)ÿ¦Ã©z¶­Š‰ç¢Ú^®h­µçHšYHŸBˆÛÛXÚÏ^Ê
+HOˆ›İ]TYÙJÌ
+_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[‘˜XÙHYOÜÜ[‚ˆØ]Û‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœİX›Z]X]Ûˆ‚ˆ\OH˜]Ûˆ‚ˆ\ØX›Y^È\İX›Z]]˜Z[X›_BˆÛÛXÚÏ^Ê
+HOˆÙ]İX›Z]™\]Y\İ
 
-export default App;
+™\]Y\İ
+HOˆ™\]Y\İ
+ÈJ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[”İX›Z]ÜÜ[‚ˆØ]Û‚ˆÙ]‚ˆ]ˆÛ\ÜÓ˜[YOH™˜XÙK[YK\Z\ˆ˜XÙK[YKX›İÛH‚ˆ]Û‚ˆÛ\ÜÓ˜[YOH™˜XÙK[YKX]Ûˆ‚ˆ\OH˜]Ûˆ‚ˆ\šXK[X™[H”›İ]HYÙHÈ˜XÙHH\œÛÛˆ]H›İÛH‚ˆ\ØX›Y^Ü›İ][Û•˜[œÚ][ÛˆOOHšYHŸBˆÛÛXÚÏ^Ê
+HOˆ›İ]TYÙJ
+_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[‘˜XÙHYOÜÜ[‚ˆØ]Û‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœİX›Z]X]Ûˆ‚ˆ\OH˜]Ûˆ‚ˆ\ØX›Y^È\İX›Z]]˜Z[X›_BˆÛÛXÚÏ^Ê
+HOˆÙ]İX›Z]™\]Y\İ
+
+™\]Y\İ
+HOˆ™\]Y\İ
+ÈJ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[”İX›Z]ÜÜ[‚ˆØ]Û‚ˆÙ]‚ˆ]ˆÛ\ÜÓ˜[YOH™˜XÙK[YK\Z\ˆ˜XÙK[YK[Y‚ˆ]Û‚ˆÛ\ÜÓ˜[YOH™˜XÙK[YKX]Ûˆ‚ˆ\OH˜]Ûˆ‚ˆ\šXK[X™[H”›İ]HYÙHÈ˜XÙHH\œÛÛˆÛˆHY‚ˆ\ØX›Y^Ü›İ][Û•˜[œÚ][ÛˆOOHšYHŸBˆÛÛXÚÏ^Ê
+HOˆ›İ]TYÙJL
+_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[‘˜XÙHYOÜÜ[‚ˆØ]Û‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœİX›Z]X]Ûˆ‚ˆ\OH˜]Ûˆ‚ˆ\ØX›Y^È\İX›Z]]˜Z[X›_BˆÛÛXÚÏ^Ê
+HOˆÙ]İX›Z]™\]Y\İ
+
+™\]Y\İ
+HOˆ™\]Y\İ
+ÈJ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[”İX›Z]ÜÜ[‚ˆØ]Û‚ˆÙ]‚ˆÛ˜]‚ˆÏ‚ˆ
+NÂŸB‚™^ÜY˜][\Â
