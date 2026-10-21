@@ -313,26 +313,61 @@ function App() {
             className="face-me-button"
             type="button"
             aria-label="Rotate page to face the person on the right"
-            disabled={rotationTransition !== þŠmþ&yºÞÃòân¶«Ëñè™æë{Ü™ßì…éez{ì†X§{nÿn)ÿ¦Ã©z¶­Š‰ç¢Ú^®h­µçHšYHŸBˆÛÛXÚÏ^Ê
-HOˆ›Ý]TYÙJÌ
-_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[‘˜XÙHYOÜÜ[‚ˆØ]Û‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœÝX›Z]X]Ûˆ‚ˆ\OH˜]Ûˆ‚ˆ\ØX›Y^È\ÝX›Z]]˜Z[X›_BˆÛÛXÚÏ^Ê
-HOˆÙ]ÝX›Z]™\]Y\Ý
+            disabled={rotationTransition !== "idle"}
+            onClick={() => rotatePage(270)}
+          >
+            <span className="button-label">Face Me</span>
+          </button>
+          <button
+            className="submit-button"
+            type="button"
+            disabled={!submitAvailable}
+            onClick={() => setSubmitRequest((request) => request + 1)}
+          >
+            <span className="button-label">Submit</span>
+          </button>
+        </div>
+        <div className="face-me-pair face-me-bottom">
+          <button
+            className="face-me-button"
+            type="button"
+            aria-label="Rotate page to face the person at the bottom"
+            disabled={rotationTransition !== "idle"}
+            onClick={() => rotatePage(0)}
+          >
+            <span className="button-label">Face Me</span>
+          </button>
+          <button
+            className="submit-button"
+            type="button"
+            disabled={!submitAvailable}
+            onClick={() => setSubmitRequest((request) => request + 1)}
+          >
+            <span className="button-label">Submit</span>
+          </button>
+        </div>
+        <div className="face-me-pair face-me-left">
+          <button
+            className="face-me-button"
+            type="button"
+            aria-label="Rotate page to face the person on the left"
+            disabled={rotationTransition !== "idle"}
+            onClick={() => rotatePage(90)}
+          >
+            <span className="button-label">Face Me</span>
+          </button>
+          <button
+            className="submit-button"
+            type="button"
+            disabled={!submitAvailable}
+            onClick={() => setSubmitRequest((request) => request + 1)}
+          >
+            <span className="button-label">Submit</span>
+          </button>
+        </div>
+      </nav>
+    </>
+  );
+}
 
-™\]Y\Ý
-HOˆ™\]Y\Ý
-ÈJ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[”ÝX›Z]ÜÜ[‚ˆØ]Û‚ˆÙ]‚ˆ]ˆÛ\ÜÓ˜[YOH™˜XÙK[YK\Z\ˆ˜XÙK[YKX›ÝÛH‚ˆ]Û‚ˆÛ\ÜÓ˜[YOH™˜XÙK[YKX]Ûˆ‚ˆ\OH˜]Ûˆ‚ˆ\šXK[X™[H”›Ý]HYÙHÈ˜XÙHH\œÛÛˆ]H›ÝÛH‚ˆ\ØX›Y^Ü›Ý][Û•˜[œÚ][ÛˆOOHšYHŸBˆÛÛXÚÏ^Ê
-HOˆ›Ý]TYÙJ
-_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[‘˜XÙHYOÜÜ[‚ˆØ]Û‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœÝX›Z]X]Ûˆ‚ˆ\OH˜]Ûˆ‚ˆ\ØX›Y^È\ÝX›Z]]˜Z[X›_BˆÛÛXÚÏ^Ê
-HOˆÙ]ÝX›Z]™\]Y\Ý
-
-™\]Y\Ý
-HOˆ™\]Y\Ý
-ÈJ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[”ÝX›Z]ÜÜ[‚ˆØ]Û‚ˆÙ]‚ˆ]ˆÛ\ÜÓ˜[YOH™˜XÙK[YK\Z\ˆ˜XÙK[YK[Y‚ˆ]Û‚ˆÛ\ÜÓ˜[YOH™˜XÙK[YKX]Ûˆ‚ˆ\OH˜]Ûˆ‚ˆ\šXK[X™[H”›Ý]HYÙHÈ˜XÙHH\œÛÛˆÛˆHY‚ˆ\ØX›Y^Ü›Ý][Û•˜[œÚ][ÛˆOOHšYHŸBˆÛÛXÚÏ^Ê
-HOˆ›Ý]TYÙJL
-_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[‘˜XÙHYOÜÜ[‚ˆØ]Û‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœÝX›Z]X]Ûˆ‚ˆ\OH˜]Ûˆ‚ˆ\ØX›Y^È\ÝX›Z]]˜Z[X›_BˆÛÛXÚÏ^Ê
-HOˆÙ]ÝX›Z]™\]Y\Ý
-
-™\]Y\Ý
-HOˆ™\]Y\Ý
-ÈJ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[”ÝX›Z]ÜÜ[‚ˆØ]Û‚ˆÙ]‚ˆÛ˜]‚ˆÏ‚ˆ
-NÂŸB‚™^ÜY˜][\Â
+export default App;

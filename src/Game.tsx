@@ -1,157 +1,275 @@
-şŠmş&yºŞÃòân¶«Ëñè™æë{Ü™ßì…éez{ì†X§{nÿn)ÿ¦Ã©z¶­Š‰ç¢Ú^®h­µçZ[\ÜÈ\ÙQY™™Xİ\ÙT™Y‹\ÙTİ]HHœ›ÛHœ™XXİÂš[\Ü›Ø\™œ›ÛH‹‹Ğ›Ø\™ŞÂš[\ÜÚY™›Hœ›ÛH›Ù\ÚœÚY™›HÂš[\Ü\HÈØ[YQ]HHœ›ÛH‹‹ÙØ[YQ]KÈÂ‚˜ÛÛœİÔ“Ó‘×ĞS”ÕÑT—Ñ“TÒÓTÈHLÂ˜ÛÛœİÔ“Ó‘×ĞS”ÕÑT—Ô‘TÑUÑSVWÓTÈHÌÂ‚˜ÛÛœİÙ]ÛÛ™YÜ›İ\ÛÛÜÛ\ÜÈH
-Y™šXİ[OÎˆİš[™ÊHOˆÂˆİÚ]Ú
-Y™šXİ[OËÓİÙ\Ø\ÙJ
-JHÂˆØ\ÙH™X\ŞH‚ˆ™]\›ˆ™X\ŞHÂˆØ\ÙH›YY][H‚ˆ™]\›ˆ›YY][HÂˆØ\ÙHš\™‚ˆ™]\›ˆš\™ÂˆØ\ÙHšXÚŞH‚ˆ™]\›ˆšXÚŞHÂˆY˜][‚ˆ™]\›ˆšXÚŞHÂˆBŸNÂ‚˜ÛÛœİØ[YHH
-ÂˆØ[YQ]TÙ]ËˆİX›Z]™\]Y\İˆÛ”İX›Z]]˜Z[Xš[]PÚ[™ÙKˆ›İ][Û‹ŸNˆÂˆØ[YQ]TÙ]ÎˆØ[YQ]V×NÂˆİX›Z]™\]Y\İˆ[X™\ÂˆÛ”İX›Z]]˜Z[Xš[]PÚ[™ÙNˆ
-]˜Z[X›Nˆ›ÛÛX[ŠHOˆ›ÚYÂˆ›İ][Ûˆ[X™\ÂŸJHOˆÂˆÛÛœİØİ\œ™[^›R[™^Ù]İ\œ™[^›R[™^HH\ÙTİ]J
-NÂˆÛÛœİØ[YQ]HHØ[YQ]TÙ]ÖØİ\œ™[^›R[™^NÂˆÛÛœİÜ™[XZ[š[™ÕÛÜ™ËÙ]™[XZ[š[™ÕÛÜ™×HH\ÙTİ]J
+import { useEffect, useRef, useState } from "react";
+import Board from "./Board.tsx";
+import shuffle from "lodash.shuffle";
+import type { GameData } from "./gameData.ts";
 
-HO‚ˆÚY™›JØ[YQ]TÙ]ÖÌKÛÜ™ÊKˆ
-NÂˆÛÛœİÜİX›Z]ØÚÙYÙ]İX›Z]ØÚÙYHH\ÙTİ]J˜[ÙJNÂˆÛÛœİÜÙ[XİYÙ]Ù[XİYHH\ÙTİ]Oİš[™Ö×OŠ×JNÂˆÛÛœİÚ[˜ÛÜœ™XİÙ[Xİ[Û‹Ù][˜ÛÜœ™XİÙ[Xİ[Û—HH\ÙTİ]J˜[ÙJNÂˆÛÛœİÜÛÛ™YÜ›İ\ËÙ]ÛÛ™YÜ›İ\×HH\ÙTİ]Oİš[™Ö×OŠ×JNÂˆÛÛœİÛZ\İZÙ\ÓYÙ]Z\İZÙ\ÓYHH\ÙTİ]J
-NÂˆÛÛœİÚ[Y\ÜØYÙKÙ][Y\ÜØYÙWHH\ÙTİ]JˆŠNÂˆÛÛœİÜÚİĞ[œİÙ\œËÙ]ÚİĞ[œİÙ\œ×HH\ÙTİ]J˜[ÙJNÂˆÛÛœİ[˜ÛÜœ™Xİ[š[X][Û•[Y\ˆH\ÙT™Y[X™\ˆ[Š[
-NÂ‚ˆ\ÙQY™™Xİ
+const WRONG_ANSWER_FLASH_MS = 850;
+const WRONG_ANSWER_RESET_DELAY_MS = 300;
 
+const getSolvedGroupColorClass = (difficulty?: string) => {
+  switch (difficulty?.toLowerCase()) {
+    case "easy":
+      return "easy";
+    case "medium":
+      return "medium";
+    case "hard":
+      return "hard";
+    case "tricky":
+      return "tricky";
+    default:
+      return "tricky";
+  }
+};
 
-HOˆ
+const Game = ({
+  gameDataSets,
+  submitRequest,
+  onSubmitAvailabilityChange,
+  rotation,
+}: {
+  gameDataSets: GameData[];
+  submitRequest: number;
+  onSubmitAvailabilityChange: (available: boolean) => void;
+  rotation: number;
+}) => {
+  const [currentPuzzleIndex, setCurrentPuzzleIndex] = useState(0);
+  const gameData = gameDataSets[currentPuzzleIndex];
+  const [remainingWords, setRemainingWords] = useState(() =>
+    shuffle(gameDataSets[0].words),
+  );
+  const [submitLocked, setSubmitLocked] = useState(false);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [incorrectSelection, setIncorrectSelection] = useState(false);
+  const [solvedGroups, setSolvedGroups] = useState<string[]>([]);
+  const [mistakesLeft, setMistakesLeft] = useState(4);
+  const [hintMessage, setHintMessage] = useState("");
+  const [showAnswers, setShowAnswers] = useState(false);
+  const incorrectAnimationTimer = useRef<number | null>(null);
 
-HOˆÂˆYˆ
-[˜ÛÜœ™Xİ[š[X][Û•[Y\‹˜İ\œ™[OOH[
-HÂˆÚ[™İË˜ÛX\•[Y[İ]
-[˜ÛÜœ™Xİ[š[X][Û•[Y\‹˜İ\œ™[
-NÂˆBˆK×JNÂ‚ˆ\ÙQY™™Xİ
+  useEffect(() => () => {
+    if (incorrectAnimationTimer.current !== null) {
+      window.clearTimeout(incorrectAnimationTimer.current);
+    }
+  }, []);
 
+  useEffect(() => {
+    if (!hintMessage) return;
 
-HOˆÂˆYˆ
-Z[Y\ÜØYÙJH™]\›Â‚ˆÛÛœİÛÜÙSÛ‘\ØØ\HH
-]™[ˆÙ^X›Ø\™]™[
-HOˆÂˆYˆ
-]™[šÙ^HOOH‘\ØØ\HŠHÙ][Y\ÜØYÙJˆŠNÂˆNÂˆÚ[™İË˜Y]™[\İ[™\ŠšÙ^YİÛˆ‹ÛÜÙSÛ‘\ØØ\JNÂˆ™]\›ˆ
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setHintMessage("");
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [hintMessage]);
 
-HOˆÚ[™İËœ™[[İ™Q]™[\İ[™\ŠšÙ^YİÛˆ‹ÛÜÙSÛ‘\ØØ\JNÂˆKÚ[Y\ÜØYÙWJNÂ‚ˆÛÛœİÛÛ™YÜ›İ\]HHÛÛ™YÜ›İ\Ë™›]X\
+  const solvedGroupData = solvedGroups.flatMap((description) => {
+    const group = gameData.groups.find(
+      (candidate) => candidate.description === description,
+    );
+    return group
+      ? [
+          {
+            ...group,
+            className: getSolvedGroupColorClass(group.className),
+          },
+        ]
+      : [];
+  });
+  const hasWon = solvedGroups.length === gameData.groups.length;
+  const hasLost = mistakesLeft === 0 && !hasWon;
+  const isGameOver = hasWon || hasLost;
+  const canSubmit = selected.length === 4 && !submitLocked && !isGameOver;
 
-\ØÜš\[ÛŠHOˆÂˆÛÛœİÜ›İ\HØ[YQ]K™Ü›İ\Ë™š[™
-ˆ
-Ø[™Y]JHOˆØ[™Y]K™\ØÜš\[ÛˆOOH\ØÜš\[Û‹ˆ
-NÂˆ™]\›ˆÜ›İ\ˆÈÂˆÂˆ‹‹™Ü›İ\ˆÛ\ÜÓ˜[YNˆÙ]ÛÛ™YÜ›İ\ÛÛÜÛ\ÜÊÜ›İ\˜Û\ÜÓ˜[YJKˆKˆBˆˆ×NÂˆJNÂˆÛÛœİ\ÕÛÛˆHÛÛ™YÜ›İ\Ë›[™İOOHØ[YQ]K™Ü›İ\Ë›[™İÂˆÛÛœİ\ÓÜİHZ\İZÙ\ÓYOOH	‰ˆZ\ÕÛÛÂˆÛÛœİ\ÑØ[YSİ™\ˆH\ÕÛÛˆ\ÓÜİÂˆÛÛœİØ[”İX›Z]HÙ[XİY›[™İOOH	‰ˆ\İX›Z]ØÚÙY	‰ˆZ\ÑØ[YSİ™\Â‚ˆ\ÙQY™™Xİ
+  useEffect(() => {
+    onSubmitAvailabilityChange(canSubmit);
+  }, [canSubmit, onSubmitAvailabilityChange]);
 
+  const toggleSelected = (value: string) => {
+    if (incorrectSelection || submitLocked) return;
+    if (selected.includes(value)) {
+      setSelected(selected.filter((word) => word !== value));
+      setSubmitLocked(false);
+      return;
+    }
 
-HOˆÂˆÛ”İX›Z]]˜Z[Xš[]PÚ[™ÙJØ[”İX›Z]
-NÂˆKØØ[”İX›Z]Û”İX›Z]]˜Z[Xš[]PÚ[™ÙWJNÂ‚ˆÛÛœİÙÙÛTÙ[XİYH
-˜[YNˆİš[™ÊHOˆÂˆYˆ
-[˜ÛÜœ™XİÙ[Xİ[ÛˆİX›Z]ØÚÙY
-H™]\›ÂˆYˆ
-Ù[XİYš[˜ÛY\Ê˜[YJJHÂˆÙ]Ù[XİY
-Ù[XİY™š[\Š
-ÛÜ™
-HOˆÛÜ™OOH˜[YJJNÂˆÙ]İX›Z]ØÚÙY
-˜[ÙJNÂˆ™]\›ÂˆB‚ˆYˆ
-Ù[XİY›[™İ
-HÂˆÙ]Ù[XİY
-Ë‹‹œÙ[XİY˜[YWJNÂˆÙ]İX›Z]ØÚÙY
-˜[ÙJNÂˆBˆNÂ‚ˆÛÛœİÛ”İX›Z]H
+    if (selected.length < 4) {
+      setSelected([...selected, value]);
+      setSubmitLocked(false);
+    }
+  };
 
-HOˆÂˆYˆ
-Ù[XİY›[™İOOH
-H™]\›Â‚ˆÛÛœİX]ÚYÜ›İ\HØ[YQ]K™Ü›İ\Ë™š[™
+  const onSubmit = () => {
+    if (selected.length !== 4) return;
 
-ÈÛÜ™Ë\ØÜš\[ÛˆJHO‚ˆ\ÛÛ™YÜ›İ\Ëš[˜ÛY\Ê\ØÜš\[ÛŠH	‰‚ˆÛÜ™Ë™]™\J
-ÛÜ™
-HOˆÙ[XİYš[˜ÛY\ÊÛÜ™
-JKˆ
-NÂ‚ˆYˆ
-[X]ÚYÜ›İ\
-HÂˆÙ]İX›Z]ØÚÙY
-YJNÂˆÙ]Z\İZÙ\ÓY
+    const matchedGroup = gameData.groups.find(({ words, description }) =>
+      !solvedGroups.includes(description) &&
+      words.every((word) => selected.includes(word)),
+    );
 
-Ûİ[
-HOˆX]›X^
-Ûİ[HJJNÂˆÙ][˜ÛÜœ™XİÙ[Xİ[ÛŠYJNÂˆYˆ
-[˜ÛÜœ™Xİ[š[X][Û•[Y\‹˜İ\œ™[OOH[
-HÂˆÚ[™İË˜ÛX\•[Y[İ]
-[˜ÛÜœ™Xİ[š[X][Û•[Y\‹˜İ\œ™[
-NÂˆBˆ[˜ÛÜœ™Xİ[š[X][Û•[Y\‹˜İ\œ™[HÚ[™İËœÙ][Y[İ]
+    if (!matchedGroup) {
+      setSubmitLocked(true);
+      setMistakesLeft((count) => Math.max(0, count - 1));
+      setIncorrectSelection(true);
+      if (incorrectAnimationTimer.current !== null) {
+        window.clearTimeout(incorrectAnimationTimer.current);
+      }
+      incorrectAnimationTimer.current = window.setTimeout(() => {
+        setIncorrectSelection(false);
+        incorrectAnimationTimer.current = window.setTimeout(() => {
+          setSelected([]);
+          setSubmitLocked(false);
+          incorrectAnimationTimer.current = null;
+        }, WRONG_ANSWER_RESET_DELAY_MS);
+      }, WRONG_ANSWER_FLASH_MS);
+      return;
+    }
 
+    setIncorrectSelection(false);
+    setSelected([]);
+    setSolvedGroups([...solvedGroups, matchedGroup.description]);
 
-HOˆÂˆÙ][˜ÛÜœ™XİÙ[Xİ[ÛŠ˜[ÙJNÂˆ[˜ÛÜœ™Xİ[š[X][Û•[Y\‹˜İ\œ™[HÚ[™İËœÙ][Y[İ]
+    // Move the remaining top-row words into the spaces made by the solved group.
+    const topRowWords = remainingWords
+      .slice(0, 4)
+      .filter((word) => !matchedGroup.words.includes(word));
+    const bottomWords = remainingWords.slice(4).map((word) =>
+      matchedGroup.words.includes(word) ? topRowWords.shift()! : word,
+    );
+    setRemainingWords(bottomWords);
+  };
 
+  const onSubmitRef = useRef(onSubmit);
+  const handledSubmitRequest = useRef(submitRequest);
 
-HOˆÂˆÙ]Ù[XİY
-×JNÂˆÙ]İX›Z]ØÚÙY
-˜[ÙJNÂˆ[˜ÛÜœ™Xİ[š[X][Û•[Y\‹˜İ\œ™[H[ÂˆKÔ“Ó‘×ĞS”ÕÑT—Ô‘TÑUÑSVWÓTÊNÂˆKÔ“Ó‘×ĞS”ÕÑT—Ñ“TÒÓTÊNÂˆ™]\›ÂˆB‚ˆÙ][˜ÛÜœ™XİÙ[Xİ[ÛŠ˜[ÙJNÂˆÙ]Ù[XİY
-×JNÂˆÙ]ÛÛ™YÜ›İ\ÊË‹‹œÛÛ™YÜ›İ\ËX]ÚYÜ›İ\™\ØÜš\[Û—JNÂ‚ˆËÈ[İ™HH™[XZ[š[™ÈÜ\›İÈÛÜ™È[ÈHÜXÙ\ÈXYHHHÛÛ™YÜ›İ\‚ˆÛÛœİÜ›İÕÛÜ™ÈH™[XZ[š[™ÕÛÜ™ÂˆœÛXÙJ
-Bˆ™š[\Š
-ÛÜ™
-HOˆ[X]ÚYÜ›İ\ÛÜ™Ëš[˜ÛY\ÊÛÜ™
-JNÂˆÛÛœİ›İÛUÛÜ™ÈH™[XZ[š[™ÕÛÜ™ËœÛXÙJ
-K›X\
+  useEffect(() => {
+    onSubmitRef.current = onSubmit;
+  });
 
-ÛÜ™
-HO‚ˆX]ÚYÜ›İ\ÛÜ™Ëš[˜ÛY\ÊÛÜ™
-HÈÜ›İÕÛÜ™ËœÚY
+  useEffect(() => {
+    if (submitRequest === handledSubmitRequest.current) return;
+    handledSubmitRequest.current = submitRequest;
+    onSubmitRef.current();
+  }, [submitRequest]);
 
-HHˆÛÜ™ˆ
-NÂˆÙ]™[XZ[š[™ÕÛÜ™Ê›İÛUÛÜ™ÊNÂˆNÂ‚ˆÛÛœİÛ”İX›Z]™YˆH\ÙT™YŠÛ”İX›Z]
-NÂˆÛÛœİ[™YİX›Z]™\]Y\İH\ÙT™YŠİX›Z]™\]Y\İ
-NÂ‚ˆ\ÙQY™™Xİ
+  const onHint = () => {
+    const nextGroup = gameData.groups.find(
+      ({ description }) => !solvedGroups.includes(description),
+    );
+    if (nextGroup) {
+      setHintMessage(`One group is â€œ${nextGroup.description}â€.`);
+    }
+  };
 
+  const resetPuzzle = (puzzleIndex: number) => {
+    if (incorrectAnimationTimer.current !== null) {
+      window.clearTimeout(incorrectAnimationTimer.current);
+      incorrectAnimationTimer.current = null;
+    }
+    setCurrentPuzzleIndex(puzzleIndex);
+    setRemainingWords(shuffle(gameDataSets[puzzleIndex].words));
+    setSelected([]);
+    setIncorrectSelection(false);
+    setSolvedGroups([]);
+    setMistakesLeft(4);
+    setSubmitLocked(false);
+    setHintMessage("");
+    setShowAnswers(false);
+  };
 
-HOˆÂˆÛ”İX›Z]™Y‹˜İ\œ™[HÛ”İX›Z]ÂˆJNÂ‚ˆ\ÙQY™™Xİ
+  const onRestart = () => resetPuzzle(currentPuzzleIndex);
 
+  const onNext = () => {
+    const nextPuzzleIndex = (currentPuzzleIndex + 1) % gameDataSets.length;
+    resetPuzzle(nextPuzzleIndex);
+  };
 
-HOˆÂˆYˆ
-İX›Z]™\]Y\İOOH[™YİX›Z]™\]Y\İ˜İ\œ™[
-H™]\›Âˆ[™YİX›Z]™\]Y\İ˜İ\œ™[HİX›Z]™\]Y\İÂˆÛ”İX›Z]™Y‹˜İ\œ™[
+  return (
+    <>
+      <div className="game-layout">
+        <div className="game-top-controls">
+          <div
+            className="card mistakes-remaining"
+            role="group"
+            aria-label={`Mistakes remaining: ${mistakesLeft}`}
+          >
+            MISTAKES REMAINING:{" "}
+            {Array(mistakesLeft)
+              .fill(null)
+              .map((_value, index) => (
+                <span className="mistake-dot" key={`dot-${index}`}>&#9679;</span>
+              ))}
+          </div>
 
-NÂˆKÜİX›Z]™\]Y\İJNÂ‚ˆÛÛœİÛ’[H
+          <div className="game-controls">
+            <button className="game-control-button" disabled={isGameOver} onClick={onHint}>
+              Hint
+            </button>
+            <button
+              className="game-control-button"
+              aria-expanded={showAnswers}
+              onClick={() => setShowAnswers((visible) => !visible)}
+            >
+              {showAnswers ? "Hide Answers" : "Show Answers"}
+            </button>
+            <button className="game-control-button" onClick={onRestart}>Restart</button>
+            <button className="game-control-button" onClick={onNext}>Next</button>
+          </div>
+        </div>
 
-HOˆÂˆÛÛœİ™^Ü›İ\HØ[YQ]K™Ü›İ\Ë™š[™
-ˆ
-È\ØÜš\[ÛˆJHOˆ\ÛÛ™YÜ›İ\Ëš[˜ÛY\Ê\ØÜš\[ÛŠKˆ
-NÂˆYˆ
-™^Ü›İ\
-HÂˆÙ][Y\ÜØYÙJÛ™HÜ›İ\\È8 '	Û™^Ü›İ\™\ØÜš\[ÛŸx 'K˜
-NÂˆBˆNÂ‚ˆÛÛœİ™\Ù]^›HH
-^›R[™^ˆ[X™\ŠHOˆÂˆYˆ
-[˜ÛÜœ™Xİ[š[X][Û•[Y\‹˜İ\œ™[OOH[
-HÂˆÚ[™İË˜ÛX\•[Y[İ]
-[˜ÛÜœ™Xİ[š[X][Û•[Y\‹˜İ\œ™[
-NÂˆ[˜ÛÜœ™Xİ[š[X][Û•[Y\‹˜İ\œ™[H[ÂˆBˆÙ]İ\œ™[^›R[™^
-^›R[™^
-NÂˆÙ]™[XZ[š[™ÕÛÜ™ÊÚY™›JØ[YQ]TÙ]ÖÜ^›R[™^KÛÜ™ÊJNÂˆÙ]Ù[XİY
-×JNÂˆÙ][˜ÛÜœ™XİÙ[Xİ[ÛŠ˜[ÙJNÂˆÙ]ÛÛ™YÜ›İ\Ê×JNÂˆÙ]Z\İZÙ\ÓY
+        <div className="board-stage">
+          <Board
+            words={remainingWords}
+            selected={selected}
+            incorrectSelection={incorrectSelection}
+            rotation={rotation}
+            solvedGroupData={solvedGroupData}
+            toggleSelected={toggleSelected}
+          />
+        </div>
 
-NÂˆÙ]İX›Z]ØÚÙY
-˜[ÙJNÂˆÙ][Y\ÜØYÙJˆŠNÂˆÙ]ÚİĞ[œİÙ\œÊ˜[ÙJNÂˆNÂ‚ˆÛÛœİÛ”™\İ\H
+        {hintMessage && (
+          <div
+            className="hint-modal-backdrop"
+            role="presentation"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setHintMessage("");
+            }}
+          >
+            <section
+              className="hint-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="hint-modal-title"
+              aria-describedby="hint-modal-description"
+            >
+              <div className="hint-modal-heading">
+                <h2 id="hint-modal-title">Hint</h2>
+                <button
+                  className="hint-modal-close"
+                  type="button"
+                  aria-label="Close hint"
+                  onClick={() => setHintMessage("")}
+                >
+                  Ã—
+                </button>
+              </div>
+              <p id="hint-modal-description">{hintMessage}</p>
+            </section>
+          </div>
+        )}
+        {showAnswers && (
+          <section className="answer-key" aria-label="Answer key">
+            <h2>Answer key</h2>
+            {gameData.groups.map((group) => (
+              <p key={group.description}>
+                <strong>{group.description}:</strong> {group.words.join(", ")}
+              </p>
+            ))}
+          </section>
+        )}
+      </div>
+    </>
+  );
+};
 
-HOˆ™\Ù]^›Jİ\œ™[^›R[™^
-NÂ‚ˆÛÛœİÛ“™^H
-
-HOˆÂˆÛÛœİ™^^›R[™^H
-İ\œ™[^›R[™^
-ÈJH	HØ[YQ]TÙ]Ë›[™İÂˆ™\Ù]^›J™^^›R[™^
-NÂˆNÂ‚ˆ™]\›ˆ
-ˆ‚ˆ]ˆÛ\ÜÓ˜[YOH™Ø[YK[^[İ]‚ˆ]ˆÛ\ÜÓ˜[YOH™Ø[YK]ÜXÛÛ›ÛÈ‚ˆ]‚ˆÛ\ÜÓ˜[YOH˜Ø\™Z\İZÙ\Ë\™[XZ[š[™È‚ˆ›ÛOH™Ü›İ\‚ˆ\šXK[X™[^ØZ\İZÙ\È™[XZ[š[™Îˆ	ÛZ\İZÙ\ÓYXBˆ‚ˆRTÕRÑTÈ‘SPRS’S‘ÎÈˆŸBˆĞ\œ˜^JZ\İZÙ\ÓY
-Bˆ™š[
-[
-Bˆ›X\
-
-İ˜[YK[™^
-HOˆ
-ˆÜ[ˆÛ\ÜÓ˜[YOH›Z\İZÙKYİˆÙ^O^ØİIÚ[™^XO‰ˆÎMÎNÏÜÜ[‚ˆ
-J_BˆÙ]‚‚ˆ]ˆÛ\ÜÓ˜[YOH™Ø[YKXÛÛ›ÛÈ‚ˆ]ÛˆÛ\ÜÓ˜[YOH™Ø[YKXÛÛ›ÛX]Ûˆˆ\ØX›Y^Ú\ÑØ[YSİ™\ŸHÛÛXÚÏ^ÛÛ’[O‚ˆ[ˆØ]Û‚ˆ]Û‚ˆÛ\ÜÓ˜[YOH™Ø[YKXÛÛ›ÛX]Ûˆ‚ˆ\šXKY^[™Y^ÜÚİĞ[œİÙ\œßBˆÛÛXÚÏ^Ê
-HOˆÙ]ÚİĞ[œİÙ\œÊ
-š\ÚX›JHOˆ]š\ÚX›J_Bˆ‚ˆÜÚİĞ[œİÙ\œÈÈ’YH[œİÙ\œÈˆˆ”ÚİÈ[œİÙ\œÈŸBˆØ]Û‚ˆ]ÛˆÛ\ÜÓ˜[YOH™Ø[YKXÛÛ›ÛX]ÛˆˆÛÛXÚÏ^ÛÛ”™\İ\O”™\İ\Ø]Û‚ˆ]ÛˆÛ\ÜÓ˜[YOH™Ø[YKXÛÛ›ÛX]ÛˆˆÛÛXÚÏ^ÛÛ“™^O“™^Ø]Û‚ˆÙ]‚ˆÙ]‚‚ˆ]ˆÛ\ÜÓ˜[YOH˜›Ø\™\İYÙH‚ˆ›Ø\™ˆÛÜ™Ï^Ü™[XZ[š[™ÕÛÜ™ßBˆÙ[XİY^ÜÙ[XİYBˆ[˜ÛÜœ™XİÙ[Xİ[Û^Ú[˜ÛÜœ™XİÙ[Xİ[ÛŸBˆ›İ][Û^Ü›İ][ÛŸBˆÛÛ™YÜ›İ\]O^ÜÛÛ™YÜ›İ\]_BˆÙÙÛTÙ[XİY^İÙÙÛTÙ[XİYBˆÏ‚ˆÙ]‚‚ˆÚ[Y\ÜØYÙH	‰ˆ
-ˆ]‚ˆÛ\ÜÓ˜[YOHš[[[Ù[X˜XÚÙ›Ü‚ˆ›ÛOHœ™\Ù[][Ûˆ‚ˆÛ“[İ\ÙQİÛ^Ê]™[
-HOˆÂˆYˆ
-]™[\™Ù]OOH]™[˜İ\œ™[\™Ù]
-HÙ][Y\ÜØYÙJˆŠNÂˆ_Bˆ‚ˆÙXİ[Û‚ˆÛ\ÜÓ˜[YOHš[[[Ù[‚ˆ›ÛOH™X[ÙÈ‚ˆ\šXK[[Ù[HYH‚ˆ\šXK[X™[YOHš[[[Ù[]]H‚ˆ\šXKY\ØÜšX™YOHš[[[Ù[Y\ØÜš\[Ûˆ‚ˆ‚ˆ]ˆÛ\ÜÓ˜[YOHš[[[Ù[ZXY[™È‚ˆˆYHš[[[Ù[]]H’[Ú‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHš[[[Ù[XÛÜÙH‚ˆ\OH˜]Ûˆ‚ˆ\šXK[X™[HÛÜÙH[‚ˆÛÛXÚÏ^Ê
-HOˆÙ][Y\ÜØYÙJˆŠ_Bˆ‚ˆ0åÂˆØ]Û‚ˆÙ]‚ˆYHš[[[Ù[Y\ØÜš\[ÛˆÚ[Y\ÜØYÙ_OÜ‚ˆÜÙXİ[Û‚ˆÙ]‚ˆ
-_BˆÜÚİĞ[œİÙ\œÈ	‰ˆ
-ˆÙXİ[ÛˆÛ\ÜÓ˜[YOH˜[œİÙ\‹ZÙ^Hˆ\šXK[X™[H[œİÙ\ˆÙ^H‚ˆ[œİÙ\ˆÙ^OÚ‚ˆÙØ[YQ]K™Ü›İ\Ë›X\
-
-Ü›İ\
-HOˆ
-ˆÙ^O^ÙÜ›İ\™\ØÜš\[ÛŸO‚ˆİ›Û™ÏÙÜ›İ\™\ØÜš\[ÛŸNÜİ›Û™ÏˆÙÜ›İ\ÛÜ™Ëš›Ú[Š‹Š_BˆÜ‚ˆ
-J_BˆÜÙXİ[Û‚ˆ
-_BˆÙ]‚ˆÏ‚ˆ
-NÂŸNÂ‚™^ÜY˜][Ø[YNÂ
+export default Game;
