@@ -1,222 +1,79 @@
-import { useRef } from "react";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
-import type { AutoAnimationPlugin } from "@formkit/auto-animate";
+şŠmş&yºŞÃòân¶«Ëñè™æë{Ü™ßì…éez{ì†X§{nÿn)ÿ¦Ã©z¶­Š‰ç¢Ú^®h­µçZ[\ÜÈ\ÙT™YˆHœ›ÛHœ™XXİÂš[\ÜÈ\ÙP]]Ğ[š[X]HHœ›ÛH›Ü›ZÚ]Ø]]ËX[š[X]KÜ™XXİÂš[\Ü\HÈ]]Ğ[š[X][Û”YÚ[ˆHœ›ÛH›Ü›ZÚ]Ø]]ËX[š[X]HÂ‚š[\Ü‹‹Ğ›Ø\™œØÜÜÈÂš[\Ü][Hœ›ÛH‹‹Ò][KŞÂš[\ÜÛÛ™YÜ›İ\œ›ÛH‹‹ÔÛÛ™YÜ›İ\ŞÂš[\Ü\HÈÛÜ™Ü›İ\Hœ›ÛH‹‹ÙØ[YQ]KÈÂ‚\H›Ø\™ÛÛÜ™[˜]\ÈHÂˆÜˆ[X™\ÂˆYˆ[X™\ÂˆÚYˆ[X™\ÂˆZYÚˆ[X™\ÂŸNÂ‚˜ÛÛœİ“ĞT‘ĞS’SPUSÓ—ÑTUSÓ—ÓTÈHÂ‚˜ÛÛœİĞ›Ø\™ÛÛÜ™[˜]\ÈH
+ˆ[X™\‹Nˆ[X™\‹›İ][Ûˆ[X™\ŠHOˆÂˆİÚ]Ú
+›İ][ÛŠHÂˆØ\ÙHL‚ˆ™]\›ˆÈˆKNˆ^NÂˆØ\ÙHN‚ˆ™]\›ˆÈˆ^Nˆ^HNÂˆØ\ÙHÌ‚ˆ™]\›ˆÈˆ^KNˆNÂˆY˜][‚ˆ™]\›ˆÈHNÂˆBŸNÂ‚˜ÛÛœİÙ]ØÜ›ÛÙ™œÙ]H
+[[Y[ˆS[[Y[
+HOˆÂˆ][˜Ù\İÜˆH[[Y[œ\™[[[Y[ÂˆÚ[H
+[˜Ù\İÜŠHÂˆYˆ
+[˜Ù\İÜ‹œØÜ›ÛY[˜Ù\İÜ‹œØÜ›ÛÜ
+HÂˆ™]\›ˆÈˆ[˜Ù\İÜ‹œØÜ›ÛYNˆ[˜Ù\İÜ‹œØÜ›ÛÜNÂˆBˆ[˜Ù\İÜˆH[˜Ù\İÜ‹œ\™[[[Y[ÂˆBˆ™]\›ˆÈˆNˆNÂŸNÂ‚˜ÛÛœİÜ™X]P›Ø\™[š[X][Û”YÚ[ˆH
+ˆ›İ][Û”™YˆÈİ\œ™[ˆ[X™\ˆKŠNˆ]]Ğ[š[X][Û”YÚ[ˆOˆ
+[[Y[Xİ[Û‹š\œİÛÛÜ™[˜]\ËÙXÛÛ™ÛÛÜ™[˜]\ÊHOˆÂˆÛÛœİ›İ][ÛˆH›İ][Û”™Y‹˜İ\œ™[ÂˆÛÛœİ™Y™\œÔ™YXÙY[İ[ÛˆHÚ[™İË›X]ÚYYXJˆŠ™Y™\œË\™YXÙY[[İ[Ûˆ™YXÙJH‹ˆ
+K›X]Ú\ÎÂˆÛÛœİ\˜][ÛˆH™Y™\œÔ™YXÙY[İ[ÛˆÈHˆ“ĞT‘ĞS’SPUSÓ—ÑTUSÓ—ÓTÎÂ‚ˆYˆ
+Xİ[ÛˆOOH˜Yˆ	‰ˆš\œİÛÛÜ™[˜]\ÊHÂˆ™]\›ˆ™]ÈÙ^Yœ˜[YQY™™Xİ
+ˆ[[Y[ˆÂˆÈ˜[œÙ›Ü›NˆœØØ[JN
+H‹ÜXÚ]NˆKˆÈ˜[œÙ›Ü›NˆœØØ[JN
+H‹ÜXÚ]NˆÙ™œÙ]ˆHKˆÈ˜[œÙ›Ü›NˆœØØ[JJH‹ÜXÚ]NˆHKˆKˆÈ\˜][Ûˆ\˜][Ûˆ
+ˆKKX\Ú[™Îˆ™X\ÙKZ[ˆˆKˆ
+NÂˆB‚ˆYˆ
+ˆXİ[ÛˆOOHœ™[XZ[ˆˆ	‰‚ˆš\œİÛÛÜ™[˜]\È	‰‚ˆÙXÛÛ™ÛÛÜ™[˜]\Âˆ
+HÂˆÛÛœİÛÛÛÜ™[˜]\ÈHš\œİÛÛÜ™[˜]\È\È›Ø\™ÛÛÜ™[˜]\ÎÂˆÛÛœİ™]ĞÛÛÜ™[˜]\ÈHÙXÛÛ™ÛÛÜ™[˜]\È\È›Ø\™ÛÛÜ™[˜]\ÎÂˆÛÛœİÛÙ[\ˆHÂˆˆÛÛÛÜ™[˜]\Ë›Y
+ÈÛÛÛÜ™[˜]\ËÚYÈ‹ˆNˆÛÛÛÜ™[˜]\ËÜ
+ÈÛÛÛÜ™[˜]\ËšZYÚÈ‹ˆNÂˆÛÛœİ™]ĞÙ[\ˆHÂˆˆ™]ĞÛÛÜ™[˜]\Ë›Y
+È™]ĞÛÛÜ™[˜]\ËÚYÈ‹ˆNˆ™]ĞÛÛÜ™[˜]\ËÜ
+È™]ĞÛÛÜ™[˜]\ËšZYÚÈ‹ˆNÂˆÛÛœİ[İ™[Y[HĞ›Ø\™ÛÛÜ™[˜]\ÊˆÛÙ[\‹H™]ĞÙ[\‹ˆÛÙ[\‹HH™]ĞÙ[\‹Kˆ›İ][Û‹ˆ
+NÂˆÛÛœİ]X\\•\›ˆH›İ][ÛˆOOHL›İ][ÛˆOOHÌÂˆÛÛœİÛÚYH]X\\•\›ˆÈÛÛÛÜ™[˜]\ËšZYÚˆÛÛÛÜ™[˜]\ËÚYÂˆÛÛœİ™]ÕÚYH]X\\•\›ˆÈ™]ĞÛÛÜ™[˜]\ËšZYÚˆ™]ĞÛÛÜ™[˜]\ËÚYÂˆÛÛœİÛZYÚH]X\\•\›ˆÈÛÛÛÜ™[˜]\ËÚYˆÛÛÛÜ™[˜]\ËšZYÚÂˆÛÛœİ™]ÒZYÚH]X\\•\›ˆÈ™]ĞÛÛÜ™[˜]\ËÚYˆ™]ĞÛÛÜ™[˜]\ËšZYÚÂˆÛÛœİœ›ÛNˆÙ^Yœ˜[YHHÂˆ˜[œÙ›Ü›Nˆ˜[œÛ]J	Û[İ™[Y[\	Û[İ™[Y[_\
+XˆNÂˆÛÛœİÎˆÙ^Yœ˜[YHHÈ˜[œÙ›Ü›Nˆ˜[œÛ]J
+HˆNÂ‚ˆYˆ
+ÛÚYOOH™]ÕÚY
+HÂˆœ›ÛKÚYH	ÛÛÚY\ÂˆËÚYH	Û™]ÕÚY\ÂˆBˆYˆ
+ÛZYÚOOH™]ÒZYÚ
+HÂˆœ›ÛKšZYÚH	ÛÛZYÚ\ÂˆËšZYÚH	Û™]ÒZYÚ\ÂˆB‚ˆ™]\›ˆ™]ÈÙ^Yœ˜[YQY™™Xİ
+[[Y[Ùœ›ÛK×KÂˆ\˜][Û‹ˆX\Ú[™Îˆ™X\ÙKZ[‹[İ]‹ˆJNÂˆB‚ˆYˆ
+Xİ[ÛˆOOHœ™[[İ™Hˆ	‰ˆš\œİÛÛÜ™[˜]\ÊHÂˆÛÛœİÛÛÛÜ™[˜]\ÈHš\œİÛÛÜ™[˜]\È\È›Ø\™ÛÛÜ™[˜]\ÎÂˆÛÛœİY™™XİH™]ÈÙ^Yœ˜[YQY™™Xİ
+ˆ[[Y[ˆÂˆÈ˜[œÙ›Ü›NˆœØØ[JJH‹ÜXÚ]NˆHKˆÈ˜[œÙ›Ü›NˆœØØ[JN
+H‹ÜXÚ]NˆKˆKˆÈ\˜][Û‹X\Ú[™Îˆ™X\ÙK[İ]ˆKˆ
+NÂ‚ˆYˆ
+›İ][ÛˆOOH
+H™]\›ˆY™™XİÂ‚ˆ]Ù™œÙ]\™[H[[Y[œ\™[[[Y[\ÈS[[Y[[ÂˆÚ[H
+ˆÙ™œÙ]\™[	‰‚ˆ
+Ù]ÛÛ\]Yİ[JÙ™œÙ]\™[
+KœÜÚ][ÛˆOOHœİ]XÈˆˆÙ™œÙ]\™[[œİ[˜Ù[ÙˆS›ÙQ[[Y[
+Bˆ
+HÂˆÙ™œÙ]\™[HÙ™œÙ]\™[œ\™[[[Y[ÂˆBˆÙ™œÙ]\™[ÏÏHØİ[Y[˜›ÙNÂ‚ˆÛÛœİ\™[™XİHÙ™œÙ]\™[™Ù]›İ[™[™ĞÛY[™Xİ
 
-import "./Board.scss";
-import Item, { type DictionaryLookupRequest } from "./Item.tsx";
-import SolvedGroup from "./SolvedGroup.tsx";
-import type { WordGroup } from "./gameData.ts";
+NÂˆÛÛœİØÜ›ÛÙ™œÙ]HÙ]ØÜ›ÛÙ™œÙ]
+Ù™œÙ]\™[
+NÂˆÛÛœİ\™[Ù[\ˆHÂˆˆ\™[™Xİ›Y
+ÈØÜ›ÛÙ™œÙ]
+È\™[™XİÚYÈ‹ˆNˆ\™[™XİÜ
+ÈØÜ›ÛÙ™œÙ]H
+È\™[™XİšZYÚÈ‹ˆNÂˆÛÛœİÛÙ[\ˆHÂˆˆÛÛÛÜ™[˜]\Ë›Y
+ÈÛÛÛÜ™[˜]\ËÚYÈ‹ˆNˆÛÛÛÜ™[˜]\ËÜ
+ÈÛÛÛÜ™[˜]\ËšZYÚÈ‹ˆNÂˆÛÛœİØØ[Ù[\ˆHĞ›Ø\™ÛÛÜ™[˜]\ÊˆÛÙ[\‹H\™[Ù[\‹ˆÛÙ[\‹HH\™[Ù[\‹Kˆ›İ][Û‹ˆ
+NÂˆÛÛœİ]X\\•\›ˆH›İ][ÛˆOOHL›İ][ÛˆOOHÌÂˆÛÛœİ\™[ÚYH]X\\•\›ˆÈ\™[™XİšZYÚˆ\™[™XİÚYÂˆÛÛœİ\™[ZYÚH]X\\•\›ˆÈ\™[™XİÚYˆ\™[™XİšZYÚÂˆÛÛœİ[[Y[ÚYH]X\\•\›ˆÈÛÛÛÜ™[˜]\ËšZYÚˆÛÛÛÜ™[˜]\ËÚYÂˆÛÛœİ[[Y[ZYÚH]X\\•\›ˆÈÛÛÛÜ™[˜]\ËÚYˆÛÛÛÜ™[˜]\ËšZYÚÂˆÛÛœİ\™[İ[\ÈHÙ]ÛÛ\]Yİ[JÙ™œÙ]\™[
+NÂˆÛÛœİ›Ü™\“YH[X™\‹œ\œÙQ›Ø]
+\™[İ[\Ë˜›Ü™\“YÚY
+HÂˆÛÛœİ›Ü™\•ÜH[X™\‹œ\œÙQ›Ø]
+\™[İ[\Ë˜›Ü™\•ÜÚY
+HÂˆÛÛœİİ[T™\Ù]HÂˆÜÚ][Ûˆ˜XœÛÛ]H‹ˆÜˆ	Ü\™[ZYÚÈˆ
+ÈØØ[Ù[\‹HH[[Y[ZYÚÈˆH›Ü™\•Ü\ˆYˆ	Ü\™[ÚYÈˆ
+ÈØØ[Ù[\‹H[[Y[ÚYÈˆH›Ü™\“Y\ˆÚYˆ	Ù[[Y[ÚY\ˆZYÚˆ	Ù[[Y[ZYÚ\ˆX\™Ú[ˆŒ‹ˆÚ[\‘]™[Îˆ››Û™H‹ˆ˜[œÙ›Ü›SÜšYÚ[ˆ˜Ù[\ˆ‹ˆ’[™^ˆŒL‹ˆH\È[šÛ›İÛˆ\ÈÔÔÔİ[QXÛ\˜][ÛÂ‚ˆ™]\›ˆÙY™™XİÈİ[T™\Ù]WNÂˆB‚ˆ™]\›ˆ™]ÈÙ^Yœ˜[YQY™™Xİ
+[[Y[×KÈ\˜][ÛˆHJNÂŸNÂ‚\H›Ø\™›ÜÈHÂˆÛÜ™Îˆİš[™Ö×NÂˆÙ[XİYˆİš[™Ö×NÂˆ[˜ÛÜœ™XİÙ[Xİ[Ûˆ›ÛÛX[Âˆ›İ][Ûˆ[X™\ÂˆÙÙÛTÙ[XİYˆ
+˜[YNˆİš[™ÊHOˆ›ÚYÂˆÛÛ™YÜ›İ\]NˆÛÜ™Ü›İ\×NÂŸNÂ‚˜ÛÛœİ›Ø\™H
+ÂˆÛÜ™ËˆÙ[XİYˆ[˜ÛÜœ™XİÙ[Xİ[Û‹ˆ›İ][Û‹ˆÛÛ™YÜ›İ\]KˆÙÙÛTÙ[XİYŸNˆ›Ø\™›ÜÊHOˆÂˆÛÛœİ›İ][Û”™YˆH\ÙT™YŠ›İ][ÛŠNÂˆ›İ][Û”™Y‹˜İ\œ™[H›İ][ÛÂˆÛÛœİÜ\™[HH\ÙP]]Ğ[š[X]JÜ™X]P›Ø\™[š[X][Û”YÚ[Š›İ][Û”™YŠJNÂ‚ˆ™]\›ˆ
+ˆ]ˆ™Y^Ü\™[HÛ\ÜÓ˜[YO^È˜›Ø\™ŸO‚ˆÜÛÛ™YÜ›İ\]K›X\
 
-type BoardCoordinates = {
-  top: number;
-  left: number;
-  width: number;
-  height: number;
-};
+][JHOˆ
+ˆÛÛ™YÜ›İ\Ù^O^Ú][K™\ØÜš\[ÛŸHÛÛ™YÜ›İ\^Ú][_HÏ‚ˆ
+J_BˆİÛÜ™Ë›X\
 
-const BOARD_ANIMATION_DURATION_MS = 400;
-
-const toBoardCoordinates = (x: number, y: number, rotation: number) => {
-  switch (rotation) {
-    case 90:
-      return { x: y, y: -x };
-    case 180:
-      return { x: -x, y: -y };
-    case 270:
-      return { x: -y, y: x };
-    default:
-      return { x, y };
-  }
-};
-
-const getScrollOffset = (element: HTMLElement) => {
-  let ancestor = element.parentElement;
-  while (ancestor) {
-    if (ancestor.scrollLeft || ancestor.scrollTop) {
-      return { x: ancestor.scrollLeft, y: ancestor.scrollTop };
-    }
-    ancestor = ancestor.parentElement;
-  }
-  return { x: 0, y: 0 };
-};
-
-const createBoardAnimationPlugin = (
-  rotationRef: { current: number },
-): AutoAnimationPlugin => (element, action, firstCoordinates, secondCoordinates) => {
-  const rotation = rotationRef.current;
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
-  const duration = prefersReducedMotion ? 1 : BOARD_ANIMATION_DURATION_MS;
-
-  if (action === "add" && firstCoordinates) {
-    return new KeyframeEffect(
-      element,
-      [
-        { transform: "scale(0.98)", opacity: 0 },
-        { transform: "scale(0.98)", opacity: 0, offset: 0.5 },
-        { transform: "scale(1)", opacity: 1 },
-      ],
-      { duration: duration * 1.5, easing: "ease-in" },
-    );
-  }
-
-  if (
-    action === "remain" &&
-    firstCoordinates &&
-    secondCoordinates
-  ) {
-    const oldCoordinates = firstCoordinates as BoardCoordinates;
-    const newCoordinates = secondCoordinates as BoardCoordinates;
-    const oldCenter = {
-      x: oldCoordinates.left + oldCoordinates.width / 2,
-      y: oldCoordinates.top + oldCoordinates.height / 2,
-    };
-    const newCenter = {
-      x: newCoordinates.left + newCoordinates.width / 2,
-      y: newCoordinates.top + newCoordinates.height / 2,
-    };
-    const movement = toBoardCoordinates(
-      oldCenter.x - newCenter.x,
-      oldCenter.y - newCenter.y,
-      rotation,
-    );
-    const quarterTurn = rotation === 90 || rotation === 270;
-    const oldWidth = quarterTurn ? oldCoordinates.height : oldCoordinates.width;
-    const newWidth = quarterTurn ? newCoordinates.height : newCoordinates.width;
-    const oldHeight = quarterTurn ? oldCoordinates.width : oldCoordinates.height;
-    const newHeight = quarterTurn ? newCoordinates.width : newCoordinates.height;
-    const from: Keyframe = {
-      transform: `translate(${movement.x}px, ${movement.y}px)`,
-    };
-    const to: Keyframe = { transform: "translate(0, 0)" };
-
-    if (oldWidth !== newWidth) {
-      from.width = `${oldWidth}px`;
-      to.width = `${newWidth}px`;
-    }
-    if (oldHeight !== newHeight) {
-      from.height = `${oldHeight}px`;
-      to.height = `${newHeight}px`;
-    }
-
-    return new KeyframeEffect(element, [from, to], {
-      duration,
-      easing: "ease-in-out",
-    });
-  }
-
-  if (action === "remove" && firstCoordinates) {
-    const oldCoordinates = firstCoordinates as BoardCoordinates;
-    const effect = new KeyframeEffect(
-      element,
-      [
-        { transform: "scale(1)", opacity: 1 },
-        { transform: "scale(0.98)", opacity: 0 },
-      ],
-      { duration, easing: "ease-out" },
-    );
-
-    if (rotation === 0) return effect;
-
-    let offsetParent = element.parentElement as HTMLElement | null;
-    while (
-      offsetParent &&
-      (getComputedStyle(offsetParent).position === "static" ||
-        offsetParent instanceof HTMLBodyElement)
-    ) {
-      offsetParent = offsetParent.parentElement;
-    }
-    offsetParent ??= document.body;
-
-    const parentRect = offsetParent.getBoundingClientRect();
-    const scrollOffset = getScrollOffset(offsetParent);
-    const parentCenter = {
-      x: parentRect.left + scrollOffset.x + parentRect.width / 2,
-      y: parentRect.top + scrollOffset.y + parentRect.height / 2,
-    };
-    const oldCenter = {
-      x: oldCoordinates.left + oldCoordinates.width / 2,
-      y: oldCoordinates.top + oldCoordinates.height / 2,
-    };
-    const localCenter = toBoardCoordinates(
-      oldCenter.x - parentCenter.x,
-      oldCenter.y - parentCenter.y,
-      rotation,
-    );
-    const quarterTurn = rotation === 90 || rotation === 270;
-    const parentWidth = quarterTurn ? parentRect.height : parentRect.width;
-    const parentHeight = quarterTurn ? parentRect.width : parentRect.height;
-    const elementWidth = quarterTurn ? oldCoordinates.height : oldCoordinates.width;
-    const elementHeight = quarterTurn ? oldCoordinates.width : oldCoordinates.height;
-    const parentStyles = getComputedStyle(offsetParent);
-    const borderLeft = Number.parseFloat(parentStyles.borderLeftWidth) || 0;
-    const borderTop = Number.parseFloat(parentStyles.borderTopWidth) || 0;
-    const styleReset = {
-      position: "absolute",
-      top: `${parentHeight / 2 + localCenter.y - elementHeight / 2 - borderTop}px`,
-      left: `${parentWidth / 2 + localCenter.x - elementWidth / 2 - borderLeft}px`,
-      width: `${elementWidth}px`,
-      height: `${elementHeight}px`,
-      margin: "0",
-      pointerEvents: "none",
-      transformOrigin: "center",
-      zIndex: "100",
-    } as unknown as CSSStyleDeclaration;
-
-    return [effect, { styleReset }];
-  }
-
-  return new KeyframeEffect(element, [], { duration: 1 });
-};
-
-type BoardProps = {
-  words: string[];
-  selected: string[];
-  incorrectSelection: boolean;
-  rotation: number;
-  toggleSelected: (value: string) => void;
-  solvedGroupData: WordGroup[];
-  lookupRequest: DictionaryLookupRequest | null;
-  onLookupRequestHandled: (requestId: number) => void;
-};
-
-const Board = ({
-  words,
-  selected,
-  incorrectSelection,
-  rotation,
-  solvedGroupData,
-  toggleSelected,
-  lookupRequest,
-  onLookupRequestHandled,
-}: BoardProps) => {
-  const rotationRef = useRef(rotation);
-  rotationRef.current = rotation;
-  const [parent] = useAutoAnimate(createBoardAnimationPlugin(rotationRef));
-
-  return (
-    <div ref={parent} className={"board"}>
-      {solvedGroupData.map((item) => (
-        <SolvedGroup key={item.description} solvedGroup={item} />
-      ))}
-      {words.map((word) => (
-        <Item
-          key={word}
-          itemOnClick={() => {
-            toggleSelected(word);
-          }}
-          selected={selected.includes(word)}
-          incorrect={incorrectSelection && selected.includes(word)}
-          rotation={rotation}
-          lookupRequest={lookupRequest}
-          onLookupRequestHandled={onLookupRequestHandled}
-        >
-          {word}
-        </Item>
-      ))}
-    </div>
-  );
-};
-
-export default Board;
+ÛÜ™
+HOˆ
+ˆ][BˆÙ^O^İÛÜ™Bˆ][SÛÛXÚÏ^Ê
+HOˆÂˆÙÙÛTÙ[XİY
+ÛÜ™
+NÂˆ_BˆÙ[XİY^ÜÙ[XİYš[˜ÛY\ÊÛÜ™
+_Bˆ[˜ÛÜœ™Xİ^Ú[˜ÛÜœ™XİÙ[Xİ[Ûˆ	‰ˆÙ[XİYš[˜ÛY\ÊÛÜ™
+_Bˆ‚ˆİÛÜ™BˆÒ][O‚ˆ
+J_BˆÙ]‚ˆ
+NÂŸNÂ‚™^ÜY˜][›Ø\™Â
