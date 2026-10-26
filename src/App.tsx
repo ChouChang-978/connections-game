@@ -1,385 +1,912 @@
-şŠmş&yºŞÃòân¶«Ëñè™æë{Ü™ßì…éez{ì†X§{nÿn)ÿ¦Ã©z¶­Š‰ç¢Ú^®h­µçZ[\ÜÈ\ÙQY™™Xİ\ÙT™Y‹\ÙTİ]K\H›Ü›Q]™[Hœ›ÛHœ™XXİÂš[\ÜÈÜ™X]TÜ[Hœ›ÛHœ™XXİYÛHÂš[\Ü‹‹Ğ\˜ÜÜÈÂš[\ÜØ[YHœ›ÛH‹‹ÑØ[YKŞÂš[\Ü\HÈXİ[Û˜\SÛÚİ\™\]Y\İÛÚİ\ÜšYÙ[ÛÚİ\ÜšYÚYHHœ›ÛH‹‹Ò][KŞÂš[\ÜÈØ[YQ]TÙ]ÈHœ›ÛH‹‹ÙØ[YQ]KÈÂš[\ÜÂˆ™YÚ[‘Ø[YPXİ]š]SÙËˆİÛ›ØYXİ]š]SÙËˆİÛ›ØYİ\œ™[Ø[YPXİ]š]SÙËˆ[™Ø[YPXİ]š]KˆÙĞXİ]š]Kˆİ\Ø[YPXİ]š]KŸHœ›ÛH‹‹ØXİ]š]SÙËÈÂ‚\HXİ[Û˜\QYš[š][ÛˆHÂˆYš[š][ÛÎˆİš[™ÎÂˆ^[\\ÏÎˆİš[™Ö×NÂŸNÂ‚\HXİ[Û˜\Q[HHÂˆ\Ù”ÜYXÚÎˆİš[™ÎÂˆYš[š][ÛœÏÎˆXİ[Û˜\QYš[š][Û–×NÂŸNÂ‚\HXİ[Û˜\TÛİ\˜ÙHH›Y\œšX[K]ÙXœİ\ˆˆÚZİ[Û˜\HÂ‚\HÛÚİ\İ]\ÈHšYHˆ›ØY[™ÈˆœİXØÙ\ÜÈˆ››İY›İ[™ˆ™\œ›ÜˆÂ‚\HÛÚİ\Xİ[Û˜\Q[HHÂˆ\Ù”ÜYXÚÎˆİš[™ÎÂˆYš[š][ÛœÎˆİš[™Ö×NÂŸNÂ‚˜ÛÛœİÓÒÕTÔS‘SÔÒV‘HHŒÂ˜ÛÛœİÓÒÕTÔS‘SÑĞTHLÂ‚˜ÛÛœİÙ]ÛÚİ\[™[ÜÚ][ÛˆH
-ˆX]š^ˆS[[Y[ˆÚYNˆÛÚİ\ÜšYÚYKˆÜ[”™\]Y\İÎˆXİ[Û˜\SÛÚİ\™\]Y\İ×KŠHOˆÂˆÛÛœİ›İ[™ÈHX]š^™Ù]›İ[™[™ĞÛY[™Xİ
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
+import "./App.css";
+import Game from "./Game.tsx";
+import type { DictionaryLookupRequest, LookupGridCell, LookupGridSide } from "./Item.tsx";
+import { gameDataSets } from "./gameData.ts";
+import {
+  beginGameActivityLog,
+  downloadActivityLog,
+  downloadCurrentGameActivityLog,
+  endGameActivity,
+  logActivity,
+  startGameActivity,
+} from "./activityLog.ts";
 
-NÂˆÛÛœİšY]ÜÜÚYHÚ[™İËš[›™\•ÚYÂˆÛÛœİšY]ÜÜZYÚHÚ[™İËš[›™\’ZYÚÂˆÛÛœİ[™[Ú^™HHX]›X^
-ˆKˆX]›Z[ŠˆÓÒÕTÔS‘SÔÒV‘KˆšY]ÜÜÚYHM‹ˆ
-šY]ÜÜZYÚHMˆHÓÒÕTÔS‘SÑĞT
-ˆŠHÈËˆ
-Kˆ
-NÂˆÛÛœİÙ]š\İX[›İ[™ÈH
-™\]Y\İˆXİ[Û˜\SÛÚİ\™\]Y\İ
-HOˆ
-ÂˆYˆ™\]Y\İœ[™[ÜÚ][Û‹›YˆÜˆ™\]Y\İœ[™[ÜÚ][Û‹ÜˆšYÚˆ™\]Y\İœ[™[ÜÚ][Û‹›Y
-È™\]Y\İœ[™[ÜÚ][Û‹œ[™[Ú^™Kˆ›İÛNˆ™\]Y\İœ[™[ÜÚ][Û‹Ü
-È™\]Y\İœ[™[ÜÚ][Û‹œ[™[Ú^™KˆJNÂˆÛÛœİØØİ\YYHÜ[”™\]Y\İË›X\
-Ù]š\İX[›İ[™ÊNÂˆÛÛœİX^YHX]›X^
-šY]ÜÜÚYH[™[Ú^™HH
-NÂˆÛÛœİX^ÜHX]›X^
-šY]ÜÜZYÚH[™[Ú^™HH
-NÂˆÛÛœİÛ[\H
-˜[YNˆ[X™\‹X^[][Nˆ[X™\ŠHOˆX]›X^
-X]›Z[Š˜[YKX^[][JJNÂˆÛÛœİ™\XØ[Ù[\ˆH›İ[™ËÜ
-È›İ[™ËšZYÚÈˆH[™[Ú^™HÈÂˆÛÛœİÜš^›Û[Ù[\ˆH›İ[™Ë›Y
-È›İ[™ËÚYÈˆH[™[Ú^™HÈÂˆÛÛœİ™Y™\œ™YHÚYHOOH›Y‚ˆÈÂˆÈYˆ›İ[™ËœšYÚ
-ÈÓÒÕTÔS‘SÑĞTÜˆ™\XØ[Ù[\ˆKˆÈYˆ›İ[™Ë›YH[™[Ú^™HHÓÒÕTÔS‘SÑĞTÜˆ™\XØ[Ù[\ˆKˆÈYˆÜš^›Û[Ù[\‹Üˆ›İ[™ËÜH[™[Ú^™HHÓÒÕTÔS‘SÑĞTKˆÈYˆÜš^›Û[Ù[\‹Üˆ›İ[™Ë˜›İÛH
-ÈÓÒÕTÔS‘SÑĞTKˆBˆˆÚYHOOHœšYÚ‚ˆÈÂˆÈYˆ›İ[™Ë›YH[™[Ú^™HHÓÒÕTÔS‘SÑĞTÜˆ™\XØ[Ù[\ˆKˆÈYˆ›İ[™ËœšYÚ
-ÈÓÒÕTÔS‘SÑĞTÜˆ™\XØ[Ù[\ˆKˆÈYˆÜš^›Û[Ù[\‹Üˆ›İ[™ËÜH[™[Ú^™HHÓÒÕTÔS‘SÑĞTKˆÈYˆÜš^›Û[Ù[\‹Üˆ›İ[™Ë˜›İÛH
-ÈÓÒÕTÔS‘SÑĞTKˆBˆˆÂˆÈYˆÜš^›Û[Ù[\‹Üˆ›İ[™ËÜH[™[Ú^™HHÓÒÕTÔS‘SÑĞTKˆÈYˆÜš^›Û[Ù[\‹Üˆ›İ[™Ë˜›İÛH
-ÈÓÒÕTÔS‘SÑĞTKˆÈYˆ›İ[™Ë›YH[™[Ú^™HHÓÒÕTÔS‘SÑĞTÜˆ™\XØ[Ù[\ˆKˆÈYˆ›İ[™ËœšYÚ
-ÈÓÒÕTÔS‘SÑĞTÜˆ™\XØ[Ù[\ˆKˆNÂ‚ˆÛÛœİØ[™Y]\ÈHË‹‹œ™Y™\œ™YNÂˆ›Üˆ
-]ÜHÈÜHX^ÜÈÜ
-ÏH[™[Ú^™H
-ÈÓÒÕTÔS‘SÑĞT
-HÂˆ›Üˆ
-]YHÈYHX^YÈY
-ÏH[™[Ú^™H
-ÈÓÒÕTÔS‘SÑĞT
-HÂˆØ[™Y]\Ëœ\Ú
-ÈYÜJNÂˆBˆB‚ˆÛÛœİÜÚ][ÛˆHØ[™Y]\Âˆ›X\
+type DictionaryDefinition = {
+  definition?: string;
+  examples?: string[];
+};
 
-ÈYÜJHOˆ
-ÈYˆÛ[\
-YX^Y
-KÜˆÛ[\
-ÜX^Ü
-HJJBˆ™š[™
+type DictionaryEntry = {
+  partOfSpeech?: string;
+  definitions?: DictionaryDefinition[];
+};
 
-Ø[™Y]K[™^[Ø[™Y]\ÊHOˆÂˆÛÛœİÙ^HH	ØØ[™Y]K›YN‰ØØ[™Y]KÜXÂˆYˆ
-[Ø[™Y]\Ë™š[™[™^
+type DictionarySource = "merriam-webster" | "wiktionary";
 
-İ\ŠHOˆ	Ûİ\‹›YN‰Ûİ\‹ÜXOOHÙ^JHOOH[™^
-H™]\›ˆ˜[ÙNÂˆ™]\›ˆØØİ\YY™]™\J
-™Xİ
-HO‚ˆØ[™Y]K›Y
-È[™[Ú^™H
-ÈÓÒÕTÔS‘SÑĞTH™Xİ›YˆØ[™Y]K›YH™XİœšYÚ
-ÈÓÒÕTÔS‘SÑĞTˆØ[™Y]KÜ
-È[™[Ú^™H
-ÈÓÒÕTÔS‘SÑĞTH™XİÜˆØ[™Y]KÜH™Xİ˜›İÛH
-ÈÓÒÕTÔS‘SÑĞTˆ
-NÂˆJNÂ‚ˆ™]\›ˆÈ‹‹ŠÜÚ][ÛˆÏÈÈYˆÜˆJK[™[Ú^™HNÂŸNÂ‚˜ÛÛœİÛÚİ\X]š^H
-ÂˆÚYKˆÙ[ËˆÜ[”™\]Y\İËˆ›İ][Û‹ˆ\ØX›YˆÛ“ÛÚİ\ŸNˆÂˆÚYNˆÛÚİ\ÜšYÚYNÂˆÙ[ÎˆÛÚİ\ÜšYÙ[×NÂˆÜ[”™\]Y\İÎˆXİ[Û˜\SÛÚİ\™\]Y\İ×NÂˆ›İ][Ûˆ[X™\Âˆ\ØX›Yˆ›ÛÛX[ÂˆÛ“ÛÚİ\ˆ
-ÛÜ™ˆİš[™Ë›İÎˆ[X™\‹ÛÛ[[ˆ[X™\‹ÚYNˆÛÚİ\ÜšYÚYK[™[ÜÚ][ÛˆÈYˆ[X™\ÈÜˆ[X™\È[™[Ú^™Nˆ[X™\ˆJHOˆ›ÚYÂŸJHOˆÂˆÛÛœİÚYT›İ][ÛˆHÚYHOOHœšYÚˆÈLˆÚYHOOH›YˆÈNLˆÂˆÛÛœİX]š^›İ][ÛˆH
+type LookupStatus = "idle" | "loading" | "success" | "not-found" | "error";
 
-›İ][ÛˆHÚYT›İ][ÛŠH	HÍŒ
-ÈÍŒ
-H	HÍŒÂ‚ˆ™]\›ˆ
-ˆ]‚ˆÛ\ÜÓ˜[YOHÛÜ™[ÛÚİ\[X]š^‚ˆ›ÛOH™Ü›İ\‚ˆ\šXK[X™[^ØXİ[Û˜\HÛÚİ\ÜÚ][ÛœÈÛˆH	ÜÚY_HÚYXBˆİ[O^ŞÈ˜[œÙ›Ü›Nˆ›İ]J	ÛX]š^›İ][ÛŸYYÊX_Bˆ‚ˆĞ\œ˜^K™œ›ÛJÈ[™İˆMˆK
-İ˜[YK[™^
-HOˆÂˆÛÛœİ›İÈHX]™›ÛÜŠ[™^È
-H
-ÈNÂˆÛÛœİÛÛ[[ˆH
-[™^	H
-H
-ÈNÂˆÛÛœİÛÜ™HÙ[ÖÚ[™^HÏÈ[ÂˆÛÛœİØ[YTÚYT™\]Y\İÈHÜ[”™\]Y\İË™š[\Š
-™\]Y\İ
-HOˆ™\]Y\İœÚYHOOHÚYJNÂˆ™]\›ˆ
-ˆ]Û‚ˆÙ^O^Ø	ÜÚY_KIÜ›İßKIØÛÛ[[ŸXBˆÛ\ÜÓ˜[YOHÛÜ™[ÛÚİ\[X]š^X]Ûˆ‚ˆ]KXXİ]š]KX]Û^ØÛÜ™[ÛÚİ\IÜÚY_K\‰Ü›İßXÉØÛÛ[[ŸXBˆ\OH˜]Ûˆ‚ˆ\ØX›Y^È]ÛÜ™\ØX›YBˆ\šXK[X™[^İÛÜ™ˆÈÛÚÈ\HÛÜ™]›İÈ	Ü›İßKÛÛ[[ˆ	ØÛÛ[[ŸXˆˆ›ÈÛÜ™]›İÈ	Ü›İßKÛÛ[[ˆ	ØÛÛ[[ŸXBˆÛÛXÚÏ^Ê]™[
-HOˆÂˆYˆ
-]ÛÜ™
-H™]\›ÂˆÛÛœİX]š^H]™[˜İ\œ™[\™Ù]˜ÛÜÙ\İS[[Y[Š‹ÛÜ™[ÛÚİ\[X]š^ŠNÂˆYˆ
-[X]š^
-H™]\›ÂˆÛ“ÛÚİ\
-ÛÜ™›İËÛÛ[[‹ÚYKÙ]ÛÚİ\[™[ÜÚ][ÛŠX]š^ÚYKØ[YTÚYT™\]Y\İÊJNÂˆ_BˆÏ‚ˆ
-NÂˆJ_BˆÙ]‚ˆ
-NÂŸNÂ‚˜ÛÛœİÙ]ÚÜYš[š][ÛœÈH
-]Nˆ[šÛ›İÛŠNˆÛÚİ\Xİ[Û˜\Q[V×HOˆÂˆYˆ
-P\œ˜^Kš\Ğ\œ˜^J]JJH™]\›ˆ×NÂ‚ˆ™]\›ˆ]K™›]X\
+type LookupDictionaryEntry = {
+  partOfSpeech?: string;
+  definitions: string[];
+};
 
-][JHOˆÂˆYˆ
-Z][H\[Ùˆ][HOOH›Øš™XİŠH™]\›ˆ×NÂˆÛÛœİ[HH][H\È™XÛÜ™İš[™Ë[šÛ›İÛÂˆÛÛœİYš[š][ÛœÈH\œ˜^Kš\Ğ\œ˜^J[KœÚÜYŠBˆÈ[KœÚÜY‹™š[\Š
-Yš[š][ÛŠNˆYš[š][Ûˆ\Èİš[™ÈOˆ\[ÙˆYš[š][ÛˆOOHœİš[™ÈŠBˆˆ×NÂˆ™]\›ˆYš[š][ÛœË›[™İˆˆÈŞÈ\Ù”ÜYXÚˆ\[Ùˆ[K™›OOHœİš[™ÈˆÈ[K™›ˆ[™Yš[™YYš[š][ÛœÈWBˆˆ×NÂˆJNÂŸNÂ‚˜ÛÛœİXİ[Û˜\SÛÚİ\[™[H
-Âˆ™\]Y\İˆÛÛÜÙKŸNˆÂˆ™\]Y\İˆXİ[Û˜\SÛÚİ\™\]Y\İÂˆÛÛÜÙNˆ
-™\]Y\İYˆ[X™\ŠHOˆ›ÚYÂŸJHOˆÂˆÛÛœİÜİ]\ËÙ]İ]\×HH\ÙTİ]O^ÛYOÛÚİ\İ]\ËšYHŠ›ØY[™ÈŠNÂˆÛÛœİÙ[šY\ËÙ][šY\×HH\ÙTİ]OÛÚİ\Xİ[Û˜\Q[V×OŠ×JNÂˆÛÛœİ™\İ[ÙÙÙYH\ÙT™YŠ˜[ÙJNÂ‚ˆ\ÙQY™™Xİ
+const LOOKUP_PANEL_SIZE = 260;
+const LOOKUP_PANEL_GAP = 12;
 
+const getLookupPanelPosition = (
+  matrix: HTMLElement,
+  side: LookupGridSide,
+  openRequests: DictionaryLookupRequest[],
+) => {
+  const bounds = matrix.getBoundingClientRect();
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const panelSize = Math.max(
+    1,
+    Math.min(
+      LOOKUP_PANEL_SIZE,
+      viewportWidth - 16,
+      (viewportHeight - 16 - LOOKUP_PANEL_GAP * 2) / 3,
+    ),
+  );
+  const getVisualBounds = (request: DictionaryLookupRequest) => ({
+    left: request.panelPosition.left,
+    top: request.panelPosition.top,
+    right: request.panelPosition.left + request.panelPosition.panelSize,
+    bottom: request.panelPosition.top + request.panelPosition.panelSize,
+  });
+  const occupied = openRequests.map(getVisualBounds);
+  const maxLeft = Math.max(8, viewportWidth - panelSize - 8);
+  const maxTop = Math.max(8, viewportHeight - panelSize - 8);
+  const clamp = (value: number, maximum: number) => Math.max(8, Math.min(value, maximum));
+  const verticalCenter = bounds.top + bounds.height / 2 - panelSize / 2;
+  const horizontalCenter = bounds.left + bounds.width / 2 - panelSize / 2;
+  const preferred = side === "left"
+    ? [
+        { left: bounds.right + LOOKUP_PANEL_GAP, top: verticalCenter },
+        { left: bounds.left - panelSize - LOOKUP_PANEL_GAP, top: verticalCenter },
+        { left: horizontalCenter, top: bounds.top - panelSize - LOOKUP_PANEL_GAP },
+        { left: horizontalCenter, top: bounds.bottom + LOOKUP_PANEL_GAP },
+      ]
+    : side === "right"
+      ? [
+          { left: bounds.left - panelSize - LOOKUP_PANEL_GAP, top: verticalCenter },
+          { left: bounds.right + LOOKUP_PANEL_GAP, top: verticalCenter },
+          { left: horizontalCenter, top: bounds.top - panelSize - LOOKUP_PANEL_GAP },
+          { left: horizontalCenter, top: bounds.bottom + LOOKUP_PANEL_GAP },
+        ]
+      : [
+          { left: horizontalCenter, top: bounds.top - panelSize - LOOKUP_PANEL_GAP },
+          { left: horizontalCenter, top: bounds.bottom + LOOKUP_PANEL_GAP },
+          { left: bounds.left - panelSize - LOOKUP_PANEL_GAP, top: verticalCenter },
+          { left: bounds.right + LOOKUP_PANEL_GAP, top: verticalCenter },
+        ];
 
-HOˆÂˆÛÛœİÛÛ›Û\ˆH™]ÈX›ÜÛÛ›Û\Š
-NÂˆÙ]İ]\Ê›ØY[™ÈŠNÂˆÙ][šY\Ê×JNÂˆ™\İ[ÙÙÙY˜İ\œ™[H˜[ÙNÂ‚ˆ›ÚY
-\Ş[˜È
+  const candidates = [...preferred];
+  for (let top = 8; top <= maxTop; top += panelSize + LOOKUP_PANEL_GAP) {
+    for (let left = 8; left <= maxLeft; left += panelSize + LOOKUP_PANEL_GAP) {
+      candidates.push({ left, top });
+    }
+  }
 
-HOˆÂˆHÂˆÛÛœİ™\ÜÛœÙHH]ØZ]™]Ú
-ˆØ\KÙXİ[Û˜\OİÛÜ™IÙ[˜ÛÙUT’PÛÛ\Û™[
-™\]Y\İÛÜ™ÓØØ[SİÙ\Ø\ÙJ
-J_XˆÈÚYÛ˜[ˆÛÛ›Û\‹œÚYÛ˜[XY\œÎˆÈXØÙ\ˆ˜\XØ][Û‹ÚœÛÛˆˆHKˆ
-NÂˆYˆ
-\™\ÜÛœÙK›ÚÊH›İÈ™]È\œ›ÜŠXİ[Û˜\H™\]Y\İ˜Z[Yˆ	Ü™\ÜÛœÙKœİ]\ßX
-NÂˆÛÛœİ™\İ[ÈHÙ]ÚÜYš[š][ÛœÊ]ØZ]™\ÜÛœÙKšœÛÛŠ
-JNÂˆYˆ
-ÛÛ›Û\‹œÚYÛ˜[˜X›ÜY
-H™]\›ÂˆÙ][šY\Ê™\İ[ÊNÂˆÙ]İ]\Ê™\İ[Ë›[™İˆÈœİXØÙ\ÜÈˆˆ››İY›İ[™ŠNÂˆHØ]Ú
-\œ›ÜŠHÂˆYˆ
-\œ›Üˆ[œİ[˜Ù[Ùˆ\œ›Üˆ	‰ˆ\œ›Ü‹›˜[YHOOHX›Ü\œ›ÜˆŠH™]\›ÂˆYˆ
-XÛÛ›Û\‹œÚYÛ˜[˜X›ÜY
-HÙ]İ]\Ê™\œ›ÜˆŠNÂˆBˆJJ
-NÂ‚ˆ™]\›ˆ
+  const position = candidates
+    .map(({ left, top }) => ({ left: clamp(left, maxLeft), top: clamp(top, maxTop) }))
+    .find((candidate, index, allCandidates) => {
+      const key = `${candidate.left}:${candidate.top}`;
+      if (allCandidates.findIndex((other) => `${other.left}:${other.top}` === key) !== index) return false;
+      return occupied.every((rect) =>
+        candidate.left + panelSize + LOOKUP_PANEL_GAP <= rect.left ||
+        candidate.left >= rect.right + LOOKUP_PANEL_GAP ||
+        candidate.top + panelSize + LOOKUP_PANEL_GAP <= rect.top ||
+        candidate.top >= rect.bottom + LOOKUP_PANEL_GAP,
+      );
+    });
 
-HOˆÛÛ›Û\‹˜X›Ü
+  return { ...(position ?? { left: 8, top: 8 }), panelSize };
+};
 
-NÂˆKÜ™\]Y\İœ™\]Y\İY™\]Y\İÛÜ™JNÂ‚ˆ\ÙQY™™Xİ
+const LookupMatrix = ({
+  side,
+  cells,
+  openRequests,
+  rotation,
+  disabled,
+  onLookup,
+}: {
+  side: LookupGridSide;
+  cells: LookupGridCell[];
+  openRequests: DictionaryLookupRequest[];
+  rotation: number;
+  disabled: boolean;
+  onLookup: (word: string, row: number, column: number, side: LookupGridSide, panelPosition: { left: number; top: number; panelSize: number }) => void;
+}) => {
+  const sideRotation = side === "right" ? 90 : side === "left" ? -90 : 0;
+  const matrixRotation = ((rotation - sideRotation) % 360 + 360) % 360;
 
+  return (
+    <div
+      className="word-lookup-matrix"
+      role="group"
+      aria-label={`Dictionary lookup positions on the ${side} side`}
+      style={{ transform: `rotate(${matrixRotation}deg)` }}
+    >
+      {Array.from({ length: 16 }, (_value, index) => {
+        const row = Math.floor(index / 4) + 1;
+        const column = (index % 4) + 1;
+        const word = cells[index] ?? null;
+        const sameSideRequests = openRequests.filter((request) => request.side !== side);
+        return (
+          <button
+            key={`${side}-${row}-${column}`}
+            className="word-lookup-matrix-button"
+            data-activity-button={`word-lookup-${side}-r${row}c${column}`}
+            type="button"
+            disabled={!word || disabled}
+            aria-label={word
+              ? `Look up the word at row ${row}, column ${column}`
+              : `No word at row ${row}, column ${column}`}
+            onClick={(event) => {
+              if (!word) return;
+              const matrix = event.currentTarget.closest<HTMLElement>(".word-lookup-matrix");
+              if (!matrix) return;
+              onLookup(word, row, column, side, getLookupPanelPosition(matrix, side, sameSideRequests));
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
 
-HOˆÂˆYˆ
-İ]\ÈOOH›ØY[™Èˆ™\İ[ÙÙÙY˜İ\œ™[
-H™]\›Âˆ™\İ[ÙÙÙY˜İ\œ™[HYNÂˆÙĞXİ]š]J™Xİ[Û˜\WÜÙX\˜ÚÜ™\İ[‹Âˆ]Y\Nˆ™\]Y\İÛÜ™ˆÛÜ™ˆ™\]Y\İÛÜ™ˆÛİ\˜ÙNˆ›Y\œšX[K]ÙXœİ\ˆ‹ˆ[œ]Y]ÙˆœÜÚ][Û—ÛX]š^‹ˆÚYNˆ™\]Y\İœÚYKˆÜšY›İÎˆ™\]Y\İœ›İËˆÜšYÛÛ[[ˆ™\]Y\İ˜ÛÛ[[‹ˆ™\]Y\İYˆ™\]Y\İœ™\]Y\İYˆİ]\Ëˆ[PÛİ[ˆ[šY\Ë›[™İˆYš[š][ÛÛİ[ˆ[šY\Ëœ™YXÙJ
-İ[[JHOˆİ[
-È[K™Yš[š][ÛœË›[™İ
-KˆJNÂˆKÙ[šY\Ë™\]Y\İİ]\×JNÂ‚ˆÛÛœİÛÜÙHH
+const getShortDefinitions = (data: unknown): LookupDictionaryEntry[] => {
+  if (!Array.isArray(data)) return [];
 
-HOˆÂˆÙĞXİ]š]J™Xİ[Û˜\WÜ[™[ØÛÜÙY‹Âˆ]Y\Nˆ™\]Y\İÛÜ™ˆÛÜ™ˆ™\]Y\İÛÜ™ˆ[œ]Y]ÙˆœÜÚ][Û—ÛX]š^‹ˆÚYNˆ™\]Y\İœÚYKˆÜšY›İÎˆ™\]Y\İœ›İËˆÜšYÛÛ[[ˆ™\]Y\İ˜ÛÛ[[‹ˆ™\]Y\İYˆ™\]Y\İœ™\]Y\İYˆ™X\ÛÛˆ˜ÛÜÙWØ]Ûˆ‹ˆš[˜[İ]\Îˆİ]\ËˆJNÂˆÛÛÜÙJ™\]Y\İœ™\]Y\İY
-NÂˆNÂ‚ˆÛÛœİÜšY[][ÛˆH™\]Y\İœÚYHOOH›Y‚ˆÈœ›İ]JLYÊH‚ˆˆ™\]Y\İœÚYHOOHœšYÚ‚ˆÈœ›İ]JNLYÊH‚ˆˆœ›İ]JYÊHÂ‚ˆ™]\›ˆÜ™X]TÜ[
-ˆ\ÚYBˆÛ\ÜÓ˜[YOH™Xİ[Û˜\K]ÛÜ™\[™[‚ˆ›ÛOH™X[ÙÈ‚ˆ\šXK[X™[^Ø	Ü™\]Y\İÛÜ™HXİ[Û˜\HYš[š][Û˜Bˆ]K\ÚYO^Ü™\]Y\İœÚY_Bˆİ[O^ŞÂˆYˆ™\]Y\İœ[™[ÜÚ][Û‹›YˆÜˆ™\]Y\İœ[™[ÜÚ][Û‹ÜˆÚYˆ™\]Y\İœ[™[ÜÚ][Û‹œ[™[Ú^™KˆX^ZYÚˆ™\]Y\İœ[™[ÜÚ][Û‹œ[™[Ú^™Kˆ˜[œÙ›Ü›NˆÜšY[][Û‹ˆ˜[œÙ›Ü›SÜšYÚ[ˆ˜Ù[\ˆÙ[\ˆ‹ˆ_Bˆ‚ˆ]ˆÛ\ÜÓ˜[YOH™Xİ[Û˜\K\[™[ZXY[™È‚ˆİ›Û™ÈÛ\ÜÓ˜[YOH™Xİ[Û˜\K\[™[]ÛÜ™Ü™\]Y\İÛÜ™OÜİ›Û™Ï‚ˆ]Û‚ˆÛ\ÜÓ˜[YOH™Xİ[Û˜\K\[™[XÛÜÙH‚ˆ]KXXİ]š]KX]ÛH™Xİ[Û˜\K\[™[XÛÜÙH‚ˆ\OH˜]Ûˆ‚ˆ\šXK[X™[^ØÛÜÙHYš[š][Ûˆ›Üˆ	Ü™\]Y\İÛÜ™XBˆÛÛXÚÏ^ØÛÜÙ_Bˆ‚ˆ0åÂˆØ]Û‚ˆÙ]‚ˆÜİ]\ÈOOH›ØY[™Èˆ	‰ˆ“ÛÚÚ[™È\8 )ÜŸBˆÜİ]\ÈOOH››İY›İ[™ˆ	‰ˆ“›ÈÛÛYÚX]HYš[š][Ûˆ›İ[™ÜŸBˆÜİ]\ÈOOH™\œ›Üˆˆ	‰ˆÛİ[›İ™XXÚY\œšX[KUÙXœİ\‹ÜŸBˆÜİ]\ÈOOHœİXØÙ\ÜÈˆ	‰ˆ[šY\Ë›X\
+  return data.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const entry = item as Record<string, unknown>;
+    const definitions = Array.isArray(entry.shortdef)
+      ? entry.shortdef.filter((definition): definition is string => typeof definition === "string")
+      : [];
+    return definitions.length > 0
+      ? [{ partOfSpeech: typeof entry.fl === "string" ? entry.fl : undefined, definitions }]
+      : [];
+  });
+};
 
-[K[R[™^
-HOˆ
-ˆÙXİ[ÛˆÛ\ÜÓ˜[YOH™Xİ[Û˜\K\[™[Y[HˆÙ^O^Ø	Ù[Kœ\Ù”ÜYXÚKIÙ[R[™^XO‚ˆÙ[Kœ\Ù”ÜYXÚ	‰ˆÏÙ[Kœ\Ù”ÜYXÚOÚÏŸBˆÛ‚ˆÙ[K™Yš[š][ÛœË›X\
+const DictionaryLookupPanel = ({
+  request,
+  onClose,
+}: {
+  request: DictionaryLookupRequest;
+  onClose: (requestId: number) => void;
+}) => {
+  const [status, setStatus] = useState<Exclude<LookupStatus, "idle">>("loading");
+  const [entries, setEntries] = useState<LookupDictionaryEntry[]>([]);
+  const resultLogged = useRef(false);
 
-Yš[š][Û‹[™^
-HOˆ
-ˆHÙ^O^Ø	Ú[™^KIÙYš[š][ÛŸXOÙYš[š][ÛŸOÛO‚ˆ
-J_BˆÛÛ‚ˆÜÙXİ[Û‚ˆ
-J_BˆØ\ÚYO‹ˆØİ[Y[˜›ÙKˆ
-NÂŸNÂ‚˜ÛÛœİİš\X\šİ\H
-˜[YNˆİš[™ÊHO‚ˆ™]ÈÓT\œÙ\Š
-Kœ\œÙQœ›ÛTİš[™Ê˜[YK^Ú[ŠK˜›ÙK^ÛÛ[Ëš[J
-HÏÈˆÂ‚˜ÛÛœİÙ]Y\œšX[UÙXœİ\‘[šY\ÈH
-]Nˆ[šÛ›İÛŠNˆXİ[Û˜\Q[V×HOˆÂˆYˆ
-P\œ˜^Kš\Ğ\œ˜^J]JJH™]\›ˆ×NÂ‚ˆ™]\›ˆ]K™›]X\
+  useEffect(() => {
+    const controller = new AbortController();
+    setStatus("loading");
+    setEntries([]);
+    resultLogged.current = false;
 
-][JHOˆÂˆYˆ
-Z][H\[Ùˆ][HOOH›Øš™XİŠH™]\›ˆ×NÂˆÛÛœİ[HH][H\È™XÛÜ™İš[™Ë[šÛ›İÛÂˆÛÛœİYš[š][ÛœÈH\œ˜^Kš\Ğ\œ˜^J[KœÚÜYŠBˆÈ[KœÚÜY‚ˆ™š[\Š
-Yš[š][ÛŠNˆYš[š][Ûˆ\Èİš[™ÈOˆ\[ÙˆYš[š][ÛˆOOHœİš[™ÈŠBˆ›X\
+    void (async () => {
+      try {
+        const response = await fetch(
+          `/api/dictionary?word=${encodeURIComponent(request.word.toLocaleLowerCase())}`,
+          { signal: controller.signal, headers: { Accept: "application/json" } },
+        );
+        if (!response.ok) throw new Error(`Dictionary request failed: ${response.status}`);
+        const results = getShortDefinitions(await response.json());
+        if (controller.signal.aborted) return;
+        setEntries(results);
+        setStatus(results.length > 0 ? "success" : "not-found");
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") return;
+        if (!controller.signal.aborted) setStatus("error");
+      }
+    })();
 
-Yš[š][ÛŠHOˆ
-ÈYš[š][ÛˆJJBˆˆ×NÂ‚ˆ™]\›ˆYš[š][ÛœË›[™İˆˆÈŞÂˆ\Ù”ÜYXÚˆ\[Ùˆ[K™›OOHœİš[™ÈˆÈ[K™›ˆ[™Yš[™YˆYš[š][ÛœËˆWBˆˆ×NÂˆJNÂŸNÂ‚˜ÛÛœİÙ]ÚZİ[Û˜\Q[šY\ÈH
-]Nˆ[šÛ›İÛŠNˆXİ[Û˜\Q[V×HOˆÂˆYˆ
-Y]H\[Ùˆ]HOOH›Øš™Xİˆ\œ˜^Kš\Ğ\œ˜^J]JJH™]\›ˆ×NÂ‚ˆÛÛœİ™\ÜÛœÙHH]H\È™XÛÜ™İš[™Ë[šÛ›İÛÂˆÛÛœİ[šY\ÈH™\ÜÛœÙK™[ˆÏÈ™\ÜÛœÙK‘[™Û\ÚÂˆ™]\›ˆ\œ˜^Kš\Ğ\œ˜^J[šY\ÊHÈ
-[šY\È\ÈXİ[Û˜\Q[V×JHˆ×NÂŸNÂ‚˜ÛÛœİY\™ÙUÚZİ[Û˜\Q[šY\ÈH
-[QÜ›İ\ÎˆXİ[Û˜\Q[V×V×JNˆXİ[Û˜\Q[V×HOˆÂˆÛÛœİY\™ÙYH™]ÈX\İš[™ËXİ[Û˜\Q[OŠ
-NÂˆÛÛœİÙY[‘Yš[š][ÛœÈH™]ÈX\İš[™ËÙ]İš[™ÏŠ
-NÂ‚ˆ›Üˆ
-ÛÛœİ[HÙˆ[QÜ›İ\Ë™›]
+    return () => controller.abort();
+  }, [request.requestId, request.word]);
 
-JHÂˆÛÛœİ\Ù”ÜYXÚH[Kœ\Ù”ÜYXÚËš[J
-HÏÈˆÂˆÛÛœİ[RÙ^HH\Ù”ÜYXÚÓØØ[SİÙ\Ø\ÙJ
-NÂˆYˆ
-[Y\™ÙYš\Ê[RÙ^JJHÂˆY\™ÙYœÙ]
-[RÙ^KÈ\Ù”ÜYXÚYš[š][ÛœÎˆ×HJNÂˆÙY[‘Yš[š][ÛœËœÙ]
-[RÙ^K™]ÈÙ]
+  useEffect(() => {
+    if (status === "loading" || resultLogged.current) return;
+    resultLogged.current = true;
+    logActivity("dictionary_search_result", {
+      query: request.word,
+      word: request.word,
+      source: "merriam-webster",
+      inputMethod: "position_matrix",
+      side: request.side,
+      gridRow: request.row,
+      gridColumn: request.column,
+      requestId: request.requestId,
+      status,
+      entryCount: entries.length,
+      definitionCount: entries.reduce((total, entry) => total + entry.definitions.length, 0),
+    });
+  }, [entries, request, status]);
 
-JNÂˆB‚ˆÛÛœİ\™Ù]HY\™ÙY™Ù]
-[RÙ^JHNÂˆÛÛœİÙY[ˆHÙY[‘Yš[š][ÛœË™Ù]
-[RÙ^JHNÂˆ›Üˆ
-ÛÛœİYš[š][ÛˆÙˆ[K™Yš[š][ÛœÈÏÈ×JHÂˆYˆ
-YYš[š][Û‹™Yš[š][ÛŠHÛÛ[YNÂˆÛÛœİYš[š][Û’Ù^HHİš\X\šİ\
-Yš[š][Û‹™Yš[š][ÛŠBˆÓØØ[SİÙ\Ø\ÙJ
-Bˆœ™\XÙJ×ÊËÙËˆŠNÂˆYˆ
-YYš[š][Û’Ù^HÙY[‹š\ÊYš[š][Û’Ù^JJHÛÛ[YNÂˆÙY[‹˜Y
-Yš[š][Û’Ù^JNÂˆ\™Ù]™Yš[š][ÛœÏËœ\Ú
-Yš[š][ÛŠNÂˆBˆB‚ˆ™]\›ˆ\œ˜^K™œ›ÛJY\™ÙY˜[Y\Ê
-JK™š[\Š
-[JHOˆ[K™Yš[š][ÛœÏË›[™İ
-NÂŸNÂ‚˜ÛÛœİ“ÕUSÓ—ÑQWÑTUSÓ—ÓTÈHNÂ‚™[˜İ[Ûˆ\
+  const close = () => {
+    logActivity("dictionary_panel_closed", {
+      query: request.word,
+      word: request.word,
+      inputMethod: "position_matrix",
+      side: request.side,
+      gridRow: request.row,
+      gridColumn: request.column,
+      requestId: request.requestId,
+      reason: "close_button",
+      finalStatus: status,
+    });
+    onClose(request.requestId);
+  };
 
-HÂˆÛÛœİÙØ[YTİ\YÙ]Ø[YTİ\YHH\ÙTİ]J˜[ÙJNÂˆÛÛœİÙØ[YQ[™YÙ]Ø[YQ[™YHH\ÙTİ]J˜[ÙJNÂˆÛÛœİÜÚİÑİÛ›ØYÚÚXÙ\ËÙ]ÚİÑİÛ›ØYÚÚXÙ\×HH\ÙTİ]J˜[ÙJNÂˆÛÛœİÙØ[YR[œİ[˜ÙKÙ]Ø[YR[œİ[˜ÙWHH\ÙTİ]J
-NÂˆÛÛœİÙÜ›İ\Ú^™KÙ]Ü›İ\Ú^™WHH\ÙTİ]JˆŠNÂˆÛÛœİÜÙX\˜Ú\›KÙ]ÙX\˜Ú\›WHH\ÙTİ]JˆŠNÂˆÛÛœİÜÙX\˜ÚY\›KÙ]ÙX\˜ÚY\›WHH\ÙTİ]JˆŠNÂˆÛÛœİÙXİ[Û˜\Q[šY\ËÙ]Xİ[Û˜\Q[šY\×HH\ÙTİ]OXİ[Û˜\Q[V×OŠ×JNÂˆÛÛœİÙXİ[Û˜\TÛİ\˜ÙKÙ]Xİ[Û˜\TÛİ\˜ÙWHH\ÙTİ]OXİ[Û˜\TÛİ\˜ÙOŠ›Y\œšX[K]ÙXœİ\ˆŠNÂˆÛÛœİÛÛÚİ\İ]\ËÙ]ÛÚİ\İ]\×HH\ÙTİ]OÛÚİ\İ]\ÏŠšYHŠNÂˆÛÛœİXİ]™SÛÚİ\H\ÙT™YX›ÜÛÛ›Û\ˆ[Š[
-NÂˆÛÛœİÜ›İ][Û‹Ù]›İ][Û—HH\ÙTİ]J
-NÂˆÛÛœİÜ›İ][Û•˜[œÚ][Û‹Ù]›İ][Û•˜[œÚ][Û—HH\ÙTİ]OšYHˆ™˜YK[İ]ˆ™˜YKZ[ˆŠšYHŠNÂˆÛÛœİ›İ][Û•[Y\ˆH\ÙT™Y[X™\ˆ[Š[
-NÂˆÛÛœİÜİX›Z]™\]Y\İÙ]İX›Z]™\]Y\İHH\ÙTİ]J
-NÂˆÛÛœİÜİX›Z]Ûİ\˜ÙKÙ]İX›Z]Ûİ\˜ÙWHH\ÙTİ]J[šÛ›İÛˆŠNÂˆÛÛœİÜİX›Z]]˜Z[X›KÙ]İX›Z]]˜Z[X›WHH\ÙTİ]J˜[ÙJNÂˆÛÛœİÛÛÚİ\ÜšYÙ]ÛÚİ\ÜšYHH\ÙTİ]OÛÚİ\ÜšYÙ[×OŠ
+  const orientation = request.side === "left"
+    ? "rotate(90deg)"
+    : request.side === "right"
+      ? "rotate(-90deg)"
+      : "rotate(0deg)";
 
-HOˆ\œ˜^JMŠK™š[
-[
-JNÂˆÛÛœİÛÛÚİ\™\]Y\İËÙ]ÛÚİ\™\]Y\İ×HH\ÙTİ]OXİ[Û˜\SÛÚİ\™\]Y\İ×OŠ×JNÂˆÛÛœİÛÚİ\™\]Y\İÙ\]Y[˜ÙHH\ÙT™YŠ
-NÂˆÛÛœİ\Ú[™YˆH\ÙT™YS]‘[[Y[[Š[
-NÂˆÛÛœİ˜XÙSYPÛÛ›ÛÔ™YˆH\ÙT™YS[[Y[[Š[
-NÂ‚ˆ\ÙQY™™Xİ
+  return createPortal(
+    <aside
+      className="dictionary-word-panel"
+      role="dialog"
+      aria-label={`${request.word} dictionary definition`}
+      data-side={request.side}
+      style={{
+        left: request.panelPosition.left,
+        top: request.panelPosition.top,
+        width: request.panelPosition.panelSize,
+        maxHeight: request.panelPosition.panelSize,
+        transform: orientation,
+        transformOrigin: "center center",
+      }}
+    >
+      <div className="dictionary-panel-heading">
+        <strong className="dictionary-panel-word">{request.word}</strong>
+        <button
+          className="dictionary-panel-close"
+          data-activity-button="dictionary-panel-close"
+          type="button"
+          aria-label={`Close definition for ${request.word}`}
+          onClick={close}
+        >
+          Ã—
+        </button>
+      </div>
+      {status === "loading" && <p>Looking upâ€¦</p>}
+      {status === "not-found" && <p>No Collegiate definition found.</p>}
+      {status === "error" && <p>Could not reach Merriam-Webster.</p>}
+      {status === "success" && entries.map((entry, entryIndex) => (
+        <section className="dictionary-panel-entry" key={`${entry.partOfSpeech}-${entryIndex}`}>
+          {entry.partOfSpeech && <h3>{entry.partOfSpeech}</h3>}
+          <ol>
+            {entry.definitions.map((definition, index) => (
+              <li key={`${index}-${definition}`}>{definition}</li>
+            ))}
+          </ol>
+        </section>
+      ))}
+    </aside>,
+    document.body,
+  );
+};
 
+const stripMarkup = (value: string) =>
+  new DOMParser().parseFromString(value, "text/html").body.textContent?.trim() ?? "";
 
-HOˆÂˆÛÛœİ[\™˜XÙPXİ]™HHØ[YTİ\Y	‰ˆYØ[YQ[™YÂˆYˆ
-\Ú[™Y‹˜İ\œ™[
-H\Ú[™Y‹˜İ\œ™[š[™\HZ[\™˜XÙPXİ]™NÂˆYˆ
-˜XÙSYPÛÛ›ÛÔ™Y‹˜İ\œ™[
-H˜XÙSYPÛÛ›ÛÔ™Y‹˜İ\œ™[š[™\HZ[\™˜XÙPXİ]™NÂˆKÙØ[YTİ\YØ[YQ[™YJNÂ‚ˆ\ÙQY™™Xİ
+const getMerriamWebsterEntries = (data: unknown): DictionaryEntry[] => {
+  if (!Array.isArray(data)) return [];
 
+  return data.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const entry = item as Record<string, unknown>;
+    const definitions = Array.isArray(entry.shortdef)
+      ? entry.shortdef
+          .filter((definition): definition is string => typeof definition === "string")
+          .map((definition) => ({ definition }))
+      : [];
 
-HOˆ
+    return definitions.length > 0
+      ? [{
+          partOfSpeech: typeof entry.fl === "string" ? entry.fl : undefined,
+          definitions,
+        }]
+      : [];
+  });
+};
 
-HOˆÂˆXİ]™SÛÚİ\˜İ\œ™[Ë˜X›Ü
+const getWiktionaryEntries = (data: unknown): DictionaryEntry[] => {
+  if (!data || typeof data !== "object" || Array.isArray(data)) return [];
 
-NÂˆYˆ
-›İ][Û•[Y\‹˜İ\œ™[OOH[
-HÚ[™İË˜ÛX\•[Y[İ]
-›İ][Û•[Y\‹˜İ\œ™[
-NÂˆK×JNÂ‚ˆÛÛœİ›İ]TYÙHH
-™^›İ][Ûˆ[X™\‹\™Xİ[ÛˆÜˆœšYÚˆ˜›İÛHˆ›YŠHOˆÂˆÙĞXİ]š]JœYÙWÜ›İ][Û—Ü™\]Y\İY‹Âˆ\™Xİ[Û‹ˆœ›ÛT›İ][Ûˆ›İ][Û‹ˆÔ›İ][Ûˆ™^›İ][Û‹ˆJNÂˆYˆ
-™^›İ][ÛˆOOH›İ][Ûˆ›İ][Û•˜[œÚ][ÛˆOOHšYHŠH™]\›Â‚ˆÛÛœİ˜YQ\˜][ÛˆHÚ[™İË›X]ÚYYXJŠ™Y™\œË\™YXÙY[[İ[Ûˆ™YXÙJHŠK›X]Ú\ÂˆÈˆˆ“ÕUSÓ—ÑQWÑTUSÓ—ÓTÎÂˆÙ]›İ][Û•˜[œÚ][ÛŠ™˜YK[İ]ŠNÂˆ›İ][Û•[Y\‹˜İ\œ™[HÚ[™İËœÙ][Y[İ]
+  const response = data as Record<string, unknown>;
+  const entries = response.en ?? response.English;
+  return Array.isArray(entries) ? (entries as DictionaryEntry[]) : [];
+};
 
+const mergeWiktionaryEntries = (entryGroups: DictionaryEntry[][]): DictionaryEntry[] => {
+  const merged = new Map<string, DictionaryEntry>();
+  const seenDefinitions = new Map<string, Set<string>>();
 
-HOˆÂˆÙ]›İ][ÛŠ™^›İ][ÛŠNÂˆÙ]›İ][Û•˜[œÚ][ÛŠ™˜YKZ[ˆŠNÂˆ›İ][Û•[Y\‹˜İ\œ™[HÚ[™İËœÙ][Y[İ]
+  for (const entry of entryGroups.flat()) {
+    const partOfSpeech = entry.partOfSpeech?.trim() ?? "";
+    const entryKey = partOfSpeech.toLocaleLowerCase();
+    if (!merged.has(entryKey)) {
+      merged.set(entryKey, { partOfSpeech, definitions: [] });
+      seenDefinitions.set(entryKey, new Set());
+    }
 
+    const target = merged.get(entryKey)!;
+    const seen = seenDefinitions.get(entryKey)!;
+    for (const definition of entry.definitions ?? []) {
+      if (!definition.definition) continue;
+      const definitionKey = stripMarkup(definition.definition)
+        .toLocaleLowerCase()
+        .replace(/\s+/g, " ");
+      if (!definitionKey || seen.has(definitionKey)) continue;
+      seen.add(definitionKey);
+      target.definitions?.push(definition);
+    }
+  }
 
-HOˆÂˆÙ]›İ][Û•˜[œÚ][ÛŠšYHŠNÂˆ›İ][Û•[Y\‹˜İ\œ™[H[ÂˆK˜YQ\˜][ÛŠNÂˆK˜YQ\˜][ÛŠNÂˆNÂ‚ˆÛÛœİİX›Z]œ›ÛTÚYHH
-ÚYNˆÜˆœšYÚˆ˜›İÛHˆ›YŠHOˆÂˆÙ]İX›Z]Ûİ\˜ÙJİX›Z]IÜÚY_X
-NÂˆÙ]İX›Z]™\]Y\İ
+  return Array.from(merged.values()).filter((entry) => entry.definitions?.length);
+};
 
-™\]Y\İ
-HOˆ™\]Y\İ
-ÈJNÂˆNÂ‚ˆÛÛœİÛÚİ\ÛÜ™]ÜÚ][ÛˆH
-ˆÛÜ™ˆİš[™Ëˆ›İÎˆ[X™\‹ˆÛÛ[[ˆ[X™\‹ˆÚYNˆÛÚİ\ÜšYÚYKˆ[™[ÜÚ][ÛˆÈYˆ[X™\ÈÜˆ[X™\È[™[Ú^™Nˆ[X™\ˆKˆ
-HOˆÂˆÛÛœİ^\İ[™ÔÚYT™\]Y\İHÛÚİ\™\]Y\İË™š[™
+const ROTATION_FADE_DURATION_MS = 180;
 
-™\]Y\İ
-HOˆ™\]Y\İœÚYHOOHÚYJNÂˆYˆ
-^\İ[™ÔÚYT™\]Y\İËÛÜ™OOHÛÜ™
-H™]\›Â‚ˆYˆ
-^\İ[™ÔÚYT™\]Y\İ
-HÂˆÙĞXİ]š]J™Xİ[Û˜\WÜ[™[ØÛÜÙY‹Âˆ]Y\Nˆ^\İ[™ÔÚYT™\]Y\İÛÜ™ˆÛÜ™ˆ^\İ[™ÔÚYT™\]Y\İÛÜ™ˆ[œ]Y]ÙˆœÜÚ][Û—ÛX]š^‹ˆÚYNˆ^\İ[™ÔÚYT™\]Y\İœÚYKˆÜšY›İÎˆ^\İ[™ÔÚYT™\]Y\İœ›İËˆÜšYÛÛ[[ˆ^\İ[™ÔÚYT™\]Y\İ˜ÛÛ[[‹ˆ™\]Y\İYˆ^\İ[™ÔÚYT™\]Y\İœ™\]Y\İYˆ™X\ÛÛˆœ™\XÙYØWÛÛÚİ\‹ˆJNÂˆB‚ˆÛÚİ\™\]Y\İÙ\]Y[˜ÙK˜İ\œ™[
-ÏHNÂˆÛÛœİ™\]Y\İHÂˆÛÜ™ˆ›İËˆÛÛ[[‹ˆÚYKˆ[™[ÜÚ][Û‹ˆ™\]Y\İYˆÛÚİ\™\]Y\İÙ\]Y[˜ÙK˜İ\œ™[ˆNÂˆÙ]ÛÚİ\™\]Y\İÊ
-İ\œ™[
-HOˆÂˆ‹‹˜İ\œ™[™š[\Š
-Ü[”™\]Y\İ
-HOˆÜ[”™\]Y\İœÚYHOOHÚYJKˆ™\]Y\İˆJNÂˆNÂ‚ˆÛÛœİÛÜÙSÛÚİ\[™[H
-™\]Y\İYˆ[X™\ŠHOˆÂˆÙ]ÛÚİ\™\]Y\İÊ
-İ\œ™[
-HOˆİ\œ™[™š[\Š
-™\]Y\İ
-HOˆ™\]Y\İœ™\]Y\İYOOH™\]Y\İY
-JNÂˆNÂ‚ˆÛÛœİ[™TÙX\˜ÚH\Ş[˜È
-]™[ˆ›Ü›Q]™[S›Ü›Q[[Y[ŠHOˆÂˆ]™[œ™]™[Y˜][
+function App() {
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameEnded, setGameEnded] = useState(false);
+  const [showDownloadChoices, setShowDownloadChoices] = useState(false);
+  const [gameInstance, setGameInstance] = useState(0);
+  const [groupSize, setGroupSize] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchedTerm, setSearchedTerm] = useState("");
+  const [dictionaryEntries, setDictionaryEntries] = useState<DictionaryEntry[]>([]);
+  const [dictionarySource, setDictionarySource] = useState<DictionarySource>("merriam-webster");
+  const [lookupStatus, setLookupStatus] = useState<LookupStatus>("idle");
+  const activeLookup = useRef<AbortController | null>(null);
+  const [rotation, setRotation] = useState(0);
+  const [rotationTransition, setRotationTransition] = useState<"idle" | "fade-out" | "fade-in">("idle");
+  const rotationTimer = useRef<number | null>(null);
+  const [submitRequest, setSubmitRequest] = useState(0);
+  const [submitSource, setSubmitSource] = useState("unknown");
+  const [submitAvailable, setSubmitAvailable] = useState(false);
+  const [lookupGrid, setLookupGrid] = useState<LookupGridCell[]>(() => Array(16).fill(null));
+  const [lookupRequests, setLookupRequests] = useState<DictionaryLookupRequest[]>([]);
+  const lookupRequestSequence = useRef(0);
+  const appShellRef = useRef<HTMLDivElement | null>(null);
+  const faceMeControlsRef = useRef<HTMLElement | null>(null);
 
-NÂˆÛÛœİ]Y\HHÙX\˜Ú\›Kš[J
-NÂˆYˆ
-\]Y\JH™]\›Â‚ˆXİ]™SÛÚİ\˜İ\œ™[Ë˜X›Ü
+  useEffect(() => {
+    const interfaceActive = gameStarted && !gameEnded;
+    if (appShellRef.current) appShellRef.current.inert = !interfaceActive;
+    if (faceMeControlsRef.current) faceMeControlsRef.current.inert = !interfaceActive;
+  }, [gameStarted, gameEnded]);
 
-NÂˆÛÛœİÛÛ›Û\ˆH™]ÈX›ÜÛÛ›Û\Š
-NÂˆXİ]™SÛÚİ\˜İ\œ™[HÛÛ›Û\ÂˆÙ]ÙX\˜ÚY\›J]Y\JNÂˆÙ]Xİ[Û˜\Q[šY\Ê×JNÂˆÙ]ÛÚİ\İ]\Ê›ØY[™ÈŠNÂ‚ˆHÂˆÛÛœİ™\ÜÛœÙHH]ØZ]™]Ú
-ˆØ\KÙXİ[Û˜\OİÛÜ™IÙ[˜ÛÙUT’PÛÛ\Û™[
-]Y\KÓİÙ\Ø\ÙJ
-J_XˆÈÚYÛ˜[ˆÛÛ›Û\‹œÚYÛ˜[XY\œÎˆÈXØÙ\ˆ˜\XØ][Û‹ÚœÛÛˆˆHKˆ
-NÂ‚ˆ]]Nˆ[šÛ›İÛÂˆ][šY\ÎˆXİ[Û˜\Q[V×NÂˆYˆ
-™\ÜÛœÙKœİ]\ÈOOH
-HÂˆËÈÚ]XˆYÙ\ÈØ[››İ[ˆH›ŞNÈÛÚÈ\›İÛÛ[[Ûˆ[™Ø\][^™Y›Ü›\Ë‚ˆÛÛœİİÙ\˜Ø\ÙT]Y\HH]Y\KÓØØ[SİÙ\Ø\ÙJ
-NÂˆÛÛœİØ\][^™Y]Y\HHİÙ\˜Ø\ÙT]Y\K˜Ú\]
-
-KÓØØ[U\\Ø\ÙJ
-H
-ÈİÙ\˜Ø\ÙT]Y\KœÛXÙJJNÂˆÛÛœİ]\ÈH\œ˜^K™œ›ÛJˆ™]ÈÙ]
-ˆÛİÙ\˜Ø\ÙT]Y\KØ\][^™Y]Y\K]Y\WK›X\
+  useEffect(() => () => {
+    activeLookup.current?.abort();
+    if (rotationTimer.current !== null) window.clearTimeout(rotationTimer.current);
+  }, []);
 
-\›JHO‚ˆ[˜ÛÙUT’PÛÛ\Û™[
-\›Kœ™\XÙJ×ÊËÙË—ÈŠJKˆ
-Kˆ
-Kˆ
-NÂˆÛÛœİ[QÜ›İ\ÈH]ØZ]›ÛZ\ÙK˜[
-ˆ]\Ë›X\
-\Ş[˜È
-]JHOˆÂˆÛÛœİ˜[˜XÚÈH]ØZ]™]Ú
-ˆÎ‹ËÙ[‹ÚZİ[Û˜\K›Ü™ËØ\KÜ™\İİŒKÜYÙKÙYš[š][Û‹Éİ]_XˆÈÚYÛ˜[ˆÛÛ›Û\‹œÚYÛ˜[XY\œÎˆÈXØÙ\ˆ˜\XØ][Û‹ÚœÛÛˆˆHKˆ
-NÂˆYˆ
-˜[˜XÚËœİ]\ÈOOH
-H™]\›ˆ×NÂˆYˆ
-Y˜[˜XÚË›ÚÊH›İÈ™]È\œ›ÜŠXİ[Û˜\H™\]Y\İ˜Z[Yˆ	Ù˜[˜XÚËœİ]\ßX
-NÂˆ™]\›ˆÙ]ÚZİ[Û˜\Q[šY\Ê]ØZ]˜[˜XÚËšœÛÛŠ
-JNÂˆJKˆ
-NÂˆ[šY\ÈHY\™ÙUÚZİ[Û˜\Q[šY\Ê[QÜ›İ\ÊNÂˆÙ]Xİ[Û˜\TÛİ\˜ÙJÚZİ[Û˜\HŠNÂˆH[ÙHÂˆYˆ
-\™\ÜÛœÙK›ÚÊH›İÈ™]È\œ›ÜŠXİ[Û˜\H™\]Y\İ˜Z[Yˆ	Ü™\ÜÛœÙKœİ]\ßX
-NÂˆ]HH]ØZ]™\ÜÛœÙKšœÛÛŠ
-NÂˆ[šY\ÈHÙ]Y\œšX[UÙXœİ\‘[šY\Ê]JNÂˆÙ]Xİ[Û˜\TÛİ\˜ÙJ›Y\œšX[K]ÙXœİ\ˆŠNÂˆB‚ˆ[šY\ÈH[šY\Ë™š[\Š
-[JHO‚ˆ[K™Yš[š][ÛœÏËœÛÛYJ
-Yš[š][ÛŠHOˆYš[š][Û‹™Yš[š][ÛŠKˆ
-NÂˆÙ]Xİ[Û˜\Q[šY\Ê[šY\ÊNÂˆÛÛœİ™^İ]\ÈH[šY\Ë›[™İˆÈœİXØÙ\ÜÈˆˆ››İY›İ[™ÂˆÙ]ÛÚİ\İ]\Ê™^İ]\ÊNÂˆHØ]Ú
-\œ›ÜŠHÂˆYˆ
-\œ›Üˆ[œİ[˜Ù[Ùˆ\œ›Üˆ	‰ˆ\œ›Ü‹›˜[YHOOHX›Ü\œ›ÜˆŠH™]\›ÂˆÙ]ÛÚİ\İ]\Ê™\œ›ÜˆŠNÂˆHš[˜[HÂˆYˆ
-Xİ]™SÛÚİ\˜İ\œ™[OOHÛÛ›Û\ŠHXİ]™SÛÚİ\˜İ\œ™[H[ÂˆBˆNÂ‚ˆ\ÙQY™™Xİ
+  const rotatePage = (nextRotation: number, direction: "top" | "right" | "bottom" | "left") => {
+    logActivity("page_rotation_requested", {
+      direction,
+      fromRotation: rotation,
+      toRotation: nextRotation,
+    });
+    if (nextRotation === rotation || rotationTransition !== "idle") return;
 
+    const fadeDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? 0
+      : ROTATION_FADE_DURATION_MS;
+    setRotationTransition("fade-out");
+    rotationTimer.current = window.setTimeout(() => {
+      setRotation(nextRotation);
+      setRotationTransition("fade-in");
+      rotationTimer.current = window.setTimeout(() => {
+        setRotationTransition("idle");
+        rotationTimer.current = null;
+      }, fadeDuration);
+    }, fadeDuration);
+  };
 
-HOˆÂˆYˆ
-ÛÚİ\İ]\ÈOOHšYHˆÛÚİ\İ]\ÈOOH›ØY[™ÈŠH™]\›ÂˆÛÛœİ[™[HØİ[Y[œ]Y\TÙ[XİÜS[[Y[Š‹™Xİ[Û˜\K\™\İ[ÈŠNÂˆYˆ
-\[™[
-H™]\›ÂˆÛÛœİİ[HHÚ[™İË™Ù]ÛÛ\]Yİ[J[™[
-NÂˆYˆ
-İ[K™\Ü^HOOH››Û™Hˆİ[Kš\ÚXš[]HOOHšY[ˆˆ[™[™Ù]ÛY[™XİÊ
-K›[™İOOH
-H™]\›Â‚ˆÙĞXİ]š]J™Xİ[Û˜\WÜÙX\˜ÚÜ™\İ[‹Âˆ]Y\NˆÙX\˜ÚY\›KˆÛİ\˜ÙNˆXİ[Û˜\TÛİ\˜ÙKˆİ]\ÎˆÛÚİ\İ]\Ëˆ[PÛİ[ˆXİ[Û˜\Q[šY\Ë›[™İˆJNÂˆKÙXİ[Û˜\Q[šY\Ë›[™İXİ[Û˜\TÛİ\˜ÙKÛÚİ\İ]\ËÙX\˜ÚY\›WJNÂ‚ˆ™]\›ˆ
-ˆ‚ˆ]‚ˆ™Y^Ø\Ú[™YŸBˆÛ\ÜÓ˜[YOH˜\\Ú[‚ˆ]K\›İ][Û^Ü›İ][ÛŸBˆ]K\›İ][Û‹]˜[œÚ][Û^Ü›İ][Û•˜[œÚ][ÛŸBˆ‚ˆO“^HÛÛ›™Xİ[ÛœÈØ[YOÚO‚ˆ›Ü›HÛ\ÜÓ˜[YOHÙX‹\ÙX\˜Úˆ›ÛOHœÙX\˜ÚˆÛ”İX›Z]^Ú[™TÙX\˜ÚO‚ˆ[œ]ˆ]KXXİ]š]KZ[œ]H™Xİ[Û˜\K\ÙX\˜Ú\]Y\H‚ˆ\OHœÙX\˜Ú‚ˆ\šXK[X™[H“ÛÚÈ\[ˆ[™Û\ÚÛÜ™[ˆY\œšX[KUÙXœİ\‰ÜÈÛÛYÚX]HXİ[Û˜\H‚ˆXÙZÛ\H“ÛÚÈ\[ˆ[™Û\ÚÛÜ™‹‹ˆ‚ˆ˜[YO^ÜÙX\˜Ú\›_BˆÛÚ[™ÙO^Ê]™[
-HOˆÙ]ÙX\˜Ú\›J]™[\™Ù]˜[YJ_BˆÏ‚ˆ]Ûˆ]KXXİ]š]KX]ÛH™Xİ[Û˜\K\ÙX\˜Úˆ\OHœİX›Z]ˆ\ØX›Y^È\ÙX\˜Ú\›Kš[J
-_O‚ˆÛÚÈ\ˆØ]Û‚ˆÙ›Ü›O‚ˆÛÛÚİ\İ]\ÈOOHšYHˆ	‰ˆ
-ˆÙXİ[ÛˆÛ\ÜÓ˜[YOH™Xİ[Û˜\K\™\İ[Èˆ\šXK[]™OHœÛ]H‚ˆ]ˆÛ\ÜÓ˜[YOH™Xİ[Û˜\K\™\İ[ËZXY[™È‚ˆÜÙX\˜ÚY\›_OÚ‚ˆ]Û‚ˆÛ\ÜÓ˜[YOH™Xİ[Û˜\KXÛÜÙH‚ˆ]KXXİ]š]KX]ÛH™Xİ[Û˜\KXÛÜÙH‚ˆ\OH˜]Ûˆ‚ˆ\šXK[X™[HÛÜÙHXİ[Û˜\H™\İ[È‚ˆÛÛXÚÏ^Ê
-HOˆÂˆÙĞXİ]š]J™Xİ[Û˜\WÜ[™[ØÛÜÙY‹È]Y\NˆÙX\˜ÚY\›HJNÂˆÙ]ÛÚİ\İ]\ÊšYHŠNÂˆ_Bˆ‚ˆ0åÂˆØ]Û‚ˆÙ]‚ˆÛÛÚİ\İ]\ÈOOH›ØY[™Èˆ	‰ˆ“ÛÚÚ[™È\HÛÜ™‹‹ÜŸBˆÛÛÚİ\İ]\ÈOOH››İY›İ[™ˆ	‰ˆ
-ˆ“›È[™Û\ÚYš[š][Ûˆ›İ[™›Üˆ8 'ÜÙX\˜ÚY\›_x 'KÜ‚ˆ
-_BˆÛÛÚİ\İ]\ÈOOH™\œ›Üˆˆ	‰ˆ
-ˆÛİ[›İ™XXÚHXİ[Û˜\KˆÚXÚÈ[İ\ˆ[\›™]ÛÛ›™Xİ[Ûˆ[™HYØZ[‹Ü‚ˆ
-_BˆÛÛÚİ\İ]\ÈOOHœİXØÙ\ÜÈˆ	‰ˆ
-ˆ‚ˆÙXİ[Û˜\Q[šY\Ë›X\
+  const submitFromSide = (side: "top" | "right" | "bottom" | "left") => {
+    setSubmitSource(`submit-${side}`);
+    setSubmitRequest((request) => request + 1);
+  };
 
-[K[R[™^
-HOˆ
-ˆ]ˆÛ\ÜÓ˜[YOH™Xİ[Û˜\KY[HˆÙ^O^Ø	Ù[Kœ\Ù”ÜYXÚKIÙ[R[™^XO‚ˆÙ[Kœ\Ù”ÜYXÚ	‰ˆÏÙ[Kœ\Ù”ÜYXÚOÚÏŸBˆÛ‚ˆÙ[K™Yš[š][ÛœÏËœÛXÙJŠK›X\
+  const lookupWordAtPosition = (
+    word: string,
+    row: number,
+    column: number,
+    side: LookupGridSide,
+    panelPosition: { left: number; top: number; panelSize: number },
+  ) => {
+    const existingSideRequest = lookupRequests.find((request) => request.side === side);
+    if (existingSideRequest?.word === word) return;
 
-Yš[š][Û‹[™^
-HOˆÂˆÛÛœİ^HYš[š][Û‹™Yš[š][Û‚ˆÈİš\X\šİ\
-Yš[š][Û‹™Yš[š][ÛŠBˆˆˆÂˆYˆ
-]^
-H™]\›ˆ[Â‚ˆÛÛœİ^[\HHYš[š][Û‹™^[\\ÏË–ÌBˆÈİš\X\šİ\
-Yš[š][Û‹™^[\\ÖÌJBˆˆˆÂˆ™]\›ˆ
-ˆHÙ^O^Ø	Ù[R[™^KIÚ[™^XO‚ˆİ^BˆÙ^[\H	‰ˆÛ\ÜÓ˜[YOH™Xİ[Û˜\KY^[\H‘^[\NˆÙ^[\_OÜŸBˆÛO‚ˆ
-NÂˆJ_BˆÛÛ‚ˆÙ]‚ˆ
-J_BˆÙXİ[Û˜\TÛİ\˜ÙHOOH›Y\œšX[K]ÙXœİ\ˆˆÈ
-ˆ]ˆÛ\ÜÓ˜[YOH™Xİ[Û˜\K\Ûİ\˜ÙHY\œšX[K]ÙXœİ\‹\Ûİ\˜ÙH‚ˆBˆ™Y^ØÎ‹ËİİİË›Y\œšX[K]ÙXœİ\‹˜ÛÛKÙXİ[Û˜\KÉÙ[˜ÛÙUT’PÛÛ\Û™[
-ÙX\˜ÚY\›J_XBˆ\™Ù]H—Ø›[šÈ‚ˆ™[H››Ü™Y™\œ™\ˆ‚ˆ\šXK[X™[H“Y\œšX[KUÙXœİ\‰ÜÈÛÛYÚX]HXİ[Û˜\H‚ˆ‚ˆ[YÂˆÜ˜ÏHšÎ‹ËÙXİ[Û˜\X\K˜ÛÛKÚ[XYÙ\ËÚ[™›ËØœ˜[™[™ËYİZY[[™\ËÓUÓÙÛ×ÓYÚ‘×ÌLŒLŒÌœ™È‚ˆ[H“Y\œšX[KUÙXœİ\ˆ‚ˆÚYHL‚ˆZYÚHL‚ˆÏ‚ˆØO‚ˆÜ[”Ûİ\˜ÙNˆY\œšX[KUÙXœİ\‰˜\ÜÎÜÈÛÛYÚX]Oİ\°«Üİ\ˆXİ[Û˜\OÜÜ[‚ˆÙ]‚ˆ
-Hˆ
-ˆÛ\ÜÓ˜[YOH™Xİ[Û˜\K\Ûİ\˜ÙH‚ˆÛİ\˜ÙNˆH™Y^ØÎ‹ËÙ[‹ÚZİ[Û˜\K›Ü™ËİÚZÚKÉÙ[˜ÛÙUT’PÛÛ\Û™[
-ÙX\˜ÚY\›Kœ™\XÙJ×ÊËÙË—ÈŠJ_XH\™Ù]H—Ø›[šÈˆ™[H››Ü™Y™\œ™\ˆ•ÚZİ[Û˜\OØO‚ˆÜ‚ˆ
-_BˆÏ‚ˆ
-_BˆÜÙXİ[Û‚ˆ
-_Bˆ]‚ˆØ[YBˆÙ^O^ÙØ[YR[œİ[˜Ù_BˆØ[YQ]TÙ]Ï^ÙØ[YQ]TÙ]ßBˆİX›Z]™\]Y\İ^ÜİX›Z]™\]Y\İBˆİX›Z]Ûİ\˜ÙO^ÜİX›Z]Ûİ\˜Ù_BˆÛ”İX›Z]]˜Z[Xš[]PÚ[™ÙO^ÜÙ]İX›Z]]˜Z[X›_Bˆ›İ][Û^Ü›İ][ÛŸBˆ›İ][Û•˜[œÚ][Û^Ü›İ][Û•˜[œÚ][ÛŸBˆÛ•ÛÜ™ÜšYÚ[™ÙO^ÜÙ]ÛÚİ\ÜšYBˆÏ‚ˆÙ]‚ˆœˆÏ‚ˆœˆÏ‚ˆÛ\ÜÓ˜[YOH™›ÛİY\ØÛZ[Y\ˆ‚ˆ\œÛÛ˜[ØØ[™\œÚ[Ûˆ˜\ÙYÛˆHÛÛ›™Xİ[ÛœË\İ[HØ[YH^ÈˆŸBˆH™YHšÎ‹ËÙÚ]X‹˜ÛÛKİÚY[\ˆÚY[\ØO‹ˆÜšYÚ[˜[Ø[YNÈˆŸBˆH™YHšÎ‹ËİİİË›][Y\Ë˜ÛÛKÙØ[Y\ËØÛÛ›™Xİ[ÛœÈ‚ˆ–H[Y\ÈÛÛ›™Xİ[ÛœÂˆØO‚ˆ‚ˆÜ‚ˆÙ]‚ˆ˜]ˆ™Y^Ù˜XÙSYPÛÛ›ÛÔ™YŸHÛ\ÜÓ˜[YOH™˜XÙK[YKXÛÛ›ÛÈˆ\šXK[X™[H”›İ]HYÙHİØ\™HÙX]‚ˆ]ˆÛ\ÜÓ˜[YOH™˜XÙK[YK\Z\ˆ˜XÙK[YK]Ü‚ˆ]Û‚ˆÛ\ÜÓ˜[YOH™˜XÙK[YKX]Ûˆ‚ˆ]KXXİ]š]KX]ÛH™˜XÙK[YK]Ü‚ˆ\OH˜]Ûˆ‚ˆ\šXK[X™[H”›İ]HYÙHÈ˜XÙHH\œÛÛˆ]HÜ‚ˆ\ØX›Y^Ü›İ][Û•˜[œÚ][ÛˆOOHšYHŸBˆÛÛXÚÏ^Ê
-HOˆ›İ]TYÙJNÜŠ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[‘˜XÙHYOÜÜ[‚ˆØ]Û‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœİX›Z]X]Ûˆ‚ˆ]KXXİ]š]KX]ÛHœİX›Z]]Ü‚ˆ\OH˜]Ûˆ‚ˆ\ØX›Y^È\İX›Z]]˜Z[X›_BˆÛÛXÚÏ^Ê
-HOˆİX›Z]œ›ÛTÚYJÜŠ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[”İX›Z]ÜÜ[‚ˆØ]Û‚ˆÙ]‚ˆ]ˆÛ\ÜÓ˜[YOH™˜XÙK[YK\Z\ˆ˜XÙK[YK\šYÚ‚ˆ]Û‚ˆÛ\ÜÓ˜[YOH™˜XÙK[YKX]Ûˆ‚ˆ]KXXİ]š]KX]ÛH™˜XÙK[YK\šYÚ‚ˆ\OH˜]Ûˆ‚ˆ\šXK[X™[H”›İ]HYÙHÈ˜XÙHH\œÛÛˆÛˆHšYÚ‚ˆ\ØX›Y^Ü›İ][Û•˜[œÚ][ÛˆOOHšYHŸBˆÛÛXÚÏ^Ê
-HOˆ›İ]TYÙJÌœšYÚŠ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[‘˜XÙHYOÜÜ[‚ˆØ]Û‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœİX›Z]X]Ûˆ‚ˆ]KXXİ]š]KX]ÛHœİX›Z]\šYÚ‚ˆ\OH˜]Ûˆ‚ˆ\ØX›Y^È\İX›Z]]˜Z[X›_BˆÛÛXÚÏ^Ê
-HOˆİX›Z]œ›ÛTÚYJœšYÚŠ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[”İX›Z]ÜÜ[‚ˆØ]Û‚ˆÛÚİ\X]š^ˆÚYOHœšYÚ‚ˆÙ[Ï^ÛÛÚİ\ÜšYBˆÜ[”™\]Y\İÏ^ÛÛÚİ\™\]Y\İßBˆ›İ][Û^Ü›İ][ÛŸBˆ\ØX›Y^Ü›İ][Û•˜[œÚ][ÛˆOOHšYHŸBˆÛ“ÛÚİ\^ÛÛÚİ\ÛÜ™]ÜÚ][ÛŸBˆÏ‚ˆÙ]‚ˆ]ˆÛ\ÜÓ˜[YOH™˜XÙK[YK\Z\ˆ˜XÙK[YKX›İÛH‚ˆ]Û‚ˆÛ\ÜÓ˜[YOH™˜XÙK[YKX]Ûˆ‚ˆ]KXXİ]š]KX]ÛH™˜XÙK[YKX›İÛH‚ˆ\OH˜]Ûˆ‚ˆ\šXK[X™[H”›İ]HYÙHÈ˜XÙHH\œÛÛˆ]H›İÛH‚ˆ\ØX›Y^Ü›İ][Û•˜[œÚ][ÛˆOOHšYHŸBˆÛÛXÚÏ^Ê
-HOˆ›İ]TYÙJ˜›İÛHŠ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[‘˜XÙHYOÜÜ[‚ˆØ]Û‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœİX›Z]X]Ûˆ‚ˆ]KXXİ]š]KX]ÛHœİX›Z]X›İÛH‚ˆ\OH˜]Ûˆ‚ˆ\ØX›Y^È\İX›Z]]˜Z[X›_BˆÛÛXÚÏ^Ê
-HOˆİX›Z]œ›ÛTÚYJ˜›İÛHŠ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[”İX›Z]ÜÜ[‚ˆØ]Û‚ˆÛÚİ\X]š^ˆÚYOH˜›İÛH‚ˆÙ[Ï^ÛÛÚİ\ÜšYBˆÜ[”™\]Y\İÏ^ÛÛÚİ\™\]Y\İßBˆ›İ][Û^Ü›İ][ÛŸBˆ\ØX›Y^Ü›İ][Û•˜[œÚ][ÛˆOOHšYHŸBˆÛ“ÛÚİ\^ÛÛÚİ\ÛÜ™]ÜÚ][ÛŸBˆÏ‚ˆÙ]‚ˆ]ˆÛ\ÜÓ˜[YOH™˜XÙK[YK\Z\ˆ˜XÙK[YK[Y‚ˆ]Û‚ˆÛ\ÜÓ˜[YOH™˜XÙK[YKX]Ûˆ‚ˆ]KXXİ]š]KX]ÛH™˜XÙK[YK[Y‚ˆ\OH˜]Ûˆ‚ˆ\šXK[X™[H”›İ]HYÙHÈ˜XÙHH\œÛÛˆÛˆHY‚ˆ\ØX›Y^Ü›İ][Û•˜[œÚ][ÛˆOOHšYHŸBˆÛÛXÚÏ^Ê
-HOˆ›İ]TYÙJL›YŠ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[‘˜XÙHYOÜÜ[‚ˆØ]Û‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœİX›Z]X]Ûˆ‚ˆ]KXXİ]š]KX]ÛHœİX›Z][Y‚ˆ\OH˜]Ûˆ‚ˆ\ØX›Y^È\İX›Z]]˜Z[X›_BˆÛÛXÚÏ^Ê
-HOˆİX›Z]œ›ÛTÚYJ›YŠ_Bˆ‚ˆÜ[ˆÛ\ÜÓ˜[YOH˜]Û‹[X™[”İX›Z]ÜÜ[‚ˆØ]Û‚ˆÛÚİ\X]š^ˆÚYOH›Y‚ˆÙ[Ï^ÛÛÚİ\ÜšYBˆÜ[”™\]Y\İÏ^ÛÛÚİ\™\]Y\İßBˆ›İ][Û^Ü›İ][ÛŸBˆ\ØX›Y^Ü›İ][Û•˜[œÚ][ÛˆOOHšYHŸBˆÛ“ÛÚİ\^ÛÛÚİ\ÛÜ™]ÜÚ][ÛŸBˆÏ‚ˆÙ]‚ˆÛ˜]‚ˆÛÛÚİ\™\]Y\İË›X\
+    if (existingSideRequest) {
+      logActivity("dictionary_panel_closed", {
+        query: existingSideRequest.word,
+        word: existingSideRequest.word,
+        inputMethod: "position_matrix",
+        side: existingSideRequest.side,
+        gridRow: existingSideRequest.row,
+        gridColumn: existingSideRequest.column,
+        requestId: existingSideRequest.requestId,
+        reason: "replaced_by_lookup",
+      });
+    }
 
-™\]Y\İ
-HOˆ
-ˆXİ[Û˜\SÛÚİ\[™[ˆÙ^O^Ü™\]Y\İœ™\]Y\İYBˆ™\]Y\İ^Ü™\]Y\İBˆÛÛÜÙO^ØÛÜÙSÛÚİ\[™[BˆÏ‚ˆ
-J_BˆÙØ[YTİ\Y	‰ˆYØ[YQ[™Y	‰ˆ
-ˆ]Û‚ˆÛ\ÜÓ˜[YOH™Ø[YKY[™X]Ûˆ‚ˆ]KXXİ]š]KX]ÛH™Ø[YKY[™‚ˆ\OH˜]Ûˆ‚ˆ\šXK[X™[H‘Ø[YH[™‚ˆÛÛXÚÏ^Ê
-HOˆÂˆÛÛœİØ[YS^[İ]HØİ[Y[œ]Y\TÙ[XİÜS[[Y[Š‹™Ø[YK[^[İ]ŠNÂˆ[™Ø[YPXİ]š]JÂˆ›İ[™ˆ[X™\ŠØ[YS^[İ]Ë™]\Ù]œ›İ[™
-H[ˆ›İ[™™\İ[ˆØ[YS^[İ]Ë™]\Ù]œ›İ[™™\İ[ÏÈ[ˆJNÂˆÙ]ÚİÑİÛ›ØYÚÚXÙ\Ê˜[ÙJNÂˆÙ]Ø[YQ[™Y
-YJNÂˆ_Bˆ‚ˆ8£îBˆØ]Û‚ˆ
-_BˆÈYØ[YTİ\Y	‰ˆYØ[YQ[™Y	‰ˆ
-ˆ]ˆÛ\ÜÓ˜[YOHœİ\YØ[YK[İ™\›^Hˆ›ÛOH™X[ÙÈˆ\šXK[[Ù[HYHˆ\šXK[X™[H”İ\Ø[YH‚ˆ]ˆÛ\ÜÓ˜[YOHœİ\YØ[YKXÛÛ[‚ˆX™[Û\ÜÓ˜[YOHœİ\YØ[YKYÜ›İ\\Ú^™H‚ˆÜ›İ\Ú^™H
-Ü[Û˜[
-Bˆ[œ]ˆ\OH›[X™\ˆ‚ˆZ[HŒH‚ˆX^HŒŒ‚ˆ[œ][ÙOH›[Y\šXÈ‚ˆ˜[YO^ÙÜ›İ\Ú^™_BˆÛÚ[™ÙO^Ê]™[
-HOˆÙ]Ü›İ\Ú^™J]™[\™Ù]˜[YJ_BˆÏ‚ˆÛX™[‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœİ\YØ[YKX]Ûˆ‚ˆ]KXXİ]š]KX]ÛHœİ\YØ[YH‚ˆ\OH˜]Ûˆ‚ˆ]]Ñ›Øİ\ÂˆÛÛXÚÏ^Ê
-HOˆÂˆÛÛœİ\œÙYÜ›İ\Ú^™HH[X™\‹œ\œÙR[
-Ü›İ\Ú^™KL
-NÂˆİ\Ø[YPXİ]š]JÂˆ^›Nˆ”^›HH‹ˆÜ›İ\Ú^™Nˆ[X™\‹š\Ñš[š]J\œÙYÜ›İ\Ú^™JH	‰ˆ\œÙYÜ›İ\Ú^™HˆˆÈ\œÙYÜ›İ\Ú^™Bˆˆ[ˆJNÂˆÙ]Ø[YTİ\Y
-YJNÂˆ_Bˆ‚ˆİ\Ø[YBˆØ]Û‚ˆÙ]‚ˆÙ]‚ˆ
-_BˆÙØ[YQ[™Y	‰ˆ
-ˆ]ˆÛ\ÜÓ˜[YOHœİ\YØ[YK[İ™\›^Hˆ›ÛOH™X[ÙÈˆ\šXK[[Ù[HYHˆ\šXK[X™[H‘Ø[YH[™Y‚ˆ]ˆÛ\ÜÓ˜[YOHœİ\YØ[YKXÛÛ[Ø[YKY[™XÛÛ[‚ˆÈ\ÚİÑİÛ›ØYÚÚXÙ\ÈÈ
-ˆ]Û‚ˆÛ\ÜÓ˜[YOHœÜİØ[YKX]Ûˆ‚ˆ]KXXİ]š]KX]ÛH™İÛ›ØYZœÛÛ‹[Y[H‚ˆ\OH˜]Ûˆ‚ˆÛÛXÚÏ^Ê
-HOˆÙ]ÚİÑİÛ›ØYÚÚXÙ\ÊYJ_Bˆ‚ˆİÛ›ØY”ÓÓ‚ˆØ]Û‚ˆ
-Hˆ
-ˆ]ˆÛ\ÜÓ˜[YOH™İÛ›ØYZœÛÛ‹XÚÚXÙ\Èˆ›ÛOH™Ü›İ\ˆ\šXK[X™[HÚÛÜÙH”ÓÓˆİÛ›ØYØÛÜH‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœÜİØ[YKX]Ûˆ‚ˆ]KXXİ]š]KX]ÛH™İÛ›ØY]\ËYØ[YKZœÛÛˆ‚ˆ\OH˜]Ûˆ‚ˆÛÛXÚÏ^Ê
-HOˆÂˆÙĞXİ]š]J˜Xİ]š]WÛÙ×ÙİÛ›ØYÜ™\]Y\İY‹È›Ü›X]ˆ’”ÓÓˆ‹ØÛÜNˆ\×ÙØ[YHˆJNÂˆİÛ›ØYİ\œ™[Ø[YPXİ]š]SÙÊ
-NÂˆ_Bˆ‚ˆ\ÈØ[YBˆØ]Û‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœÜİØ[YKX]Ûˆ‚ˆ]KXXİ]š]KX]ÛH™İÛ›ØYX[XXİ]š]KZœÛÛˆ‚ˆ\OH˜]Ûˆ‚ˆÛÛXÚÏ^Ê
-HOˆÂˆÙĞXİ]š]J˜Xİ]š]WÛÙ×ÙİÛ›ØYÜ™\]Y\İY‹È›Ü›X]ˆ’”ÓÓˆ‹ØÛÜNˆ˜[ØXİ]š]HˆJNÂˆİÛ›ØYXİ]š]SÙÊ
-NÂˆ_Bˆ‚ˆ[Xİ]š]BˆØ]Û‚ˆ]Û‚ˆÛ\ÜÓ˜[YOHœÜİØ[YKX˜XÚËX]Ûˆ‚ˆ]KXXİ]š]KX]ÛH™İÛ›ØYZœÛÛ‹X˜XÚÈ‚ˆ\OH˜]Ûˆ‚ˆÛÛXÚÏ^Ê
-HOˆÙ]ÚİÑİÛ›ØYÚÚXÙ\Ê˜[ÙJ_Bˆ‚ˆ˜XÚÂˆØ]Û‚ˆÙ]‚ˆ
-_Bˆ]Û‚ˆÛ\ÜÓ˜[YOHš[š]X[^™KX]Ûˆ‚ˆ]KXXİ]š]KX]ÛHš[š]X[^™KYØ[YH‚ˆ\OH˜]Ûˆ‚ˆÛÛXÚÏ^Ê
-HOˆÂˆ™YÚ[‘Ø[YPXİ]š]SÙÊÈ™X\ÛÛˆš[š]X[^™HˆJNÂˆYˆ
-›İ][Û•[Y\‹˜İ\œ™[OOH[
-HÂˆÚ[™İË˜ÛX\•[Y[İ]
-›İ][Û•[Y\‹˜İ\œ™[
-NÂˆ›İ][Û•[Y\‹˜İ\œ™[H[ÂˆBˆÙ]›İ][ÛŠ
-NÂˆÙ]›İ][Û•˜[œÚ][ÛŠšYHŠNÂˆÙ]Ø[YR[œİ[˜ÙJ
-[œİ[˜ÙJHOˆ[œİ[˜ÙH
-ÈJNÂˆÙ]ÚİÑİÛ›ØYÚÚXÙ\Ê˜[ÙJNÂˆÙ]Ø[YQ[™Y
-˜[ÙJNÂˆÙ]Ø[YTİ\Y
-˜[ÙJNÂˆÙ]ÛÚİ\İ]\ÊšYHŠNÂˆÙ]ÙX\˜ÚY\›JˆŠNÂˆÙ]Xİ[Û˜\Q[šY\Ê×JNÂˆ_Bˆ‚ˆ[š]X[^™BˆØ]Û‚ˆÙ]‚ˆÙ]‚ˆ
-_BˆÏ‚ˆ
-NÂŸB‚™^ÜY˜][\Â
+    lookupRequestSequence.current += 1;
+    const request = {
+      word,
+      row,
+      column,
+      side,
+      panelPosition,
+      requestId: lookupRequestSequence.current,
+    };
+    setLookupRequests((current) => [
+      ...current.filter((openRequest) => openRequest.side !== side),
+      request,
+    ]);
+  };
+
+  const closeLookupPanel = (requestId: number) => {
+    setLookupRequests((current) => current.filter((request) => request.requestId !== requestId));
+  };
+
+  const handleSearch = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const query = searchTerm.trim();
+    if (!query) return;
+
+    activeLookup.current?.abort();
+    const controller = new AbortController();
+    activeLookup.current = controller;
+    setSearchedTerm(query);
+    setDictionaryEntries([]);
+    setLookupStatus("loading");
+
+    try {
+      const response = await fetch(
+        `/api/dictionary?word=${encodeURIComponent(query.toLowerCase())}`,
+        { signal: controller.signal, headers: { Accept: "application/json" } },
+      );
+
+      let data: unknown;
+      let entries: DictionaryEntry[];
+      if (response.status === 404) {
+        // GitHub Pages cannot run the proxy; look up both common and capitalized forms.
+        const lowercaseQuery = query.toLocaleLowerCase();
+        const capitalizedQuery = lowercaseQuery.charAt(0).toLocaleUpperCase() + lowercaseQuery.slice(1);
+        const titles = Array.from(
+          new Set(
+            [lowercaseQuery, capitalizedQuery, query].map((term) =>
+              encodeURIComponent(term.replace(/\s+/g, "_")),
+            ),
+          ),
+        );
+        const entryGroups = await Promise.all(
+          titles.map(async (title) => {
+            const fallback = await fetch(
+              `https://en.wiktionary.org/api/rest_v1/page/definition/${title}`,
+              { signal: controller.signal, headers: { Accept: "application/json" } },
+            );
+            if (fallback.status === 404) return [];
+            if (!fallback.ok) throw new Error(`Dictionary request failed: ${fallback.status}`);
+            return getWiktionaryEntries(await fallback.json());
+          }),
+        );
+        entries = mergeWiktionaryEntries(entryGroups);
+        setDictionarySource("wiktionary");
+      } else {
+        if (!response.ok) throw new Error(`Dictionary request failed: ${response.status}`);
+        data = await response.json();
+        entries = getMerriamWebsterEntries(data);
+        setDictionarySource("merriam-webster");
+      }
+
+      entries = entries.filter((entry) =>
+        entry.definitions?.some((definition) => definition.definition),
+      );
+      setDictionaryEntries(entries);
+      const nextStatus = entries.length > 0 ? "success" : "not-found";
+      setLookupStatus(nextStatus);
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") return;
+      setLookupStatus("error");
+    } finally {
+      if (activeLookup.current === controller) activeLookup.current = null;
+    }
+  };
+
+  useEffect(() => {
+    if (lookupStatus === "idle" || lookupStatus === "loading") return;
+    const panel = document.querySelector<HTMLElement>(".dictionary-results");
+    if (!panel) return;
+    const style = window.getComputedStyle(panel);
+    if (style.display === "none" || style.visibility === "hidden" || panel.getClientRects().length === 0) return;
+
+    logActivity("dictionary_search_result", {
+      query: searchedTerm,
+      source: dictionarySource,
+      status: lookupStatus,
+      entryCount: dictionaryEntries.length,
+    });
+  }, [dictionaryEntries.length, dictionarySource, lookupStatus, searchedTerm]);
+
+  return (
+    <>
+      <div
+        ref={appShellRef}
+        className="app-shell"
+        data-rotation={rotation}
+        data-rotation-transition={rotationTransition}
+      >
+        <h1>My Connections Game</h1>
+        <form className="web-search" role="search" onSubmit={handleSearch}>
+          <input
+            data-activity-input="dictionary-search-query"
+            type="search"
+            aria-label="Look up an English word in Merriam-Webster's Collegiate Dictionary"
+            placeholder="Look up an English word..."
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+          />
+          <button data-activity-button="dictionary-search" type="submit" disabled={!searchTerm.trim()}>
+            Look Up
+          </button>
+        </form>
+        {lookupStatus !== "idle" && (
+          <section className="dictionary-results" aria-live="polite">
+            <div className="dictionary-results-heading">
+              <h2>{searchedTerm}</h2>
+              <button
+                className="dictionary-close"
+                data-activity-button="dictionary-close"
+                type="button"
+                aria-label="Close dictionary results"
+                onClick={() => {
+                  logActivity("dictionary_panel_closed", { query: searchedTerm });
+                  setLookupStatus("idle");
+                }}
+              >
+                Ã—
+              </button>
+            </div>
+            {lookupStatus === "loading" && <p>Looking up the word...</p>}
+            {lookupStatus === "not-found" && (
+              <p>No English definition found for â€œ{searchedTerm}â€.</p>
+            )}
+            {lookupStatus === "error" && (
+              <p>Could not reach the dictionary. Check your internet connection and try again.</p>
+            )}
+            {lookupStatus === "success" && (
+              <>
+                {dictionaryEntries.map((entry, entryIndex) => (
+                  <div className="dictionary-entry" key={`${entry.partOfSpeech}-${entryIndex}`}>
+                    {entry.partOfSpeech && <h3>{entry.partOfSpeech}</h3>}
+                    <ol>
+                      {entry.definitions?.slice(0, 6).map((definition, index) => {
+                        const text = definition.definition
+                          ? stripMarkup(definition.definition)
+                          : "";
+                        if (!text) return null;
+
+                        const example = definition.examples?.[0]
+                          ? stripMarkup(definition.examples[0])
+                          : "";
+                        return (
+                          <li key={`${entryIndex}-${index}`}>
+                            {text}
+                            {example && <p className="dictionary-example">Example: {example}</p>}
+                          </li>
+                        );
+                      })}
+                    </ol>
+                  </div>
+                ))}
+                {dictionarySource === "merriam-webster" ? (
+                  <div className="dictionary-source merriam-webster-source">
+                    <a
+                      href={`https://www.merriam-webster.com/dictionary/${encodeURIComponent(searchedTerm)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="Merriam-Webster's Collegiate Dictionary"
+                    >
+                      <img
+                        src="https://dictionaryapi.com/images/info/branding-guidelines/MWLogo_LightBG_120x120_2x.png"
+                        alt="Merriam-Webster"
+                        width="50"
+                        height="50"
+                      />
+                    </a>
+                    <span>Source: Merriam-Webster&apos;s Collegiate<sup>Â®</sup> Dictionary</span>
+                  </div>
+                ) : (
+                  <p className="dictionary-source">
+                    Source: <a href={`https://en.wiktionary.org/wiki/${encodeURIComponent(searchedTerm.replace(/\s+/g, "_"))}`} target="_blank" rel="noreferrer">Wiktionary</a>
+                  </p>
+                )}
+              </>
+            )}
+          </section>
+        )}
+        <div>
+          <Game
+            key={gameInstance}
+            gameDataSets={gameDataSets}
+            submitRequest={submitRequest}
+            submitSource={submitSource}
+            onSubmitAvailabilityChange={setSubmitAvailable}
+            rotation={rotation}
+            rotationTransition={rotationTransition}
+            onWordGridChange={setLookupGrid}
+          />
+        </div>
+        <br />
+        <br />
+        <p className="foot-disclaimer">
+          Personal local version based on the Connections-style game by{" "}
+          <a href="https://github.com/wheeler">@wheeler</a>. Original game:{" "}
+          <a href="https://www.nytimes.com/games/connections">
+            NY Times Connections
+          </a>
+          .
+        </p>
+      </div>
+      <nav ref={faceMeControlsRef} className="face-me-controls" aria-label="Rotate page toward a seat">
+        <div className="face-me-pair face-me-top">
+          <button
+            className="face-me-button"
+            data-activity-button="face-me-top"
+            type="button"
+            aria-label="Rotate page to face the person at the top"
+            disabled={rotationTransition !== "idle"}
+            onClick={() => rotatePage(180, "top")}
+          >
+            <span className="button-label">Face Me</span>
+          </button>
+          <button
+            className="submit-button"
+            data-activity-button="submit-top"
+            type="button"
+            disabled={!submitAvailable}
+            onClick={() => submitFromSide("top")}
+          >
+            <span className="button-label">Submit</span>
+          </button>
+        </div>
+        <div className="face-me-pair face-me-right">
+          <button
+            className="face-me-button"
+            data-activity-button="face-me-right"
+            type="button"
+            aria-label="Rotate page to face the person on the right"
+            disabled={rotationTransition !== "idle"}
+            onClick={() => rotatePage(270, "right")}
+          >
+            <span className="button-label">Face Me</span>
+          </button>
+          <button
+            className="submit-button"
+            data-activity-button="submit-right"
+            type="button"
+            disabled={!submitAvailable}
+            onClick={() => submitFromSide("right")}
+          >
+            <span className="button-label">Submit</span>
+          </button>
+          <LookupMatrix
+            side="right"
+            cells={lookupGrid}
+            openRequests={lookupRequests}
+            rotation={rotation}
+            disabled={rotationTransition !== "idle"}
+            onLookup={lookupWordAtPosition}
+          />
+        </div>
+        <div className="face-me-pair face-me-bottom">
+          <button
+            className="face-me-button"
+            data-activity-button="face-me-bottom"
+            type="button"
+            aria-label="Rotate page to face the person at the bottom"
+            disabled={rotationTransition !== "idle"}
+            onClick={() => rotatePage(0, "bottom")}
+          >
+            <span className="button-label">Face Me</span>
+          </button>
+          <button
+            className="submit-button"
+            data-activity-button="submit-bottom"
+            type="button"
+            disabled={!submitAvailable}
+            onClick={() => submitFromSide("bottom")}
+          >
+            <span className="button-label">Submit</span>
+          </button>
+          <LookupMatrix
+            side="bottom"
+            cells={lookupGrid}
+            openRequests={lookupRequests}
+            rotation={rotation}
+            disabled={rotationTransition !== "idle"}
+            onLookup={lookupWordAtPosition}
+          />
+        </div>
+        <div className="face-me-pair face-me-left">
+          <button
+            className="face-me-button"
+            data-activity-button="face-me-left"
+            type="button"
+            aria-label="Rotate page to face the person on the left"
+            disabled={rotationTransition !== "idle"}
+            onClick={() => rotatePage(90, "left")}
+          >
+            <span className="button-label">Face Me</span>
+          </button>
+          <button
+            className="submit-button"
+            data-activity-button="submit-left"
+            type="button"
+            disabled={!submitAvailable}
+            onClick={() => submitFromSide("left")}
+          >
+            <span className="button-label">Submit</span>
+          </button>
+          <LookupMatrix
+            side="left"
+            cells={lookupGrid}
+            openRequests={lookupRequests}
+            rotation={rotation}
+            disabled={rotationTransition !== "idle"}
+            onLookup={lookupWordAtPosition}
+          />
+        </div>
+      </nav>
+      {lookupRequests.map((request) => (
+        <DictionaryLookupPanel
+          key={request.requestId}
+          request={request}
+          onClose={closeLookupPanel}
+        />
+      ))}
+      {gameStarted && !gameEnded && (
+        <button
+          className="game-end-button"
+          data-activity-button="game-end"
+          type="button"
+          aria-label="Game End"
+          onClick={() => {
+            const gameLayout = document.querySelector<HTMLElement>(".game-layout");
+            endGameActivity({
+              round: Number(gameLayout?.dataset.round) || null,
+              roundResult: gameLayout?.dataset.roundResult ?? null,
+            });
+            setShowDownloadChoices(false);
+            setGameEnded(true);
+          }}
+        >
+          â¹
+        </button>
+      )}
+      {!gameStarted && !gameEnded && (
+        <div className="start-game-overlay" role="dialog" aria-modal="true" aria-label="Start game">
+          <div className="start-game-content">
+            <label className="start-game-group-size">
+              Group size (optional)
+              <input
+                type="number"
+                min="1"
+                max="20"
+                inputMode="numeric"
+                value={groupSize}
+                onChange={(event) => setGroupSize(event.target.value)}
+              />
+            </label>
+            <button
+              className="start-game-button"
+              data-activity-button="start-game"
+              type="button"
+              autoFocus
+              onClick={() => {
+                const parsedGroupSize = Number.parseInt(groupSize, 10);
+                startGameActivity({
+                  puzzle: "Puzzle 1",
+                  groupSize: Number.isFinite(parsedGroupSize) && parsedGroupSize > 0
+                    ? parsedGroupSize
+                    : null,
+                });
+                setGameStarted(true);
+              }}
+            >
+              Start Game
+            </button>
+          </div>
+        </div>
+      )}
+      {gameEnded && (
+        <div className="start-game-overlay" role="dialog" aria-modal="true" aria-label="Game ended">
+          <div className="start-game-content game-end-content">
+            {!showDownloadChoices ? (
+              <button
+                className="postgame-button"
+                data-activity-button="download-json-menu"
+                type="button"
+                onClick={() => setShowDownloadChoices(true)}
+              >
+                Download JSON
+              </button>
+            ) : (
+              <div className="download-json-choices" role="group" aria-label="Choose JSON download scope">
+                <button
+                  className="postgame-button"
+                  data-activity-button="download-this-game-json"
+                  type="button"
+                  onClick={() => {
+                    logActivity("activity_log_download_requested", { format: "JSON", scope: "this_game" });
+                    downloadCurrentGameActivityLog();
+                  }}
+                >
+                  This Game
+                </button>
+                <button
+                  className="postgame-button"
+                  data-activity-button="download-all-activity-json"
+                  type="button"
+                  onClick={() => {
+                    logActivity("activity_log_download_requested", { format: "JSON", scope: "all_activity" });
+                    downloadActivityLog();
+                  }}
+                >
+                  All Activity
+                </button>
+                <button
+                  className="postgame-back-button"
+                  data-activity-button="download-json-back"
+                  type="button"
+                  onClick={() => setShowDownloadChoices(false)}
+                >
+                  Back
+                </button>
+              </div>
+            )}
+            <button
+              className="initialize-button"
+              data-activity-button="initialize-game"
+              type="button"
+              onClick={() => {
+                beginGameActivityLog({ reason: "initialize" });
+                if (rotationTimer.current !== null) {
+                  window.clearTimeout(rotationTimer.current);
+                  rotationTimer.current = null;
+                }
+                setRotation(0);
+                setRotationTransition("idle");
+                setGameInstance((instance) => instance + 1);
+                setShowDownloadChoices(false);
+                setGameEnded(false);
+                setGameStarted(false);
+                setLookupStatus("idle");
+                setSearchedTerm("");
+                setDictionaryEntries([]);
+              }}
+            >
+              Initialize
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+export default App;

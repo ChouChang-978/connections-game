@@ -1,10 +1,43 @@
-þŠmþ&yºÞÃòân¶«Ëñè™æë{Ü™ßì…éez{ì†X§{nÿn)ÿ¦Ã©z¶­Š‰ç¢Ú^®h­µçZ[\ÜÛ\ÜÓ˜[Y\Èœ›ÛH˜Û\ÜÛ˜[Y\ÈŽÂš[\Ü\HÈ™XXÝ›ÙHHœ›ÛHœ™XXÝŽÂš[\Ü‹‹Ò][KœØÜÜÈŽÂ‚\H][T›ÜÈHÂˆÚ[™[Žˆ™XXÝ›ÙNÂˆÙ[XÝYˆ›ÛÛX[ŽÂˆ[˜ÛÜœ™XÝˆ›ÛÛX[ŽÂˆ][SÛÛXÚÎˆ
+import classNames from "classnames";
+import type { ReactNode } from "react";
+import "./Item.scss";
 
-HOˆ›ÚYÂŸNÂ‚™^Ü\HÛÚÝ\ÜšYÙ[HÝš[™È[Â™^Ü\HÛÚÝ\ÜšYÚYHH›YˆœšYÚˆ˜›ÝÛHŽÂ‚™^Ü\HXÝ[Û˜\žSÛÚÝ\™\]Y\ÝHÂˆÛÜ™ˆÝš[™ÎÂˆ›ÝÎˆ[X™\ŽÂˆÛÛ[[Žˆ[X™\ŽÂˆÚYNˆÛÚÝ\ÜšYÚYNÂˆ[™[ÜÚ][ÛŽˆÈYˆ[X™\ŽÈÜˆ[X™\ŽÈ[™[Ú^™Nˆ[X™\ˆNÂˆ™\]Y\ÝYˆ[X™\ŽÂŸNÂ‚˜ÛÛœÝ][HH
-ÈÚ[™[‹Ù[XÝY[˜ÛÜœ™XÝ][SÛÛXÚÈNˆ][T›ÜÊHOˆÂˆÛÛœÝÛÜ™^HÝš[™ÊÚ[™[ŠNÂ‚ˆ™]\›ˆ
-ˆ]ˆÛ\ÜÓ˜[YO^ØÛ\ÜÓ˜[Y\Êš][H‹ÈÙ[XÝY[˜ÛÜœ™XÝJ_O‚ˆ]Û‚ˆ\OH˜]Ûˆ‚ˆÛÛXÚÏ^Ú][SÛÛXÚßBˆÛÛÛ^Y[O^Ê]™[
-HOˆ]™[œ™]™[Y˜][
+type ItemProps = {
+  children: ReactNode;
+  selected: boolean;
+  incorrect: boolean;
+  itemOnClick: () => void;
+};
 
-_Bˆ]KXXÝ]š]KX]Û^ØÛÜ™][N‰ÝÛÜ™^ÓØØ[SÝÙ\Ø\ÙJ
-_XBˆ]KXXÝ]š]K]ÛÜ™^ÝÛÜ™^Bˆ\šXK[X™[^Ø	ÝÛÜ™^Kˆ\ÈÙ[XÝ˜Bˆ‚ˆØÚ[™[ŸBˆØ]Û‚ˆÙ]‚ˆ
-NÂŸNÂ‚™^ÜY˜][][NÂ
+export type LookupGridCell = string | null;
+export type LookupGridSide = "left" | "right" | "bottom";
+
+export type DictionaryLookupRequest = {
+  word: string;
+  row: number;
+  column: number;
+  side: LookupGridSide;
+  panelPosition: { left: number; top: number; panelSize: number };
+  requestId: number;
+};
+
+const Item = ({ children, selected, incorrect, itemOnClick }: ItemProps) => {
+  const wordText = String(children);
+
+  return (
+    <div className={classNames("item", { selected, incorrect })}>
+      <button
+        type="button"
+        onClick={itemOnClick}
+        onContextMenu={(event) => event.preventDefault()}
+        data-activity-button={`word-tile:${wordText.toLocaleLowerCase()}`}
+        data-activity-word={wordText}
+        aria-label={`${wordText}. Tap to select.`}
+      >
+        {children}
+      </button>
+    </div>
+  );
+};
+
+export default Item;

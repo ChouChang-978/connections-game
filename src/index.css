@@ -1,5 +1,78 @@
-şŠmş&yºŞÃòân¶«Ëñè™æë{Ü™ßì…éez{ì†X§{nÿn)ÿ¦Ã©z¶­Š‰ç¢Ú^®h­µçNœ›ÛİÂˆ›ÛY˜[Z[Nˆ[\‹Ş\İ[K]ZK]™[š\‹[™]XØK\šX[Ø[œË\Ù\šYÂˆ[™KZZYÚˆKNÂˆ›Û]ÙZYÚˆÂ‚ˆÛÛÜ‹\ØÚ[YNˆYÚ\šÎÂˆÛÛÜˆ™Ø˜JMKMKMKÊNÂˆ˜XÚÙÜ›İ[™XÛÛÜˆÌÂ‚ˆ›Û\Ş[\Ú\Îˆ›Û™NÂˆ^\™[™\š[™ÎˆÜ[Z^™SYÚXš[]NÂˆ]ÙXšÚ]Y›Û\Û[Ûİ[™Îˆ[X[X\ÙYÂˆ[[Ş‹[ÜŞY›Û\Û[Ûİ[™ÎˆÜ˜^\ØØ[NÂŸB‚˜HÂˆ›Û]ÙZYÚˆLÂˆÛÛÜˆÍ˜Ù™Âˆ^YXÛÜ˜][Ûˆ[š\š]ÂŸB˜Nšİ™\ˆÂˆÛÛÜˆÍLÍX™ŒÂŸB‚˜›ÙHÂˆX\™Ú[ˆÂˆÊ™\Ü^Nˆ›^Ê‹ÂˆXÙKZ][\ÎˆÙ[\ÂˆZ[‹]ÚYˆÌŒÂˆZ[‹ZZYÚˆLšÂŸB‚šHÂˆ›Û\Ú^™NˆËŒ™[NÂˆ[™KZZYÚˆKŒNÂŸB‚YYXHÛ›HØÜ™Y[ˆ[™
-X^]ÚYˆ
-HÂˆHÂˆ›Û\Ú^™Nˆ™[NÂˆBŸB‚˜]ÛˆÂˆ›Ü™\‹\˜Y]\ÎˆÂˆ›Ü™\ˆ\ÛÛY˜[œÜ\™[ÂˆY[™Îˆ™[HKŒ™[NÂˆ›Û\Ú^™NˆY[NÂˆ›Û]ÙZYÚˆLÂˆ›ÛY˜[Z[Nˆ[š\š]Âˆ˜XÚÙÜ›İ[™XÛÛÜˆÌXLXLXNÂˆİ\œÛÜˆÚ[\Âˆ˜[œÚ][Ûˆ›Ü™\‹XÛÛÜˆŒ\ÎÂˆ]ÙXšÚ]]\Ù\‹\Ù[Xİˆ›Û™NÂˆ\Ù\‹\Ù[Xİˆ›Û™NÂˆ]ÙXšÚ]]İXÚXØ[İ]ˆ›Û™NÂŸB˜]Ûšİ™\ˆÂˆÊ˜›Ü™\‹XÛÛÜˆÍ˜Ù™Ê‹ÂŸB˜]Û™›Øİ\Ë˜]Û™›Øİ\Ë]š\ÚX›HÂˆÊ›İ][™Nˆ›Û™NÊ‹ÂˆÊ›İ][™Nˆ]]È]ÙXšÚ]Y›Øİ\Ë\š[™ËXÛÛÜÊ‹ÂŸB‚YYXH
-™Y™\œËXÛÛÜ‹\ØÚ[YNˆYÚ
-HÂˆœ›ÛİÂˆÛÛÜˆÌŒLÍMÎÂˆ˜XÚÙÜ›İ[™XÛÛÜˆÙ™™™™™ÂˆBˆNšİ™\ˆÂˆÛÛÜˆÍÍØ™™ÂˆBˆ]ÛˆÂˆ˜XÚÙÜ›İ[™XÛÛÜˆÙYYNÂˆBŸB
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  /*display: flex;*/
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+@media only screen and (max-width: 640px) {
+  h1 {
+    font-size: 2em;
+  }
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+button:hover {
+  /*border-color: #646cff;*/
+}
+button:focus,
+button:focus-visible {
+  /*outline: none;*/
+  /*outline: 4px auto -webkit-focus-ring-color;*/
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
