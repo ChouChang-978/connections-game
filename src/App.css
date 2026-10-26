@@ -259,7 +259,7 @@
 .word-lookup-matrix {
   display: grid;
   flex: 0 0 auto;
-  grid-template-columns: repeat(4, 34px);
+  grid-template-columns: repeat(4, 32px);
   gap: 3px;
 }
 
@@ -267,14 +267,14 @@
   display: grid;
   place-items: center;
   box-sizing: border-box;
-  width: 34px;
+  width: 32px;
   height: 22px;
-  min-width: 34px;
+  min-width: 32px;
   min-height: 22px;
   padding: 0;
   border: 1px solid transparent;
   border-radius: 2px;
-  background-color: #eeeeee;
+  background-color: #e1e1e1;
   color: #213547;
   box-shadow: none;
   cursor: pointer;
@@ -282,20 +282,41 @@
 }
 
 .face-me-pair .word-lookup-matrix-button:hover:not(:disabled) {
-  background-color: #e4e4e4;
+  background-color: #d6d6d6;
 }
 
 .face-me-pair .word-lookup-matrix-button:active:not(:disabled) {
-  background-color: #d8d8d8;
+  background-color: #cccccc;
   transform: translateY(1px);
 }
 
 .face-me-pair .word-lookup-matrix-button:disabled {
-  background-color: #eeeeee;
+  border-color: #b8b8b8;
+  background-color: #bdbdbd;
   color: #213547;
-  opacity: 0.58;
+  opacity: 1;
   box-shadow: none;
   cursor: not-allowed;
+}
+
+.face-me-pair .word-lookup-matrix-button.solved-easy:disabled {
+  border-color: #e2c34b;
+  background-color: #f9df6d;
+}
+
+.face-me-pair .word-lookup-matrix-button.solved-medium:disabled {
+  border-color: #3bd866;
+  background-color: #63f486;
+}
+
+.face-me-pair .word-lookup-matrix-button.solved-hard:disabled {
+  border-color: #35cbd2;
+  background-color: #62e8ee;
+}
+
+.face-me-pair .word-lookup-matrix-button.solved-tricky:disabled {
+  border-color: #a65fe0;
+  background-color: #c185f5;
 }
 
 .word-lookup-matrix-button:focus-visible {

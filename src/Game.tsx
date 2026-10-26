@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Board from "./Board.tsx";
-import type { LookupGridCell } from "./Item.tsx";
+import type { LookupGridCell, SolvedGroupColor } from "./Item.tsx";
 import shuffle from "lodash.shuffle";
 import type { GameData, WordGroup } from "./gameData.ts";
 import {
@@ -13,7 +13,7 @@ const WRONG_ANSWER_FLASH_MS = 850;
 const WRONG_ANSWER_RESET_DELAY_MS = 300;
 const ONE_AWAY_MESSAGE_MS = 1400;
 
-const getSolvedGroupColorClass = (difficulty?: string) => {
+const getSolvedGroupColorClass = (difficulty?: string): SolvedGroupColor => {
   switch (difficulty?.toLowerCase()) {
     case "easy":
       return "easy";
@@ -45,6 +45,7 @@ const Game = ({
   rotation,
   rotationTransition,
   onWordGridChange,
+  onRestartRequested,
 }: {
   gameDataSets: GameData[];
   submitRequest: number;
@@ -53,6 +54,7 @@ const Game = ({
   rotation: number;
   rotationTransition: "idle" | "fade-out" | "fade-in";
   onWordGridChange: (cells: LookupGridCell[]) => void;
+  onRestartRequested: () => void;
 }) => {
   const [currentPuzzleIndex, setCurrentPuzzleIndex] = useState(0);
   const gameData = gameDataSets[currentPuzzleIndex];
@@ -126,9 +128,16 @@ const Game = ({
   const canSubmit = selected.length === 4 && !submitLocked && !isGameOver;
 
   useEffect(() => {
-    const solvedCells = Array<LookupGridCell>(solvedGroups.length * 4).fill(null);
-    onWordGridChange([...solvedCells, ...remainingWords]);
-  }, [onWordGridChange, remainingWords, solvedGroups.length]);
+    const solvedCells = solvedGroups.flatMap((description) => {
+      const group = gameData.groups.find((candidate) => candidate.description === description);
+      const solvedDifficulty = getSolvedGroupColorClass(group?.className);
+      return Array.from({ length: 4 }, () => ({ word: null, solvedDifficulty }));
+    });
+    onWordGridChange([
+      ...solvedCells,
+      ...remainingWords.map((word) => ({ word })),
+    ]);
+  }, [gameData, onWordGridChange, remainingWords, solvedGroups]);
 
   useEffect(() => {
     onSubmitAvailabilityChange(canSubmit);
@@ -288,6 +297,7 @@ const Game = ({
   const onRestart = () => {
     if (hintGroups) closeHint("round_restart");
     restartRoundActivity();
+    onRestartRequested();
     resetPuzzle(currentPuzzleIndex);
   };
 
@@ -357,6 +367,7 @@ const Game = ({
               words={remainingWords}
               selected={selected}
               incorrectSelection={incorrectSelection}
+              disabled={isGameOver}
               rotation={rotation}
               solvedGroupData={solvedGroupData}
               toggleSelected={toggleSelected}

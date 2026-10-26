@@ -6,10 +6,16 @@ type ItemProps = {
   children: ReactNode;
   selected: boolean;
   incorrect: boolean;
+  disabled?: boolean;
   itemOnClick: () => void;
 };
 
-export type LookupGridCell = string | null;
+export type SolvedGroupColor = "easy" | "medium" | "hard" | "tricky";
+
+export type LookupGridCell = {
+  word: string | null;
+  solvedDifficulty?: SolvedGroupColor;
+} | null;
 export type LookupGridSide = "left" | "right" | "bottom";
 
 export type DictionaryLookupRequest = {
@@ -21,18 +27,19 @@ export type DictionaryLookupRequest = {
   requestId: number;
 };
 
-const Item = ({ children, selected, incorrect, itemOnClick }: ItemProps) => {
+const Item = ({ children, selected, incorrect, disabled = false, itemOnClick }: ItemProps) => {
   const wordText = String(children);
 
   return (
     <div className={classNames("item", { selected, incorrect })}>
       <button
         type="button"
+        disabled={disabled}
         onClick={itemOnClick}
         onContextMenu={(event) => event.preventDefault()}
         data-activity-button={`word-tile:${wordText.toLocaleLowerCase()}`}
         data-activity-word={wordText}
-        aria-label={`${wordText}. Tap to select.`}
+        aria-label={`${wordText}. ${disabled ? "Unavailable." : "Tap to select."}`}
       >
         {children}
       </button>

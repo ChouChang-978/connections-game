@@ -58,6 +58,14 @@ const getLookupPanelPosition = (
     bottom: request.panelPosition.top + request.panelPosition.panelSize,
   });
   const occupied = openRequests.map(getVisualBounds);
+  if (side === "bottom") {
+    occupied.push({
+      left: bounds.left,
+      top: bounds.top,
+      right: bounds.right,
+      bottom: bounds.bottom,
+    });
+  }
   const maxLeft = Math.max(8, viewportWidth - panelSize - 8);
   const maxTop = Math.max(8, viewportHeight - panelSize - 8);
   const clamp = (value: number, maximum: number) => Math.max(8, Math.min(value, maximum));
@@ -78,10 +86,8 @@ const getLookupPanelPosition = (
           { left: horizontalCenter, top: bounds.bottom + LOOKUP_PANEL_GAP },
         ]
       : [
-          { left: horizontalCenter, top: bounds.top - panelSize - LOOKUP_PANEL_GAP },
-          { left: horizontalCenter, top: bounds.bottom + LOOKUP_PANEL_GAP },
-          { left: bounds.left - panelSize - LOOKUP_PANEL_GAP, top: verticalCenter },
           { left: bounds.right + LOOKUP_PANEL_GAP, top: verticalCenter },
+          { left: horizontalCenter, top: bounds.bottom + LOOKUP_PANEL_GAP },
         ];
 
   const candidates = [...preferred];
@@ -96,6 +102,11 @@ const getLookupPanelPosition = (
     .find((candidate, index, allCandidates) => {
       const key = `${candidate.left}:${candidate.top}`;
       if (allCandidates.findIndex((other) => `${other.left}:${other.top}` === key) !== index) return false;
+      if (side === "bottom") {
+        const rightOfMatrix = candidate.left >= bounds.right + LOOKUP_PANEL_GAP;
+        const belowMatrix = candidate.top >= bounds.bottom + LOOKUP_PANEL_GAP;
+        if (!rightOfMatrix && !belowMatrix) return false;
+      }
       return occupied.every((rect) =>
         candidate.left + panelSize + LOOKUP_PANEL_GAP <= rect.left ||
         candidate.left >= rect.right + LOOKUP_PANEL_GAP ||
@@ -135,12 +146,13 @@ const LookupMatrix = ({
       {Array.from({ length: 16 }, (_value, index) => {
         const row = Math.floor(index / 4) + 1;
         const column = (index % 4) + 1;
-        const word = cells[index] ?? null;
+        const cell = cells[index] ?? null;
+        const word = cell?.word ?? null;
         const sameSideRequests = openRequests.filter((request) => request.side !== side);
         return (
           <button
             key={`${side}-${row}-${column}`}
-            className="word-lookup-matrix-button"
+            className={`word-lookup-matrix-button${cell?.solvedDifficulty ? ` solved-${cell.solvedDifficulty}` : ""}`}
             data-activity-button={`word-lookup-${side}-r${row}c${column}`}
             type="button"
             disabled={!word || disabled}
@@ -462,6 +474,49 @@ function App() {
     setLookupRequests((current) => current.filter((request) => request.requestId !== requestId));
   };
 
+  const closeLookupRequests = (reason: string) => {
+    lookupRequests.forEach((request) => {
+      logActivity("dictionary_panel_closed", {
+        query: request.word,
+        word: request.word,
+        inputMethod: "position_matrix",
+        side: request.side,
+        gridRow: request.row,
+        gridColumn: request.column,
+        requestId: request.requestId,
+        reason,
+      });
+    });
+    setLookupRequests([]);
+  };
+
+  const resetPageForRestart = () => {
+    closeLookupRequests("round_restart");
+
+    if (rotationTimer.current !== null) {
+      window.clearTimeout(rotationTimer.current);
+      rotationTimer.current = null;
+    }
+
+    if (rotation === 0) {
+      setRotationTransition("idle");
+      return;
+    }
+
+    const fadeDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? 0
+      : ROTATION_FADE_DURATION_MS;
+    setRotationTransition("fade-out");
+    rotationTimer.current = window.setTimeout(() => {
+      setRotation(0);
+      setRotationTransition("fade-in");
+      rotationTimer.current = window.setTimeout(() => {
+        setRotationTransition("idle");
+        rotationTimer.current = null;
+      }, fadeDuration);
+    }, fadeDuration);
+  };
+
   const handleSearch = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const query = searchTerm.trim();
@@ -649,6 +704,7 @@ function App() {
             rotation={rotation}
             rotationTransition={rotationTransition}
             onWordGridChange={setLookupGrid}
+            onRestartRequested={resetPageForRestart}
           />
         </div>
         <br />
@@ -787,6 +843,7 @@ function App() {
           aria-label="Game End"
           onClick={() => {
             const gameLayout = document.querySelector<HTMLElement>(".game-layout");
+            closeLookupRequests("game_end");
             endGameActivity({
               round: Number(gameLayout?.dataset.round) || null,
               roundResult: gameLayout?.dataset.roundResult ?? null,
@@ -884,6 +941,7 @@ function App() {
               data-activity-button="initialize-game"
               type="button"
               onClick={() => {
+                closeLookupRequests("initialize");
                 beginGameActivityLog({ reason: "initialize" });
                 if (rotationTimer.current !== null) {
                   window.clearTimeout(rotationTimer.current);

@@ -174,6 +174,7 @@ type BoardProps = {
   words: string[];
   selected: string[];
   incorrectSelection: boolean;
+  disabled: boolean;
   rotation: number;
   toggleSelected: (value: string) => void;
   solvedGroupData: WordGroup[];
@@ -183,6 +184,7 @@ const Board = ({
   words,
   selected,
   incorrectSelection,
+  disabled,
   rotation,
   solvedGroupData,
   toggleSelected,
@@ -204,6 +206,7 @@ const Board = ({
           }}
           selected={selected.includes(word)}
           incorrect={incorrectSelection && selected.includes(word)}
+          disabled={disabled}
         >
           {word}
         </Item>
