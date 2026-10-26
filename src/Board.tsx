@@ -3,7 +3,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import type { AutoAnimationPlugin } from "@formkit/auto-animate";
 
 import "./Board.scss";
-import Item from "./Item.tsx";
+import Item, { type DictionaryLookupRequest } from "./Item.tsx";
 import SolvedGroup from "./SolvedGroup.tsx";
 import type { WordGroup } from "./gameData.ts";
 
@@ -177,6 +177,8 @@ type BoardProps = {
   rotation: number;
   toggleSelected: (value: string) => void;
   solvedGroupData: WordGroup[];
+  lookupRequest: DictionaryLookupRequest | null;
+  onLookupRequestHandled: (requestId: number) => void;
 };
 
 const Board = ({
@@ -186,6 +188,8 @@ const Board = ({
   rotation,
   solvedGroupData,
   toggleSelected,
+  lookupRequest,
+  onLookupRequestHandled,
 }: BoardProps) => {
   const rotationRef = useRef(rotation);
   rotationRef.current = rotation;
@@ -205,6 +209,8 @@ const Board = ({
           selected={selected.includes(word)}
           incorrect={incorrectSelection && selected.includes(word)}
           rotation={rotation}
+          lookupRequest={lookupRequest}
+          onLookupRequestHandled={onLookupRequestHandled}
         >
           {word}
         </Item>

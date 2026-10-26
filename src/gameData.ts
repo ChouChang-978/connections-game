@@ -1,6 +1,7 @@
 export type WordGroup = {
   description: string;
   className?: string;
+  hint: string;
   words: string[];
 };
 
@@ -34,21 +35,25 @@ export const gameDataSets: GameData[] = [
       {
         description: "THINGS THAT ARE ORANGE",
         className: "easy",
+        hint: "A bright shade links things from a court, a garden, and a pond.",
         words: ["BASKETBALL", "CARROT", "GOLDFISH", "PUMPKIN"],
       },
       {
         description: "ELEMENTS OF COOKING, PER SAMIN NOSRAT",
         className: "medium",
+        hint: "A celebrated culinary framework is built around four essentials.",
         words: ["SALT", "FAT", "ACID", "HEAT"],
       },
       {
         description: "SYMBOLS ABOVE NUMBERS ON A KEYBOARD",
         className: "hard",
+        hint: "Look above the number row, then consider what Shift reveals.",
         words: ["AT", "DOLLAR", "PERCENT", "POUND"],
       },
       {
         description: "___ YEAR",
         className: "tricky",
+        hint: "These words can fill the blank before a measure of time.",
         words: ["GAP", "LEAP", "LIGHT", "SCHOOL"],
       },
     ],
@@ -76,21 +81,25 @@ export const gameDataSets: GameData[] = [
       {
         description: "CLEANING SUPPLIES",
         className: "easy",
+        hint: "A few familiar helpers for resetting a messy room.",
         words: ["BROOM", "MOP", "RAG", "SPONGE"],
       },
       {
         description: "NAME PREFIXES",
         className: "medium",
+        hint: "Short forms that may appear before someone's name.",
         words: ["GEN", "MS", "PROF", "REV"],
       },
       {
         description: "COLORS IN BRAZIL'S FLAG",
         className: "hard",
+        hint: "Picture the national banner of South America's largest country.",
         words: ["BLUE", "GREEN", "WHITE", "YELLOW"],
       },
       {
         description: "SHAPES OF CAPITAL GREEK LETTERS",
         className: "tricky",
+        hint: "Think of the outlines left by tracing symbols from an old alphabet.",
         words: ["CIRCLE", "HORSESHOE", "PITCHFORK", "TRIANGLE"],
       },
     ],
@@ -118,21 +127,25 @@ export const gameDataSets: GameData[] = [
       {
         description: "INDICATION OF THINGS TO COME",
         className: "easy",
+        hint: "Sometimes the future leaves a small clue in advance.",
         words: ["MESSAGE", "OMEN", "SIGN", "WARNING"],
       },
       {
         description: "WAYS TO PREPARE CHEESE",
         className: "medium",
+        hint: "Change the texture before it reaches the plate.",
         words: ["CRUMBLE", "MELT", "SHRED", "SLICE"],
       },
       {
         description: "THINGS THAT MAKE YOU SNEEZE",
         className: "hard",
+        hint: "These can make your nose react before you know why.",
         words: ["DUST", "PEPPER", "POLLEN", "SMOKE"],
       },
       {
         description: "___ TOOTH",
         className: "tricky",
+        hint: "Each word can come before the same small word in your mouth.",
         words: ["BABY", "EYE", "SWEET", "WISDOM"],
       },
     ],
@@ -160,21 +173,25 @@ export const gameDataSets: GameData[] = [
       {
         description: "GIFT-GIVING ACCESSORIES",
         className: "easy",
+        hint: "A few finishing touches that may accompany a present.",
         words: ["BOW", "BOX", "CARD", "WRAPPING"],
       },
       {
         description: "KINDS OF EXAMS",
         className: "medium",
+        hint: "Different formats for checking what someone knows.",
         words: ["BAR", "FINAL", "ORAL", "PHYSICAL"],
       },
       {
         description: "___ LETTER",
         className: "hard",
+        hint: "The same word can complete a familiar phrase before LETTER.",
         words: ["CHAIN", "COVER", "LOVE", "SCARLET"],
       },
       {
         description: "WORDS SPELLED WITH AN UPSIDE-DOWN CALCULATOR",
         className: "tricky",
+        hint: "Turn the display around and see what the digits resemble.",
         words: ["BOOB", "EGGSHELL", "GIGGLE", "HELLO"],
       },
     ],
@@ -202,21 +219,25 @@ export const gameDataSets: GameData[] = [
       {
         description: "TROPICAL FRUITS",
         className: "easy",
+        hint: "Imagine a fruit stand somewhere warm and humid.",
         words: ["MANGO", "PAPAYA", "GUAVA", "LYCHEE"],
       },
       {
         description: "SCHOOL SUBJECTS",
         className: "MEDIUM",
+        hint: "These might appear as separate periods on a student's timetable.",
         words: ["ALGEBRA", "BIOLOGY", "HISTORY", "GEOGRAPHY"],
       },
       {
         description: "THINGS THAT CAN FLY",
         className: "HARD",
+        hint: "Some need a motor; others depend on air and a little lift.",
         words: ["HELICOPTER", "KITE", "GLIDER", "BALLOON"],
       },
       {
         description: "STARTS OF U.S. COINS",
         className: "TRICKY",
+        hint: "Say the first sound of each coin name out loud.",
         words: ["DIM", "NICK", "PEN", "QUART"],
       },
     ],
@@ -244,21 +265,25 @@ export const gameDataSets: GameData[] = [
       {
         description: "STREAMING SERVICES",
         className: "easy",
+        hint: "Places to choose a show without following a broadcast schedule.",
         words: ["HULU", "NETFLIX", "PEACOCK", "PRIME"],
       },
       {
         description: "CASINO / GAMBLING",
         className: "MEDIUM",
+        hint: "Think of a table where chance and wagers come together.",
         words: ["CARDS", "CHIPS", "DICE", "SLOTS"],
       },
       {
         description: "RECORD LABELS",
         className: "HARD",
+        hint: "Names you might see on the spine of an album.",
         words: ["CAPITOL", "COLUMBIA", "ISLAND", "VIRGIN"],
       },
       {
         description: "WORDS BEGINNING WITH “SUN”",
         className: "TRICKY",
+        hint: "Think of daylight, a garden bloom, and a way to tell time.",
         words: ["SUNLIGHT", "SUNFLOWER", "SUNRISE", "SUNDIAL"],
       },
     ],

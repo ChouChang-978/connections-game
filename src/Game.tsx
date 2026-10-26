@@ -1,10 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Board from "./Board.tsx";
+import type { DictionaryLookupRequest, LookupGridCell } from "./Item.tsx";
 import shuffle from "lodash.shuffle";
-import type { GameData } from "./gameData.ts";
+import type { GameData, WordGroup } from "./gameData.ts";
+import {
+  logActivity,
+  restartRoundActivity,
+  startNextRoundActivity,
+} from "./activityLog.ts";
 
 const WRONG_ANSWER_FLASH_MS = 850;
 const WRONG_ANSWER_RESET_DELAY_MS = 300;
+const ONE_AWAY_MESSAGE_MS = 1400;
 
 const getSolvedGroupColorClass = (difficulty?: string) => {
   switch (difficulty?.toLowerCase()) {
@@ -21,16 +28,35 @@ const getSolvedGroupColorClass = (difficulty?: string) => {
   }
 };
 
+const getDifficultyLabel = (difficulty?: string) => {
+  switch (difficulty?.toLowerCase()) {
+    case "easy": return "Straightforward";
+    case "medium": return "Medium";
+    case "hard": return "Hard";
+    default: return "Tricky";
+  }
+};
+
 const Game = ({
   gameDataSets,
   submitRequest,
+  submitSource,
   onSubmitAvailabilityChange,
   rotation,
+  rotationTransition,
+  onWordGridChange,
+  lookupRequest,
+  onLookupRequestHandled,
 }: {
   gameDataSets: GameData[];
   submitRequest: number;
+  submitSource: string;
   onSubmitAvailabilityChange: (available: boolean) => void;
   rotation: number;
+  rotationTransition: "idle" | "fade-out" | "fade-in";
+  onWordGridChange: (cells: LookupGridCell[]) => void;
+  lookupRequest: DictionaryLookupRequest | null;
+  onLookupRequestHandled: (requestId: number) => void;
 }) => {
   const [currentPuzzleIndex, setCurrentPuzzleIndex] = useState(0);
   const gameData = gameDataSets[currentPuzzleIndex];
@@ -42,25 +68,48 @@ const Game = ({
   const [incorrectSelection, setIncorrectSelection] = useState(false);
   const [solvedGroups, setSolvedGroups] = useState<string[]>([]);
   const [mistakesLeft, setMistakesLeft] = useState(4);
-  const [hintMessage, setHintMessage] = useState("");
+  const [hintGroups, setHintGroups] = useState<WordGroup[] | null>(null);
+  const [oneAwayVisible, setOneAwayVisible] = useState(false);
   const [showAnswers, setShowAnswers] = useState(false);
   const incorrectAnimationTimer = useRef<number | null>(null);
+  const oneAwayTimer = useRef<number | null>(null);
+  const gameOverLogged = useRef(false);
 
   useEffect(() => () => {
     if (incorrectAnimationTimer.current !== null) {
       window.clearTimeout(incorrectAnimationTimer.current);
     }
+    if (oneAwayTimer.current !== null) {
+      window.clearTimeout(oneAwayTimer.current);
+    }
   }, []);
 
+  const closeHint = useCallback((reason = "close_button") => {
+    if (!hintGroups) return;
+    logActivity("hint_window_closed", {
+      reason,
+      hints: hintGroups.map(({ className, hint }) => ({ difficulty: className, hint })),
+    });
+    setHintGroups(null);
+  }, [hintGroups]);
+
   useEffect(() => {
-    if (!hintMessage) return;
+    if (!hintGroups) return;
 
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setHintMessage("");
+      if (event.key === "Escape") closeHint("escape");
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [hintMessage]);
+  }, [hintGroups, closeHint]);
+
+  useEffect(() => {
+    if (hintGroups) {
+      logActivity("hint_displayed", {
+        hints: hintGroups.map(({ className, hint }) => ({ difficulty: className, hint })),
+      });
+    }
+  }, [hintGroups]);
 
   const solvedGroupData = solvedGroups.flatMap((description) => {
     const group = gameData.groups.find(
@@ -81,34 +130,82 @@ const Game = ({
   const canSubmit = selected.length === 4 && !submitLocked && !isGameOver;
 
   useEffect(() => {
+    const solvedCells = Array<LookupGridCell>(solvedGroups.length * 4).fill(null);
+    onWordGridChange([...solvedCells, ...remainingWords]);
+  }, [onWordGridChange, remainingWords, solvedGroups.length]);
+
+  useEffect(() => {
     onSubmitAvailabilityChange(canSubmit);
   }, [canSubmit, onSubmitAvailabilityChange]);
 
+  useEffect(() => {
+    if (isGameOver && !gameOverLogged.current) {
+      gameOverLogged.current = true;
+      logActivity("round_completed", {
+        puzzleIndex: currentPuzzleIndex + 1,
+        result: hasWon ? "won" : "lost",
+        solvedGroupCount: solvedGroups.length,
+        mistakesRemaining: mistakesLeft,
+      });
+    } else if (!isGameOver) {
+      gameOverLogged.current = false;
+    }
+  }, [currentPuzzleIndex, hasLost, hasWon, isGameOver, mistakesLeft, solvedGroups.length]);
+
   const toggleSelected = (value: string) => {
-    if (incorrectSelection || submitLocked) return;
+    if (incorrectSelection || submitLocked || isGameOver) return;
+
     if (selected.includes(value)) {
-      setSelected(selected.filter((word) => word !== value));
+      const nextSelected = selected.filter((word) => word !== value);
+      setSelected(nextSelected);
       setSubmitLocked(false);
+      logActivity("word_deselected", { word: value, selectedWords: nextSelected });
       return;
     }
 
     if (selected.length < 4) {
-      setSelected([...selected, value]);
+      const nextSelected = [...selected, value];
+      setSelected(nextSelected);
       setSubmitLocked(false);
+      logActivity("word_selected", { word: value, selectedWords: nextSelected });
     }
   };
 
   const onSubmit = () => {
-    if (selected.length !== 4) return;
+    if (selected.length !== 4 || submitLocked || isGameOver) return;
 
+    const submittedWords = [...selected];
     const matchedGroup = gameData.groups.find(({ words, description }) =>
       !solvedGroups.includes(description) &&
-      words.every((word) => selected.includes(word)),
+      words.every((word) => submittedWords.includes(word)),
     );
+    const oneAway = !matchedGroup && gameData.groups.some(({ words, description }) =>
+      !solvedGroups.includes(description) &&
+      words.filter((word) => submittedWords.includes(word)).length === 3,
+    );
+    if (oneAwayTimer.current !== null) {
+      window.clearTimeout(oneAwayTimer.current);
+      oneAwayTimer.current = null;
+    }
+    setOneAwayVisible(oneAway);
+    if (oneAway) {
+      oneAwayTimer.current = window.setTimeout(() => {
+        setOneAwayVisible(false);
+        oneAwayTimer.current = null;
+      }, ONE_AWAY_MESSAGE_MS);
+    }
 
     if (!matchedGroup) {
+      const nextMistakesLeft = Math.max(0, mistakesLeft - 1);
+      logActivity("group_submit_result", {
+        source: submitSource,
+        result: "incorrect",
+        selectedWords: submittedWords,
+        oneAway,
+        mistakesRemaining: nextMistakesLeft,
+      });
       setSubmitLocked(true);
-      setMistakesLeft((count) => Math.max(0, count - 1));
+      setMistakesLeft(nextMistakesLeft);
       setIncorrectSelection(true);
       if (incorrectAnimationTimer.current !== null) {
         window.clearTimeout(incorrectAnimationTimer.current);
@@ -116,7 +213,6 @@ const Game = ({
       incorrectAnimationTimer.current = window.setTimeout(() => {
         setIncorrectSelection(false);
         incorrectAnimationTimer.current = window.setTimeout(() => {
-          setSelected([]);
           setSubmitLocked(false);
           incorrectAnimationTimer.current = null;
         }, WRONG_ANSWER_RESET_DELAY_MS);
@@ -124,9 +220,22 @@ const Game = ({
       return;
     }
 
+    const nextSolvedGroups = [...solvedGroups, matchedGroup.description];
+    const solvedPosition = nextSolvedGroups.length;
+    const color = getSolvedGroupColorClass(matchedGroup.className);
+    logActivity("group_submit_result", {
+      source: submitSource,
+      result: "correct",
+      selectedWords: submittedWords,
+      groupDescription: matchedGroup.description,
+      difficulty: matchedGroup.className ?? "tricky",
+      color,
+      solvedPosition,
+      mistakesRemaining: mistakesLeft,
+    });
     setIncorrectSelection(false);
     setSelected([]);
-    setSolvedGroups([...solvedGroups, matchedGroup.description]);
+    setSolvedGroups(nextSolvedGroups);
 
     // Move the remaining top-row words into the spaces made by the solved group.
     const topRowWords = remainingWords
@@ -152,12 +261,10 @@ const Game = ({
   }, [submitRequest]);
 
   const onHint = () => {
-    const nextGroup = gameData.groups.find(
+    const unsolvedGroups = gameData.groups.filter(
       ({ description }) => !solvedGroups.includes(description),
     );
-    if (nextGroup) {
-      setHintMessage(`One group is “${nextGroup.description}”.`);
-    }
+    if (unsolvedGroups.length > 0) setHintGroups(unsolvedGroups);
   };
 
   const resetPuzzle = (puzzleIndex: number) => {
@@ -172,20 +279,42 @@ const Game = ({
     setSolvedGroups([]);
     setMistakesLeft(4);
     setSubmitLocked(false);
-    setHintMessage("");
+    setHintGroups(null);
     setShowAnswers(false);
+    setOneAwayVisible(false);
+    if (oneAwayTimer.current !== null) {
+      window.clearTimeout(oneAwayTimer.current);
+      oneAwayTimer.current = null;
+    }
+    gameOverLogged.current = false;
   };
 
-  const onRestart = () => resetPuzzle(currentPuzzleIndex);
+  const onRestart = () => {
+    if (hintGroups) closeHint("round_restart");
+    restartRoundActivity();
+    resetPuzzle(currentPuzzleIndex);
+  };
 
   const onNext = () => {
     const nextPuzzleIndex = (currentPuzzleIndex + 1) % gameDataSets.length;
+    if (hintGroups) closeHint("next_round");
+    startNextRoundActivity({
+      fromPuzzleIndex: currentPuzzleIndex + 1,
+      toPuzzleIndex: nextPuzzleIndex + 1,
+      totalRounds: gameDataSets.length,
+    });
     resetPuzzle(nextPuzzleIndex);
   };
 
   return (
     <>
-      <div className="game-layout">
+      <div
+        className="game-layout"
+        data-round={currentPuzzleIndex + 1}
+        data-selected-count={selected.length}
+        data-round-result={hasWon ? "won" : hasLost ? "lost" : "in_progress"}
+        data-rotation={rotation}
+      >
         <div className="game-top-controls">
           <div
             className="card mistakes-remaining"
@@ -201,38 +330,58 @@ const Game = ({
           </div>
 
           <div className="game-controls">
-            <button className="game-control-button" disabled={isGameOver} onClick={onHint}>
+            <button
+              className="game-control-button"
+              data-activity-button="hint"
+              disabled={isGameOver}
+              onClick={onHint}
+            >
               Hint
             </button>
             <button
               className="game-control-button"
+              data-activity-button="show-answers"
               aria-expanded={showAnswers}
-              onClick={() => setShowAnswers((visible) => !visible)}
+              onClick={() => setShowAnswers(!showAnswers)}
             >
               {showAnswers ? "Hide Answers" : "Show Answers"}
             </button>
-            <button className="game-control-button" onClick={onRestart}>Restart</button>
-            <button className="game-control-button" onClick={onNext}>Next</button>
+            <button className="game-control-button" data-activity-button="restart-round" onClick={onRestart}>Restart</button>
+            <button className="game-control-button" data-activity-button="next-round" onClick={onNext}>Next</button>
           </div>
         </div>
 
         <div className="board-stage">
-          <Board
-            words={remainingWords}
-            selected={selected}
-            incorrectSelection={incorrectSelection}
-            rotation={rotation}
-            solvedGroupData={solvedGroupData}
-            toggleSelected={toggleSelected}
-          />
+          <div
+            className="board-rotation-frame"
+            data-rotation={rotation}
+            data-rotation-transition={rotationTransition}
+          >
+            <Board
+              words={remainingWords}
+              selected={selected}
+              incorrectSelection={incorrectSelection}
+              rotation={rotation}
+              solvedGroupData={solvedGroupData}
+              toggleSelected={toggleSelected}
+              lookupRequest={lookupRequest}
+              onLookupRequestHandled={onLookupRequestHandled}
+            />
+          </div>
         </div>
 
-        {hintMessage && (
+        {oneAwayVisible && (
+          <div className="one-away-toast" role="status" aria-live="polite">
+            One away
+          </div>
+        )}
+
+        {hintGroups && (
           <div
             className="hint-modal-backdrop"
             role="presentation"
             onMouseDown={(event) => {
-              if (event.target === event.currentTarget) setHintMessage("");
+              if (event.target === event.currentTarget) closeHint("backdrop");
             }}
           >
             <section
@@ -240,20 +389,31 @@ const Game = ({
               role="dialog"
               aria-modal="true"
               aria-labelledby="hint-modal-title"
-              aria-describedby="hint-modal-description"
             >
               <div className="hint-modal-heading">
                 <h2 id="hint-modal-title">Hint</h2>
                 <button
                   className="hint-modal-close"
+                  data-activity-button="hint-close"
                   type="button"
                   aria-label="Close hint"
-                  onClick={() => setHintMessage("")}
+                  onClick={() => closeHint("close_button")}
                 >
                   ×
                 </button>
               </div>
-              <p id="hint-modal-description">{hintMessage}</p>
+              <div className="hint-group-list">
+                {hintGroups.map((group) => (
+                  <div className="hint-group-row" key={group.description}>
+                    <span
+                      className={`hint-color-swatch ${getSolvedGroupColorClass(group.className)}`}
+                      aria-hidden="true"
+                    />
+                    <strong>{getDifficultyLabel(group.className)}</strong>
+                    <p>{group.hint}</p>
+                  </div>
+                ))}
+              </div>
             </section>
           </div>
         )}
