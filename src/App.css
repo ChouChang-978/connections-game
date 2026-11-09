@@ -559,7 +559,7 @@
 }
 
 .board-rotation-frame {
-  width: min(600px, 100%);
+  width: min(720px, 100%);
   max-width: 100%;
   transform-origin: center center;
 }
@@ -801,6 +801,10 @@
 }
 
 @media only screen and (max-width: 640px) {
+  #root {
+    padding: 1rem;
+  }
+
   .game-layout {
     min-height: calc(100vh - 16px);
   }

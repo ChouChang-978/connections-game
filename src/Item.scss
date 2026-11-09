@@ -1,7 +1,9 @@
 .item {
   height: 70px;
-  width: 142px;
-  margin: auto;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
   font-weight: 700;
   font-size: 20px;
   &.selected {
@@ -145,7 +147,7 @@ $item-correction: $full-spacing / 4;
 @media only screen and (max-width: 640px) {
   .item {
     height: calc(25vw - $item-correction);
-    width: calc(25vw - $item-correction);
+    width: 100%;
   }
 }
 
